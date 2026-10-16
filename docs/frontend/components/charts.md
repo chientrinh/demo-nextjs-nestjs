@@ -34,15 +34,15 @@ Dữ liệu lấy từ **một** hook `useWeeklyTrend(weekStart)` trong `modules
 Mỗi `event` biến thành một **annotation** đặt tại `x = eventDate`:
 
 - Nhãn ngắn = `title` (cắt bớt nếu dài).
-- Tooltip annotation hiển thị `title`, `+/-amount`, `shift`.
-- `amount` âm hiển thị màu giảm; dương màu tăng.
+- Tooltip annotation hiển thị `title`, `amount` (VND), `shift`.
+- Màu sắc hiển thị theo tác động sự kiện dương (`#16A34A` / `#3C50E0`).
 
 ```ts
 annotations: {
   xaxis: events.map((e) => ({
     x: formatDate(e.eventDate),
-    borderColor: e.amount < 0 ? '#FB5454' : '#3C50E0',
-    label: { text: truncate(e.title, 40), borderColor: 'transparent', style: { background: '#3C50E0', color: '#fff' } },
+    borderColor: '#16A34A',
+    label: { text: truncate(e.title, 40), borderColor: 'transparent', style: { background: '#16A34A', color: '#fff' } },
   })),
 }
 ```
@@ -73,11 +73,16 @@ Chiều cao chuẩn: `h-[360px]` (điều chỉnh responsive).
 
 ## Nút trên header chart
 
-- **Compare to Previous** — đổi `weekStart` sang tuần trước và tải lại (nếu bật; giai đoạn này có thể là phần mở rộng).
-- **Export PNG** — dùng API `chart.dataURI()` của ApexCharts để tải ảnh PNG của biểu đồ.
+- **Compare to Previous** — bật/tắt chế độ so sánh với tuần trước (`isCompare`), hiển thị song song các cột hiện tại vs tuần trước và mũi tên delta.
+- **Export PNG** — sử dụng `html-to-image` chụp container bao gồm cả 3 phần: Hàng thẻ KPI, Biểu đồ cột có overlay delta, và Chú thích Legend phía dưới (xem ADR [0006](../../adr/0006-html-to-image-dashboard-export.md)).
 
 ```ts
-const { imgURI } = await chartRef.current.chart.dataURI();
+const { toPng } = await import("html-to-image");
+const dataUrl = await toPng(chartContainerRef.current, {
+  cacheBust: true,
+  pixelRatio: 2,
+  backgroundColor: isDark ? "#111827" : "#ffffff",
+});
 // tải xuống dưới dạng file .png
 ```
 

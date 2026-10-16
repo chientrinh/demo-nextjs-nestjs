@@ -2,13 +2,16 @@
 
 ## Tổng hợp
 
-| Tầng | Công nghệ | Phiên bản mục tiêu |
+| Tầng | Công nghệ | Phiên bản thực tế / mục tiêu |
 | --- | --- | --- |
-| Frontend framework | Next.js (App Router) | 15.x |
+| Frontend framework | Next.js (App Router) | 16.x (16.3.4) |
 | Frontend ngôn ngữ | TypeScript | 5.x |
+| Frontend runtime | React | 19.x (19.2.8) |
 | UI base | TailAdmin (Next.js free) | theo repo upstream |
-| Styling | Tailwind CSS | 4.x |
-| Biểu đồ | ApexCharts (`react-apexcharts`) | 1.x / 4.x |
+| Styling | Tailwind CSS | 4.x (@tailwindcss/postcss) |
+| Biểu đồ | ApexCharts (`react-apexcharts`) | 7.x / 2.x |
+| Xuất báo cáo | `html-to-image` | 1.x (1.11.13) |
+| Đa ngôn ngữ | `next-intl` | 4.x (4.14.2) |
 | Form | React Hook Form + Zod | 7.x / 3.x |
 | Server state | TanStack Query | 5.x |
 | HTTP client | axios | 1.x |
@@ -28,6 +31,8 @@
 **TailAdmin** là bộ khung admin sẵn có: sidebar, header, card, form, table. Form Login bắt nguồn từ TailAdmin nhưng được chuyển vào module `auth` (`modules/auth/ui/login-form/`) (xem [`features/authentication/login.md`](../features/authentication/login.md)).
 
 **ApexCharts** vẽ biểu đồ xu hướng (bar + spline), hỗ trợ annotation để ghim sự kiện lên trục thời gian — đúng với mockup `home.html` và `create-event.html`.
+
+**html-to-image** chụp toàn bộ khu vực dashboard (KPI cards, biểu đồ cột có icon overlay, chú thích legend) thành ảnh PNG độ nét cao (xem [`adr/0006-html-to-image-dashboard-export.md`](../adr/0006-html-to-image-dashboard-export.md)).
 
 **React Hook Form + Zod** cho form Event và Labour: schema Zod là nguồn validate duy nhất, dùng lại type suy ra (`z.infer`) cho payload API.
 
@@ -49,7 +54,7 @@
 
 ## Hạ tầng
 
-**Docker Compose**, tách riêng từng tầng (database, backend, frontend) theo quyết định tại [`adr/0005-docker-per-layer-compose.md`](../adr/0005-docker-per-layer-compose.md). Các service giao tiếp qua network `bistro-net`.
+**Docker Compose**, tách riêng từng tầng (database, backend, frontend) theo quyết định tại [`adr/0005-docker-per-layer-compose.md`](../adr/0005-docker-per-layer-compose.md). Các service giao tiếp qua network `bistro`.
 
 ## Quy ước chung
 

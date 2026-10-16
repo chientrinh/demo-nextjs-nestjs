@@ -2,12 +2,12 @@
 
 ## Trạng thái repo (đọc trước)
 
-- Repo hiện **chỉ có tài liệu** — chưa có `frontend/`, `backend/`, `docker/`. `/docs` mô tả **layout monorepo mục tiêu**; code sẽ được dựng theo đó. Đừng giả định các thư mục đó đã tồn tại.
+- Repo hiện **đã có `frontend/` (Next.js 16) và `docker/frontend`**; tầng `backend/` (NestJS) và `docker/database`, `docker/backend` đang chuẩn bị dựng. `/docs` mô tả **layout monorepo mục tiêu**; code được dựng theo đó.
 - Nguồn sự thật là `/docs`. Đọc [`docs/AGENT_INSTRUCTIONS.md`](docs/AGENT_INSTRUCTIONS.md) trước khi code bất cứ thứ gì — đó là bộ quy tắc bắt buộc (luật bất khả xâm phạm, chọn tài liệu theo việc, từ vựng, quy trình task).
 - Tài liệu viết bằng **tiếng Việt**. Giữ tiếng Việt cho docs, commit body, nhãn UI; định danh code bằng tiếng Anh.
 - Mockup gốc: `docs/design/*.html` + `docs/design/DESIGN.md`. Khi mockup mâu thuẫn tài liệu → **tài liệu thắng**.
 
-## Lệnh (sau khi có `frontend/`/`backend/`)
+## Lệnh
 
 Chạy trong thư mục tầng tương ứng: dev `npm run start:dev` (backend) / `npm run dev` (frontend); `npm run build`; `npm run lint`; `npm run test`; `npm run format`. Backend e2e: `npm run test:e2e`.
 
@@ -44,7 +44,7 @@ Frontend luồng dữ liệu một chiều: **`ui/<area>/hooks` → `application
 
 - `weeklyTrend` trả **đúng 7 ngày**, điền `0` cho ngày trống, gộp đúng theo nguồn.
 - `summary.totalRevenue` = POS + EATCLUB; `averagePerDay` chia theo **số ngày lịch**.
-- `amount`: revenue ≥ 0, labour > 0, event **cho phép âm**. Event `title` ≤ 80 ký tự.
+- `amount`: revenue ≥ 0, labour > 0, event ≥ 0 (không cho phép số âm). Event `title` ≤ 80 ký tự.
 - Unique `(entryDate, source)` → trùng thì trả `DUPLICATE_REVENUE_ENTRY`.
 
 ## Test bắt buộc

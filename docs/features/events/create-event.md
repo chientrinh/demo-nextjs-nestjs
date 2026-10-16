@@ -27,12 +27,12 @@ Theo mockup `docs/design/create-event.html`:
 | --- | --- | --- | --- |
 | `title` | Input text | string | **bắt buộc, 1–80 ký tự** (trim) |
 | `source` | Radio | enum | `POS` \| `EATCLUB` |
-| `amount` | `CurrencyInput` | number | số nguyên; **cho phép âm** (âm = giảm doanh thu) |
+| `amount` | `CurrencyInput` | number | số nguyên; **≥ 0** (không cho phép số âm) |
 | `eventDate` | Date picker | date | `YYYY-MM-DD` |
 | `shift` | Select | enum | `CA_NGAY` \| `CA_TRUA` \| `CA_TOI` \| `CA_DEM` |
 | `note` | Textarea | string? | ≤ 500 ký tự |
 
-> **Điểm khác biệt:** `amount` ở đây **có thể âm**, khác với revenue (≥ 0) và labour (> 0). Dùng để mô tả sự kiện làm giảm doanh thu.
+> **Điểm lưu ý:** `amount` ở đây bắt buộc **≥ 0 (không cho phép âm)**, mô tả giá trị doanh thu do sự kiện mang lại (ví dụ live music, tiệc tư nhân). Biểu đồ hiển thị tác động sự kiện dương.
 
 ## API
 
@@ -61,7 +61,7 @@ Bảng `event_annotations`. Xem [`../backend/database/schema.md`](../../backend/
 
 - [ ] Gửi hợp lệ → `201`, sự kiện xuất hiện trên biểu đồ Home ở đúng ngày.
 - [ ] `title` rỗng hoặc > 80 ký tự → lỗi ngay dưới field, không gửi.
-- [ ] `amount` âm được chấp nhận; sự kiện hiển thị là giảm doanh thu.
+- [ ] `amount` âm bị chặn (form không cho nhập dấu âm, schema validate `min(0)`).
 - [ ] `amount` không phải số nguyên → lỗi validate.
 - [ ] Quick-fill điền đúng các field nhưng vẫn qua validate khi submit.
 - [ ] `ANALYST` cố gửi → `403`, UI hiển thị "không có quyền".
@@ -83,7 +83,7 @@ Trường `title` hiển thị bộ đếm `x/80` và `note` `x/500`; đổi mà
 
 ## Kiểm thử
 
-- e2e: tạo hợp lệ; `title` > 80 → `400`; `ANALYST` → `403`; `amount` âm chấp nhận.
+- e2e: tạo hợp lệ; `title` > 80 → `400`; `ANALYST` → `403`; `amount` < 0 bị chặn.
 - Component: validate `title`/`amount`; quick-fill; trạng thái submit.
 
 ## Liên quan

@@ -45,7 +45,7 @@ Input tiền dùng `CurrencyInput` — component UI toàn cục đặt ở `src/
 ```ts
 amount: z.number({ invalid_type_error: 'Vui lòng nhập số tiền' })
   .int('Số tiền phải là số nguyên')
-  .min(0, 'Số tiền không được âm'),   // event cho phép âm → dùng .int() không min
+  .min(0, 'Số tiền không được âm'),
 ```
 
 ### Ngày
@@ -99,7 +99,7 @@ Form Event có các nút điền nhanh (presets) đặt sẵn `source`/`shift`/`
 
 | Form | Schema | Ràng buộc đặc thù |
 | --- | --- | --- |
-| Event | `modules/events/domain/event.ts` | `title` ≤ 80; `amount` **cho phép âm** |
+| Event | `modules/events/domain/event.ts` | `title` ≤ 80; `amount` **≥ 0** (không cho phép âm) |
 | Labour | `modules/labour/domain/labour.ts` | `amount` **> 0**; `department`/`paymentMethod` bắt buộc |
 
 Chi tiết đầy đủ: [`../features/events/create-event.md`](../features/events/create-event.md), [`../features/labour-cost/create-labour-cost.md`](../features/labour-cost/create-labour-cost.md).

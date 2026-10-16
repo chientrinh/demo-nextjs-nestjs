@@ -23,7 +23,7 @@ npm run test:e2e
 - `title` > 80 → `400` (`VALIDATION_ERROR`).
 - Trùng `(entryDate, source)` → `DUPLICATE_REVENUE_ENTRY`.
 - `ANALYST` ghi dữ liệu → `403`.
-- `amount` quy tắc: revenue ≥ 0, labour > 0, event **cho phép âm**.
+- `amount` quy tắc: revenue ≥ 0, labour > 0, event ≥ 0 (không cho phép số âm).
 - Auth: login đúng/sai, refresh xoay vòng, logout.
 
 ### Dọn dẹp

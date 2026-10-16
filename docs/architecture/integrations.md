@@ -32,7 +32,7 @@ Các endpoint hiện tại (`POST /api/revenue`) vẫn giữ nguyên; đồng b�
 | --- | --- | --- |
 | Frontend → Backend | HTTPS / REST JSON | Bearer JWT; base URL qua `NEXT_PUBLIC_API_URL` |
 | Backend → Database | TCP 5432 | Prisma; `DATABASE_URL` |
-| Container ↔ Container | Docker network `bistro-net` | tên service dùng làm hostname |
+| Container ↔ Container | Docker network `bistro` | tên service dùng làm hostname |
 
 ## Cấu hình liên quan
 
