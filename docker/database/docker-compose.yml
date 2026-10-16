@@ -1,0 +1,26 @@
+services:
+  database:
+    image: postgres:16-alpine
+    container_name: bistro-database
+    environment:
+      POSTGRES_USER: bistro
+      POSTGRES_PASSWORD: bistro
+      POSTGRES_DB: bistro
+    ports:
+      - "5432:5432"
+    volumes:
+      - bistro_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U bistro -d bistro"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - bistro
+
+volumes:
+  bistro_pgdata:
+
+networks:
+  bistro:
+    external: true

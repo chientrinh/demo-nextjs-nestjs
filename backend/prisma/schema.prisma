@@ -1,0 +1,110 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Role {
+  ADMIN
+  MANAGER
+  ANALYST
+}
+
+enum RevenueSource {
+  POS
+  EATCLUB
+}
+
+enum Department {
+  FOH          // Front of House
+  BOH          // Back of House
+  MANAGEMENT   // Quản lý
+  STEWARD      // Tạp vụ, rửa chén
+}
+
+enum PaymentMethod {
+  CASH_TILL     // Tiền mặt từ két
+  BANK_TRANSFER // Chuyển khoản
+  PETTY_CASH    // Quỹ lẻ
+}
+
+enum WorkShift {
+  CA_NGAY  // Ca ngày
+  CA_TRUA  // Ca trưa
+  CA_TOI   // Ca tối
+  CA_DEM   // Ca đêm
+}
+
+model User {
+  id           String   @id @default(uuid()) @db.Uuid
+  email        String   @unique
+  passwordHash String   @map("password_hash")
+  fullName     String   @map("full_name")
+  role         Role     @default(ANALYST)
+  isActive     Boolean  @default(true) @map("is_active")
+  tokenVersion Int      @default(0) @map("token_version")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  revenueEntries   RevenueEntry[]
+  labourCosts      LabourCost[]
+  eventAnnotations EventAnnotation[]
+
+  @@map("users")
+}
+
+model RevenueEntry {
+  id          String        @id @default(uuid()) @db.Uuid
+  entryDate   DateTime      @map("entry_date") @db.Date
+  source      RevenueSource
+  amount      Decimal       @db.Decimal(15, 0)
+  covers      Int           @default(0)
+  note        String?
+  createdById String        @map("created_by_id") @db.Uuid
+  createdAt   DateTime      @default(now()) @map("created_at")
+  updatedAt   DateTime      @updatedAt @map("updated_at")
+
+  createdBy   User          @relation(fields: [createdById], references: [id])
+
+  @@unique([entryDate, source])
+  @@map("revenue_entries")
+}
+
+model LabourCost {
+  id            String        @id @default(uuid()) @db.Uuid
+  expenseDate   DateTime      @map("expense_date") @db.Date
+  amount        Decimal       @db.Decimal(15, 0)
+  department    Department
+  paymentMethod PaymentMethod @map("payment_method")
+  note          String?
+  createdById   String        @map("created_by_id") @db.Uuid
+  createdAt     DateTime      @default(now()) @map("created_at")
+  updatedAt     DateTime      @updatedAt @map("updated_at")
+
+  createdBy     User          @relation(fields: [createdById], references: [id])
+
+  @@index([expenseDate])
+  @@index([department])
+  @@map("labour_costs")
+}
+
+model EventAnnotation {
+  id          String        @id @default(uuid()) @db.Uuid
+  title       String        @db.VarChar(80)
+  source      RevenueSource
+  amount      Decimal       @db.Decimal(15, 0)
+  eventDate   DateTime      @map("event_date") @db.Date
+  shift       WorkShift
+  note        String?
+  createdById String        @map("created_by_id") @db.Uuid
+  createdAt   DateTime      @default(now()) @map("created_at")
+  updatedAt   DateTime      @updatedAt @map("updated_at")
+
+  createdBy   User          @relation(fields: [createdById], references: [id])
+
+  @@index([eventDate])
+  @@map("event_annotations")
+}

@@ -56,9 +56,6 @@ services:
       JWT_SECRET: ${JWT_SECRET}
       JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET}
       CORS_ORIGIN: http://frontend:3000
-    depends_on:
-      database:
-        condition: service_healthy
     networks:
       - bistro
 
