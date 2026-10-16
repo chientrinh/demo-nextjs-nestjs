@@ -30,13 +30,14 @@ backend/
 └── package.json
 ```
 
-Mỗi module nghiệp vụ tuân theo cấu trúc Nest chuẩn:
+Mỗi module nghiệp vụ tuân theo cấu trúc Nest chuẩn với tầng Repository tách biệt:
 
 ```
 <module>/
 ├── <module>.module.ts
 ├── <module>.controller.ts     # Chỉ khai báo route, gọi service
-├── <module>.service.ts        # Toàn bộ nghiệp vụ
+├── <module>.service.ts        # Toàn bộ nghiệp vụ, gọi repository
+├── <module>.repository.ts     # Thao tác truy vấn cơ sở dữ liệu qua Prisma
 ├── dto/                       # Request DTO (class-validator)
 │   ├── create-<x>.dto.ts
 │   └── update-<x>.dto.ts
@@ -45,9 +46,9 @@ Mỗi module nghiệp vụ tuân theo cấu trúc Nest chuẩn:
 
 ## Quy ước
 
-- **Controller mỏng, Service dày.** Controller chỉ chuyển tiếp request/response; không chứa nghiệp vụ.
+- **Controller mỏng, Service dày, Repository cô lập dữ liệu.** Luồng thực thi một chiều: `Controller` → `Service` → `Repository` → `PrismaService`.
 - **DTO cho mọi đầu vào.** Không nhận `any`. DTO dùng `class-validator`, và `ValidationPipe` toàn cục bật `whitelist` + `forbidNonWhitelisted`.
-- **Prisma chỉ trong service.** Controller không chạm Prisma; tầng `PrismaService` được inject.
+- **Prisma chỉ nằm trong Repository.** Service không truy vấn DB trực tiếp mà gọi các method của Repository; `PrismaService` chỉ được inject vào tầng Repository.
 - **Xử lý lỗi qua filter.** Ném exception chuẩn Nest; filter toàn cục biến chúng thành định dạng lỗi thống nhất (xem [`api/error-handling.md`](./api/error-handling.md)).
 - **Serialization rõ ràng.** Service trả về đối tượng khớp hợp đồng API; `passwordHash` không bao giờ xuất hiện trong response.
 

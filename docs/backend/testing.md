@@ -39,7 +39,7 @@ Nghiệp vụ, không phải framework. Tập trung:
 2. **Ranh giới phân quyền** — `ANALYST` gọi `POST` phải bị `403`.
 3. **Ràng buộc dữ liệu** — tạo trùng `(entryDate, source)` phải `409 DUPLICATE_REVENUE_ENTRY`.
 4. **Validate** — `title` > 80 ký tự phải `400`.
-5. **Biên** — `amount` âm được phép ở event, bị chặn ở labour/revenue.
+5. **Biên** — `amount` âm bị chặn ở cả revenue, labour và event (`amount >= 0`).
 
 Không viết test chỉ để tăng coverage (ví dụ assert rằng một getter trả về field vừa gán).
 

@@ -36,7 +36,7 @@ Chạy trong thư mục tầng tương ứng: dev `npm run start:dev` (backend) 
 
 ## Kiến trúc
 
-Backend NestJS: **controller mỏng, service dày**; DTO `class-validator` cho mọi input (`whitelist` + `forbidNonWhitelisted`); Prisma chỉ trong service; `passwordHash` không bao giờ ra response; guard theo thứ tự `JwtAuthGuard` → `RolesGuard` (`@Public()`, `@Roles(...)`).
+Backend NestJS: **controller mỏng, service dày, repository cô lập DB** (`controller` → `service` → `repository` → `PrismaService`); DTO `class-validator` cho mọi input (`whitelist` + `forbidNonWhitelisted`); Prisma chỉ inject trong repository; `passwordHash` không bao giờ ra response; guard theo thứ tự `JwtAuthGuard` → `RolesGuard` (`@Public()`, `@Roles(...)`).
 
 Frontend luồng dữ liệu một chiều: **`ui/<area>/hooks` → `application/services/<feature>.service.ts` → `data/api.ts` → `adapters/infrastructures`** (axios ở `clients/HttpClient.ts`). Hook **không** gọi thẳng `data/`; `ui/`/`application/`/`domain/` không chạm `axios`; `app/` chỉ composition; import liên module chỉ qua barrel `modules/<feature>`. `src/shared/` = app-shared không gắn nghiệp vụ (không phụ thuộc ngược); `src/modules/shared/` = nghiệp vụ dùng chung ≥2 module.
 

@@ -11,7 +11,7 @@
 
 ## Backend (NestJS)
 
-- Mỗi miền một module: `controller` → `service` → `repository` (Prisma). Controller **không** chứa logic nghiệp vụ.
+- Mỗi miền một module: `controller` → `service` → `repository` (`PrismaService`). Controller **không** chứa logic nghiệp vụ; Service xử lý business logic; Repository là nơi duy nhất thực hiện query database qua Prisma.
 - **Đặt tên dữ liệu:** cột DB `snake_case`; field Prisma `camelCase` ánh xạ bằng `@map("snake_case")`, tên bảng `snake_case` plural qua `@@map`; JSON API `camelCase` (khớp field Prisma). Xem [`../backend/database/schema.md`](../backend/database/schema.md).
 - **DTO** với `class-validator` cho mọi đầu vào; `ValidationPipe` toàn cục (`whitelist: true`, `forbidNonWhitelisted: true`, `transform: true`).
 - Ném lỗi qua **exception chuẩn** (`BadRequestException`, `NotFoundException`, `ForbiddenException`), không trả object lỗi thủ công. Xem [`../backend/api/error-handling.md`](../backend/api/error-handling.md).
