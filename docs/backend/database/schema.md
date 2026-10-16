@@ -131,7 +131,7 @@ Sự kiện/ghi chú có ảnh hưởng doanh thu, ghim lên biểu đồ tuần
 | `id` | `id` | String (UUID) | PK | |
 | `title` | `title` | String | not null, **≤ 80 ký tự** | Tiêu đề sự kiện |
 | `source` | `source` | RevenueSource | not null | Nguồn bị ảnh hưởng |
-| `amount` | `amount` | Decimal(15,0) | not null | Ảnh hưởng **có dấu** (âm = giảm) |
+| `amount` | `amount` | Decimal(15,0) | not null, **≥ 0** | Giá trị tác động doanh thu (không âm) |
 | `event_date` | `eventDate` | Date | not null | Ngày sự kiện |
 | `shift` | `shift` | WorkShift | not null | Ca làm việc |
 | `note` | `note` | String? | nullable, ≤ 500 | |

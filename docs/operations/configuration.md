@@ -10,13 +10,8 @@ Nguồn sự thật của biến là các file `.env.example` trong `backend/` v
 | `PORT` | không | `3001` | Cổng API |
 | `DATABASE_URL` | có | `postgresql://bistro:bistro@localhost:5432/bistro?schema=public` | Chuỗi kết nối Prisma |
 | `JWT_SECRET` | có | — | Khóa ký access token (HS256) |
-| `JWT_ACCESS_TTL` | không | `15m` | Hạn access token |
 | `JWT_REFRESH_SECRET` | có | — | Khóa ký refresh token |
-| `JWT_REFRESH_TTL` | không | `7d` | Hạn refresh token |
-| `CORS_ORIGIN` | có | `http://localhost:3000` | Nguồn được phép (danh sách phẩy) |
-| `BCRYPT_ROUNDS` | không | `10` | Số vòng băm mật khẩu |
-| `RATE_LIMIT_TTL` | không | `60` | Giây cho cửa sổ rate limit |
-| `RATE_LIMIT_LIMIT` | không | `100` | Số request tối đa mỗi cửa sổ |
+| `CORS_ORIGIN` | có | `http://localhost:3000,http://frontend:3000` | Nguồn được phép (danh sách phẩy)
 
 > `JWT_SECRET` và `JWT_REFRESH_SECRET` phải **khác nhau**, dài và ngẫu nhiên (≥ 32 byte). Sinh bằng `openssl rand -base64 48`.
 
