@@ -1,0 +1,62 @@
+{
+  "sidebar": {
+    "groups": {
+      "menu": "Menu",
+      "others": "Khác"
+    },
+    "badges": {
+      "new": "Mới",
+      "pro": "Pro"
+    },
+    "items": {
+      "dashboard": "Tổng quan",
+      "ecommerceHome": "Doanh thu",
+      "calendar": "Lịch",
+      "userProfile": "Hồ sơ",
+      "forms": "Biểu mẫu",
+      "formElements": "Nhập liệu",
+      "tables": "Bảng",
+      "basicTables": "Bảng cơ bản",
+      "pages": "Trang",
+      "blankPage": "Trang trắng",
+      "error404": "Lỗi 404",
+      "charts": "Biểu đồ",
+      "lineChart": "Biểu đồ đường",
+      "barChart": "Biểu đồ cột",
+      "uiElements": "Thành phần UI",
+      "alerts": "Cảnh báo",
+      "avatar": "Avatar",
+      "badge": "Nhãn",
+      "buttons": "Nút",
+      "images": "Hình ảnh",
+      "videos": "Video",
+      "authentication": "Xác thực",
+      "signIn": "Đăng nhập",
+      "signUp": "Đăng ký",
+      "eventNote": "Ghi chú sự kiện",
+      "labourCost": "Chi phí nhân công"
+    }
+  },
+  "header": {
+    "toggleSidebar": "Mở/đóng menu",
+    "search": "Tìm kiếm...",
+    "searchPlaceholder": "Tìm kiếm hoặc gõ lệnh (Ctrl + K)",
+    "notifications": {
+      "title": "Thông báo",
+      "markAllRead": "Đánh dấu đã đọc",
+      "viewAll": "Xem tất cả",
+      "noNotifications": "Không có thông báo mới",
+      "requestsPermission": "yêu cầu quyền thay đổi",
+      "project": "Dự án",
+      "minAgo": "{count} phút trước",
+      "hrAgo": "{count} giờ trước"
+    }
+  },
+  "userDropdown": {
+    "editProfile": "Chỉnh sửa hồ sơ",
+    "accountSettings": "Cài đặt tài khoản",
+    "support": "Hỗ trợ",
+    "language": "Ngôn ngữ",
+    "signOut": "Đăng xuất"
+  }
+}

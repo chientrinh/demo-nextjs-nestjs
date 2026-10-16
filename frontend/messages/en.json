@@ -1,0 +1,62 @@
+{
+  "sidebar": {
+    "groups": {
+      "menu": "Menu",
+      "others": "Others"
+    },
+    "badges": {
+      "new": "New",
+      "pro": "Pro"
+    },
+    "items": {
+      "dashboard": "Dashboard",
+      "ecommerceHome": "Revenue",
+      "calendar": "Calendar",
+      "userProfile": "Profile",
+      "forms": "Forms",
+      "formElements": "Data Entry",
+      "tables": "Tables",
+      "basicTables": "Basic Tables",
+      "pages": "Pages",
+      "blankPage": "Blank Page",
+      "error404": "Error 404",
+      "charts": "Charts",
+      "lineChart": "Line Chart",
+      "barChart": "Bar Chart",
+      "uiElements": "UI Elements",
+      "alerts": "Alerts",
+      "avatar": "Avatar",
+      "badge": "Badge",
+      "buttons": "Buttons",
+      "images": "Images",
+      "videos": "Videos",
+      "authentication": "Authentication",
+      "signIn": "Sign In",
+      "signUp": "Sign Up",
+      "eventNote": "Event Note",
+      "labourCost": "Labour Cost"
+    }
+  },
+  "header": {
+    "toggleSidebar": "Toggle sidebar",
+    "search": "Search...",
+    "searchPlaceholder": "Search or type a command (Ctrl + K)",
+    "notifications": {
+      "title": "Notifications",
+      "markAllRead": "Mark all as read",
+      "viewAll": "View all",
+      "noNotifications": "No notifications",
+      "requestsPermission": "requests permission to change",
+      "project": "Project",
+      "minAgo": "{count} min ago",
+      "hrAgo": "{count} hr ago"
+    }
+  },
+  "userDropdown": {
+    "editProfile": "Edit Profile",
+    "accountSettings": "Account Settings",
+    "support": "Support",
+    "language": "Language",
+    "signOut": "Sign Out"
+  }
+}

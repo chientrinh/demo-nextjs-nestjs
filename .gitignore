@@ -1,0 +1,17 @@
+node_modules
+dist
+coverage
+.next
+.env
+*.local
+.DS_Store
+*:Zone.Identifier
+.agents
+classroom-vocab-sync
+public/media/lessons
+.gitnexus
+.claude
+.opencode
+supabase/.temp
+.backup
+*.tsbuildinfo
