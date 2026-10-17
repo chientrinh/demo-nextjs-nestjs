@@ -8,7 +8,7 @@
 - **Ngày:** tham số và field ngày dùng `YYYY-MM-DD` (date-only).
 - **Tiền:** số nguyên USD trong JSON (`"amount": 1250000`).
 - **Enum:** UPPER_SNAKE_CASE, khớp [`database/schema.md`](../database/schema.md).
-- **Tên khóa JSON:** `camelCase` (`entryDate`, `paymentMethod`, `totalRevenue`), khớp field Prisma. Khác tên cột DB `snake_case`. Frontend chỉ thêm `src/modules/<x>/data/dtos` khi hình dạng API khác domain — xem [`../../frontend/data-fetching.md`](../../frontend/data-fetching.md).
+- **Tên khóa JSON:** `camelCase` (`expenseDate`, `paymentMethod`, `totalRevenue`), khớp field Prisma. Khác tên cột DB `snake_case`. Frontend chỉ thêm `src/modules/<x>/data/dtos` khi hình dạng API khác domain — xem [`../../frontend/data-fetching.md`](../../frontend/data-fetching.md).
 
 ## Versioning
 
@@ -19,7 +19,7 @@ Giai đoạn này **không** đặt version trong URL. Khi cần thay đổi ph�
 **Đối tượng/collection đơn giản** trả trực tiếp:
 
 ```json
-{ "id": "…", "entryDate": "2026-10-12", "source": "POS", "amount": 8200000, "covers": 142 }
+{ "id": "…", "title": "Live nhạc", "source": "POS", "amount": 2500000, "eventDate": "2026-10-17", "shift": "CA_TOI" }
 ```
 
 **Danh sách** trả về mảng phẳng khi tập nhỏ và có phân trang khi có thể lớn:
@@ -35,7 +35,7 @@ Giai đoạn này **không** đặt version trong URL. Khi cần thay đổi ph�
 
 ## Tham số lọc chung
 
-Các endpoint danh sách (`revenue`, `labour`, `events`) hỗ trợ tối thiểu:
+Các endpoint danh sách (`labour`, `events`) hỗ trợ tối thiểu:
 
 | Tham số | Kiểu | Ý nghĩa |
 | --- | --- | --- |
@@ -57,7 +57,7 @@ Endpoint `analytics` dùng `weekStart` (thứ Hai của tuần cần xem) thay c
 | 401 Unauthorized | Thiếu/hỏng access token |
 | 403 Forbidden | Đã xác thực nhưng thiếu vai trò |
 | 404 Not Found | Không tìm thấy tài nguyên |
-| 409 Conflict | Vi phạm ràng buộc duy nhất (ví dụ `(entryDate, source)`) |
+| 409 Conflict | Vi phạm ràng buộc duy nhất |
 | 422 Unprocessable Entity | Vi phạm quy tắc nghiệp vụ (ngoài validate hình thức) |
 | 429 Too Many Requests | Vượt rate limit (đăng nhập) |
 | 500 Internal Server Error | Lỗi không lường trước |
@@ -73,6 +73,7 @@ Endpoint `analytics` dùng `weekStart` (thứ Hai của tuần cần xem) thay c
 | Nhân công (Chi phí) | `/api/labour` | [`endpoints/labour.md`](./endpoints/labour.md) |
 | Analytics | `/api/analytics` | [`endpoints/analytics.md`](./endpoints/analytics.md) |
 | Người dùng | `/api/users` | [`endpoints/auth.md`](./endpoints/auth.md#users) |
+| Health check | `/api/health` | `GET /api/health` + `GET /api/health/db` |
 
 ## Swagger
 

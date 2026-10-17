@@ -43,9 +43,8 @@ Frontend yêu cầu tuần hiện tại
    │  GET /api/analytics/weekly-trend?weekStart=2026-10-12
    ▼
 AnalyticsService.weeklyTrend()
-   │  ┌─ SELECT revenue_entries WHERE entry_date ∈ [weekStart, weekStart+6]
-   │  ├─ SELECT labour_costs   WHERE expense_date ∈ [weekStart, weekStart+6]
-   │  └─ SELECT event_annotations WHERE event_date ∈ [weekStart, weekStart+6]
+   │  ├─ SELECT event_annotations WHERE event_date ∈ [weekStart, weekStart+6]
+   │  └─ SELECT labour_costs    WHERE expense_date ∈ [weekStart, weekStart+6]
    │  gộp theo ngày → 7 điểm dữ liệu
    ▼
 Response: { days: [{ date, posRevenue, eatclubRevenue, labourCost }], events: [...] }
@@ -64,7 +63,7 @@ GET /api/analytics/summary?from=2026-10-12&to=2026-10-18
 KpiCard × 3
 ```
 
-Nguồn dữ liệu: `revenue_entries` (POS + EATCLUB) và `labour_costs`. Chi tiết đặc tả: [`features/revenue-analytics/home.md`](../features/revenue-analytics/home.md).
+Nguồn dữ liệu: `event_annotations` (POS + EATCLUB) và `labour_costs`. Chi tiết đặc tả: [`features/revenue-analytics/home.md`](../features/revenue-analytics/home.md).
 
 ## 3. Tạo sự kiện ghim biểu đồ
 
@@ -112,4 +111,4 @@ Quy tắc invalidate: sau mọi thao tác ghi (POST/PATCH/DELETE), invalidate đ
 
 - **Gộp theo ngày:** backend trả về 7 ngày liên tiếp kể cả ngày không có dữ liệu (giá trị `0`), để biểu đồ không bị đứt trục.
 - **Tiền tệ:** không làm tròn ở backend; USD là số nguyên. Định dạng hiển thị (`$1,234,567`) do frontend lo.
-- **Ngày:** mọi so sánh khoảng ngày dùng `entry_date`/`expense_date`/`event_date` kiểu `date`, không dính timezone.
+- **Ngày:** mọi so sánh khoảng ngày dùng `expense_date`/`event_date` kiểu `date`, không dính timezone.

@@ -35,16 +35,16 @@ Mọi lỗi API trả về **cùng một cấu trúc JSON**, do một exception 
 | `VALIDATION_ERROR` | 400 | DTO không hợp lệ (class-validator) |
 | `INVALID_CREDENTIALS` | 401 | Sai email/mật khẩu |
 | `UNAUTHORIZED` | 401 | Thiếu token |
-| `INVALID_TOKEN` | 401 | Access token hỏng |
-| `TOKEN_EXPIRED` | 401 | Access token hết hạn |
+| `INVALID_TOKEN` | 401 | Access token hỏng — đã định nghĩa nhưng chưa emit (gộp thành `UNAUTHORIZED`) |
+| `TOKEN_EXPIRED` | 401 | Access token hết hạn — đã định nghĩa nhưng chưa emit (gộp thành `UNAUTHORIZED`) |
 | `INVALID_REFRESH_TOKEN` | 401 | Refresh token hỏng/hết hạn |
 | `ACCOUNT_INACTIVE` | 401 | Tài khoản bị vô hiệu hóa |
 | `FORBIDDEN` | 403 | Thiếu vai trò cho hành động |
 | `NOT_FOUND` | 404 | Không tìm thấy theo id |
-| `DUPLICATE_REVENUE_ENTRY` | 409 | Đã tồn tại `(entryDate, source)` |
+| `DUPLICATE_REVENUE_ENTRY` | 409 | Vi phạm ràng buộc duy nhất (mọi `P2002`) |
 | `DUPLICATE_EMAIL` | 409 | Email đã tồn tại |
 | `BUSINESS_RULE_VIOLATION` | 422 | Vi phạm quy tắc nghiệp vụ |
-| `RATE_LIMITED` | 429 | Vượt rate limit |
+| `RATE_LIMITED` | 429 | Vượt rate limit — đã định nghĩa nhưng chưa emit với Throttler |
 | `INTERNAL_ERROR` | 500 | Lỗi không lường trước |
 
 ## Lỗi validate
@@ -67,9 +67,10 @@ Khi `ValidationPipe` thất bại, `details` liệt kê từng field:
 
 | Lỗi Prisma | `code` | HTTP |
 | --- | --- | --- |
-| `P2002` (unique) trên `users.email` | `DUPLICATE_EMAIL` | 409 |
-| `P2002` trên `revenue_entries(entryDate, source)` | `DUPLICATE_REVENUE_ENTRY` | 409 |
-| `P2025` (không tìm thấy) | `NOT_FOUND` | 404 |
+| `P2002` (mọi unique violation) | `DUPLICATE_REVENUE_ENTRY` | 409 |
+| `P2025` (không tìm thấy) | `NOT_FOUND` | 404 — chưa xử lý trong filter; service tự check 404 |
+
+> `DUPLICATE_EMAIL` **không** map từ `P2002`; nó được ném bằng pre-check tường minh trong `users.service.ts`.
 
 Filter dịch lỗi Prisma sang `code` nghiệp vụ để frontend không phụ thuộc Prisma.
 
@@ -79,8 +80,8 @@ Dùng exception chuẩn Nest; filter lo phần còn lại:
 
 ```ts
 throw new ConflictException({
-  code: 'DUPLICATE_REVENUE_ENTRY',
-  message: 'Doanh thu cho ngày và nguồn này đã tồn tại.',
+  code: 'DUPLICATE_EMAIL',
+  message: 'Email đã tồn tại.',
 });
 ```
 
@@ -88,4 +89,4 @@ Không tự dựng response lỗi trong controller.
 
 ## Phía frontend
 
-Frontend đọc `code` để quyết định thông báo: ví dụ `DUPLICATE_REVENUE_ENTRY` → gợi ý sửa bản ghi đã có thay vì tạo mới. Xem [`../../frontend/data-fetching.md`](../../frontend/data-fetching.md#xử-lý-lỗi).
+Frontend đọc `code` để quyết định thông báo: ví dụ `DUPLICATE_EMAIL` → hiển thị lỗi ở field email. Xem [`../../frontend/data-fetching.md`](../../frontend/data-fetching.md#xử-lý-lỗi).

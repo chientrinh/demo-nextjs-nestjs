@@ -10,7 +10,7 @@ Ghi từng khoản chi phí nhân công theo ngày và bộ phận, hiển thị
 
 ## Route
 
-`/forms/labour-cost` → `src/app/(admin)/forms/labour-cost/page.tsx` (page mỏng, import từ `modules/labour`), gồm `LabourCostForm` (`modules/labour/ui/labour-form/`) và `LabourLedgerTable` (`modules/labour/ui/labour-ledger/`).
+`/forms/labour-cost` → `src/app/[locale]/(admin)/forms/labour-cost/page.tsx` (page mỏng, import từ `modules/labour`), gồm `LabourCostForm` (`modules/labour/ui/labour-form/`). Sổ nhật ký `LabourLedgerTable` (`modules/labour/ui/labour-ledger/`) **chưa triển khai**.
 
 ## Bố cục
 

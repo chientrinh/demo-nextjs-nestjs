@@ -21,9 +21,9 @@ npm run test:e2e
 - `weeklyTrend` trả **đúng 7 phần tử**, điền `0` cho ngày trống, gộp đúng theo nguồn.
 - `summary.totalRevenue` = POS + EATCLUB; `averagePerDay` chia theo **số ngày lịch**; `daysWithData` đúng.
 - `title` > 80 → `400` (`VALIDATION_ERROR`).
-- Trùng `(entryDate, source)` → `DUPLICATE_REVENUE_ENTRY`.
+- Trùng email → `DUPLICATE_EMAIL`; nhiều bản ghi cùng ngày/nguồn là hợp lệ (không ràng buộc duy nhất).
 - `ANALYST` ghi dữ liệu → `403`.
-- `amount` quy tắc: revenue ≥ 0, labour > 0, event ≥ 0 (không cho phép số âm).
+- `amount` quy tắc: labour > 0, event ≥ 0 (không cho phép số âm).
 - Auth: login đúng/sai, refresh xoay vòng, logout.
 
 ### Dọn dẹp

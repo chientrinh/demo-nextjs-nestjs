@@ -1,5 +1,7 @@
 # Kiểm thử Frontend
 
+> ⚠️ **Chưa cài đặt:** frontend hiện chưa có test runner (không có script `test`, chưa có Jest/Vitest/RTL). Nội dung dưới đây mô tả chiến lược dự kiến.
+
 ## Công cụ
 
 | Loại | Công cụ | Vị trí |
@@ -26,7 +28,7 @@ Kiểm thử **hành vi người dùng**, không phải chi tiết cài đặt:
 2. **Định dạng** — `formatUsd(16110)` → `"$16,110"` (`modules/shared/lib/format.ts`).
 3. **KPI card** — nhận props và render số đã định dạng; trạng thái rỗng hiển thị `0`.
 4. **Biểu đồ** — nhận `days` (7 phần tử) và `events`, không ném lỗi; (mock `react-apexcharts`).
-5. **Luồng lỗi** — API trả `DUPLICATE_REVENUE_ENTRY` hiển thị thông báo tương ứng.
+5. **Luồng lỗi** — API trả `DUPLICATE_EMAIL` hiển thị thông báo tương ứng.
 
 ## Ví dụ — form validation
 

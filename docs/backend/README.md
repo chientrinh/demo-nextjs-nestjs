@@ -21,10 +21,10 @@ backend/
 │   │   └── decorators/
 │   ├── auth/                  # Đăng nhập, cấp/thu hồi token
 │   ├── users/                 # Quản lý người dùng (ADMIN)
-│   ├── revenue/               # Revenue entries
 │   ├── labour/                # Labour costs
 │   ├── events/                # Event annotations
-│   └── analytics/             # Tổng hợp tuần, KPI
+│   ├── analytics/             # Tổng hợp tuần, KPI
+│   └── health/                # Health check
 ├── test/                      # e2e test
 ├── .env.example               # Mẫu biến môi trường
 └── package.json
@@ -59,7 +59,7 @@ Hai guard áp dụng theo thứ tự: `JwtAuthGuard` (xác thực) rồi `RolesG
 ```ts
 @Post()
 @Roles(Role.ADMIN, Role.MANAGER)
-create(@Body() dto: CreateRevenueDto) { ... }
+create(@Body() dto: CreateEventDto) { ... }
 ```
 
 Bảng vai trò đầy đủ: [`../architecture/security.md`](../architecture/security.md).

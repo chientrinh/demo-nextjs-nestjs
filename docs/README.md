@@ -42,7 +42,7 @@ docs/
 │   │   ├── error-handling.md  # Định dạng lỗi chuẩn
 │   │   └── endpoints/         # Đặc tả từng nhóm endpoint
 │   │       ├── auth.md
-│   │       ├── revenue.md
+│   │       ├── analytics.md
 │   │       ├── events.md
 │   │       └── labour.md
 │   └── testing.md             # Chiến lược kiểm thử backend
@@ -79,7 +79,7 @@ docs/
 ├── adr/                       # Architecture Decision Records
 │   ├── README.md
 │   ├── template.md
-│   └── 0001..0005
+│   └── 0001..0008
 │
 ├── operations/                # Vận hành & DevOps
 │   ├── environments.md
@@ -89,6 +89,7 @@ docs/
 │   ├── configuration.md
 │   ├── database-migrations.md
 │   ├── monitoring.md
+│   ├── security-audit.md
 │   └── troubleshooting.md
 │
 └── contributing/              # Quy trình đóng góp

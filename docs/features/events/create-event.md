@@ -10,7 +10,7 @@ Ghi lại các giao dịch bán hàng / sự kiện phát sinh doanh thu chi ti�
 
 ## Route
 
-`/forms/event-note` → `src/app/(admin)/forms/event-note/page.tsx` (page mỏng, import từ `modules/events`), component `EventNoteForm` ở `modules/events/ui/event-form/`.
+`/forms/event-note` → `src/app/[locale]/(admin)/forms/event-note/page.tsx` (page mỏng, import từ `modules/events`), component `EventNoteForm` ở `modules/events/ui/event-form/`.
 
 ## Bố cục
 

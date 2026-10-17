@@ -5,31 +5,32 @@ Khung layout kế thừa TailAdmin. Tài liệu này mô tả phần dự án d�
 ## Cây layout
 
 ```
-src/app/layout.tsx                    # Root
-└── ThemeProvider                     # dark/light — shared/providers/theme-provider.tsx
-    └── SidebarProvider               # trạng thái sidebar — shared/providers/sidebar-provider.tsx
-        └── QueryProvider             # TanStack Query — shared/providers/query-provider.tsx
-            └── AuthProvider          # phiên đăng nhập — modules/auth/application/store/session-provider.tsx
-                └── {children}
+src/app/[locale]/layout.tsx           # Root
+└── NextIntlClientProvider            # next-intl messages
+    └── ThemeProvider                 # dark/light (Zustand) — shared/providers/theme-provider.tsx
+        └── SidebarProvider           # trạng thái sidebar (Zustand) — shared/providers/sidebar-provider.tsx
+            └── QueryProvider         # TanStack Query — shared/providers/query-provider.tsx
+                └── AuthProvider      # phiên đăng nhập — modules/auth/application/store/session-provider.tsx
+                    └── {children} + sonner <Toaster/>
 
-src/app/(admin)/layout.tsx            # Khu vực đã đăng nhập
-└── <div class="flex">
+src/app/[locale]/(admin)/layout.tsx   # Khu vực đã đăng nhập — bọc RequireAuth
+└── <RequireAuth>
     ├── AppSidebar                    # shared/components/layout/AppSidebar.tsx
-    └── <div class="flex-1">
+    └── <div>
         ├── AppHeader                 # shared/components/layout/AppHeader.tsx
         └── <main>{children}</main>
 
-src/app/(full-width-pages)/layout.tsx # Không sidebar (Login)
-└── <div class="grid place-items-center min-h-screen">{children}</div>
+src/app/[locale]/(full-width-pages)/layout.tsx # Không sidebar (Login) — bọc RequireGuest
+└── <RequireGuest><div>{children}</div></RequireGuest>
 ```
 
 ## `AppSidebar`
 
 Nguồn: `shared/components/layout/AppSidebar.tsx` (TailAdmin). Điều hướng định nghĩa bằng mảng `NavItem` (`name`, `icon`, `path`) — `path` lấy từ `ROUTES` (`shared/constants/routes.ts`). Thay menu demo bằng ba mục nghiệp vụ (xem [`../routing.md`](../routing.md#điều-hướng-sidebar)).
 
-- Sidebar nền tối (`#1C2434`), mục đang chọn nổi bật bằng màu primary.
+- Sidebar nền sáng theo TailAdmin (`bg-white dark:bg-gray-900`), mục đang chọn nổi bật bằng `brand-500`.
 - Trạng thái đóng/mở do `SidebarProvider`; trên mobile là overlay.
-- Icon dùng **Material Symbols Outlined**.
+- Icon dùng SVG trong `shared/components/icons`.
 
 ## `AppHeader`
 
@@ -64,6 +65,6 @@ Chi tiết: [`../design/responsive.md`](../../design/responsive.md).
 | Thêm `QueryProvider` (`shared/providers/query-provider.tsx`), `AuthProvider` (`modules/auth/application/`) | Cần server state + phiên đăng nhập |
 | Thay `navItems`/`othersItems` | Menu nghiệp vụ thay menu demo |
 | User dropdown dùng `useAuth().user` (từ `modules/auth`) | Hiển thị người đăng nhập thật |
-| Logo/tên "The Bistro" | Nhận diện thương hiệu |
+| Logo "ADMIN" (mặc định TailAdmin) | Chưa đổi thương hiệu |
 
 Không tùy biến phần nào khác của shell trừ khi có lý do ghi lại.

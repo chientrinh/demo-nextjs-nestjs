@@ -1,6 +1,8 @@
 # Hệ thống thiết kế
 
-Nguồn gốc: `docs/design/DESIGN.md` (frontmatter token + quy tắc). Tài liệu này là bản chuẩn hoá dùng khi code — khi mâu thuẫn, tài liệu này thắng.
+Nguồn gốc: `docs/design/DESIGN.md` (frontmatter token + quy tắc).
+
+> ⚠️ **Khớp code hiện tại:** theme thực tế trong `src/shared/styles/index.css` là theme **TailAdmin** — font **Outfit**, palette `brand/gray/orange/success/error/warning`, **sidebar sáng** (`bg-white dark:bg-gray-900`). Các token M3 (surface/primary/navy) và font Plus Jakarta Sans/Inter dưới đây là đặc tả gốc từ `DESIGN.md`, **chưa được triển khai**.
 
 Tên hệ thống: **Executive Analytics & Operational Intelligence**. Phong cách: corporate modernism + data ergonomics; nền sáng, "cột lệnh" navy đậm, điểm nhấn royal blue.
 

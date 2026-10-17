@@ -14,6 +14,8 @@ Tuần mốc trong dữ liệu demo có `totalRevenue = 16,110` USD → hiển t
 
 ## `KpiCard`
 
+> **Ghi chú:** component `KpiCard.tsx` hiện **chưa được dùng** — `DashboardView` render 3 thẻ KPI inline; props thực tế là `{ label, value?, fallbackText?, format?, loading? }`.
+
 Vị trí: `src/modules/analytics/ui/kpi-cards/components/KpiCard.tsx` (export qua `modules/analytics`).
 
 **Props**
@@ -72,4 +74,4 @@ Lấy từ `useSummary(from, to)` trong `modules/analytics/ui/dashboard/hooks/` 
 ## Liên quan
 
 - Trang dùng: [`../../features/revenue-analytics/home.md`](../../features/revenue-analytics/home.md)
-- Endpoint: [`../../backend/api/endpoints/revenue.md`](../../backend/api/endpoints/revenue.md#analytics)
+- Endpoint: [`../../backend/api/endpoints/analytics.md`](../../backend/api/endpoints/analytics.md#analytics)

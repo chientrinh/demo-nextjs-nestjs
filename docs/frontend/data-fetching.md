@@ -62,7 +62,7 @@ export const labourRepository = {
 
 Hai interceptor:
 
-1. **Request** — gắn `Authorization: Bearer <accessToken>` từ Auth context.
+1. **Request** — gắn `Authorization: Bearer <accessToken>` từ store token (`shared/token.ts`).
 2. **Response** — chuẩn hóa lỗi: đọc `code` và `message` theo [`../backend/api/error-handling.md`](../backend/api/error-handling.md) và ném một `ApiError` thống nhất.
 
 ```ts
@@ -198,11 +198,13 @@ Access token ở trong bộ nhớ nên mất khi tải lại trang. Khi ứng d�
 
 ```
 POST /api/auth/refresh   (cookie tự gửi)
-   ├─ 200 → nhận accessToken mới, gọi GET /api/auth/me, chuyển status = 'authenticated'
+   ├─ 200 → nhận accessToken mới + user, chuyển status = 'authenticated'
    └─ 401 → status = 'unauthenticated'
 ```
 
 Interceptor response có thể tự thử refresh một lần khi gặp `401 TOKEN_EXPIRED`, rồi phát lại request gốc; nếu vẫn thất bại thì đăng xuất và điều hướng `/login`.
+
+Trong lúc chờ khôi phục phiên, các trang thuộc khu vực `(admin)` hiển thị **loading toàn trang** qua gate `RequireAuth` (gắn một lần ở `(admin)/layout.tsx`, không lặp ở từng trang): `status = 'loading' | 'unauthenticated'` → `FullPageLoader`; `unauthenticated` → điều hướng `/login`.
 
 ## Xử lý lỗi
 
@@ -211,18 +213,17 @@ Dùng `code` để quyết định hành vi, **không** so khớp `message`:
 | `code` | Hành vi UI |
 | --- | --- |
 | `VALIDATION_ERROR` | Hiển thị lỗi từng field (`details`) trên form |
-| `DUPLICATE_REVENUE_ENTRY` | Toast: đã có bản ghi cho ngày+nguồn; gợi ý sửa |
 | `DUPLICATE_EMAIL` | Lỗi field `email` trên form người dùng |
 | `INVALID_CREDENTIALS` | Lỗi chung dưới form Login |
 | `FORBIDDEN` | Toast: bạn không có quyền thực hiện |
-| `TOKEN_EXPIRED` / `INVALID_TOKEN` | Thử refresh; nếu thất bại → `/login` |
+| `UNAUTHORIZED` (401) | Thử refresh; nếu thất bại → `/login` |
 | `NOT_FOUND` | Toast: không tìm thấy, làm mới danh sách |
 | còn lại | Toast lỗi chung + ghi log |
 
 ## Loading & empty state
 
 - **Loading:** khung xương (skeleton) cho card/chart, không nhấp nháy layout.
-- **Empty:** ngày không có dữ liệu vẫn hiển thị `0` trên biểu đồ (backend đã điền đầy — xem [`../backend/api/endpoints/revenue.md`](../backend/api/endpoints/revenue.md#analytics)). Sổ nhật ký rỗng hiển thị "Chưa có chi phí nào".
+- **Empty:** ngày không có dữ liệu vẫn hiển thị `0` trên biểu đồ (backend đã điền đầy — xem [`../backend/api/endpoints/analytics.md`](../backend/api/endpoints/analytics.md#analytics)). Sổ nhật ký rỗng hiển thị "Chưa có chi phí nào".
 - **Error:** thông báo ngắn + nút "Thử lại" gọi `refetch()`.
 
 ## Ghi chú

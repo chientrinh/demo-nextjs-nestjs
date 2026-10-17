@@ -4,6 +4,8 @@ Trang Home dùng **ApexCharts** để vẽ biểu đồ xu hướng tuần. Comp
 
 ## Biểu đồ "This Week's Revenue Trend"
 
+> **Ghi chú khớp code:** hiện biểu đồ vẽ **toàn cột** (không có đường labour), màu `#27272A`/`#525FE1`/`#EA580C`, trục X cố định `Mon..Sun`, và `events` chưa được dùng để vẽ annotation (mới vẽ icon tăng/giảm theo ngày). Các mô tả dưới đây là đặc tả mục tiêu.
+
 **Loại:** cột (bar) cho doanh thu + đường (spline/line) cho chi phí nhân công — nhất quán với mockup `home.html`.
 
 **Ba chuỗi (series):**
@@ -89,5 +91,5 @@ const dataUrl = await toPng(chartContainerRef.current, {
 ## Liên quan
 
 - Trang dùng: [`../../features/revenue-analytics/home.md`](../../features/revenue-analytics/home.md)
-- Đặc tả dữ liệu: [`../../backend/api/endpoints/revenue.md`](../../backend/api/endpoints/revenue.md#analytics)
+- Đặc tả dữ liệu: [`../../backend/api/endpoints/analytics.md`](../../backend/api/endpoints/analytics.md#analytics)
 - Design tokens: [`../../design/design-system.md`](../../design/design-system.md)

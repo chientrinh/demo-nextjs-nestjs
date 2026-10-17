@@ -58,7 +58,7 @@ Ghi một khoản chi phí nhân công.
 **Response `201`:** bản ghi vừa tạo.
 **Lỗi:** `400 VALIDATION_ERROR`, `403 FORBIDDEN`.
 
-> Nhiều bản ghi labour cho **cùng ngày cùng bộ phận** là hợp lệ (khác bảng `revenue`). Không có ràng buộc duy nhất.
+> Nhiều bản ghi labour cho **cùng ngày cùng bộ phận** là hợp lệ. Không có ràng buộc duy nhất.
 
 ## `PATCH /api/labour/:id` — ADMIN, MANAGER
 

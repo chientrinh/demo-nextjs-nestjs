@@ -35,7 +35,7 @@ Theo mockup `docs/design/home.html`:
 
 `weekStart` phải là **thứ Hai**. Khoảng KPI khớp tuần đang xem (`from = weekStart`, `to = weekStart + 6`).
 
-Hình dạng response đầy đủ: [`../backend/api/endpoints/revenue.md`](../../backend/api/endpoints/revenue.md#analytics).
+Hình dạng response đầy đủ: [`../backend/api/endpoints/analytics.md`](../../backend/api/endpoints/analytics.md#analytics).
 
 ## Dữ liệu hiển thị
 
@@ -80,5 +80,5 @@ Hình dạng response đầy đủ: [`../backend/api/endpoints/revenue.md`](../.
 
 - Chart component: [`../frontend/components/charts.md`](../../frontend/components/charts.md)
 - KPI component: [`../frontend/components/kpi-cards.md`](../../frontend/components/kpi-cards.md)
-- Endpoint: [`../backend/api/endpoints/revenue.md`](../../backend/api/endpoints/revenue.md#analytics)
+- Endpoint: [`../backend/api/endpoints/analytics.md`](../../backend/api/endpoints/analytics.md#analytics)
 - Mockup: `docs/design/home.html`

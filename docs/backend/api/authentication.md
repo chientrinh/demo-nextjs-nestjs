@@ -11,7 +11,7 @@
 | Token | Thời hạn | Payload | Nơi client giữ |
 | --- | --- | --- | --- |
 | Access | 15 phút | `{ sub: userId, email, role }` | Bộ nhớ (biến JS), gắn `Authorization: Bearer` |
-| Refresh | 7 ngày | `{ sub: userId, tokenVersion }` | Cookie `refresh_token` (httpOnly, Secure ở production, SameSite=Lax) |
+| Refresh | 7 ngày | `{ sub: userId, tokenVersion, email, role }` | Cookie `refresh_token` (httpOnly, Secure ở production, SameSite=Lax) |
 
 Refresh token không được trả trong body JSON. Nó đến qua `Set-Cookie`.
 
@@ -30,7 +30,7 @@ Phát access token + refresh token
 200 { accessToken, user } + Set-Cookie: refresh_token=…
 ```
 
-Phản hồi không bao giờ chứa `passwordHash`. `user` gồm `{ id, email, fullName, role }`.
+Phản hồi không bao giờ chứa `passwordHash`. `user` gồm `{ id, email, fullName, role, isActive, tokenVersion, createdAt, updatedAt }`.
 
 ## Luồng làm mới token
 
@@ -41,7 +41,7 @@ POST /api/auth/refresh   (cookie refresh_token tự gửi kèm)
    · thiếu/hỏng → 401 { code: "INVALID_REFRESH_TOKEN" }
    · kiểm tra tokenVersion khớp user (đã thu hồi thì chặn), sau đó tăng tokenVersion để refresh token cũ không còn hợp lệ
    ▼
-200 { accessToken } + xoay vòng refresh token mới
+200 { accessToken, user } + xoay vòng refresh token mới
 ```
 
 Refresh token **được xoay vòng** mỗi lần dùng (rotation); token cũ bị vô hiệu.
@@ -53,7 +53,7 @@ POST /api/auth/logout
    ▼
 Thu hồi: xóa cookie, tăng tokenVersion của user (vô hiệu mọi refresh token cũ)
    ▼
-204
+200 { success: true }
 ```
 
 ## Bảo vệ endpoint
@@ -85,7 +85,7 @@ Bảng vai trò: [`../../architecture/security.md`](../../architecture/security.
 | Trường hợp | Mã HTTP | `code` |
 | --- | --- | --- |
 | Thiếu access token | 401 | `UNAUTHORIZED` |
-| Access token hết hạn/hỏng | 401 | `TOKEN_EXPIRED` / `INVALID_TOKEN` |
+| Access token hết hạn/hỏng | 401 | `UNAUTHORIZED` (`TOKEN_EXPIRED`/`INVALID_TOKEN` đã định nghĩa nhưng chưa emit) |
 | Sai email/mật khẩu | 401 | `INVALID_CREDENTIALS` |
 | Refresh token không hợp lệ | 401 | `INVALID_REFRESH_TOKEN` |
 | Đúng token nhưng thiếu vai trò | 403 | `FORBIDDEN` |
@@ -96,7 +96,7 @@ Xem thêm: [`error-handling.md`](./error-handling.md).
 ## Bảo mật liên quan
 
 - Rate limit `POST /api/auth/login` để chống brute-force.
-- Cookie refresh: `httpOnly`, `Secure`, `SameSite=Strict`.
+- Cookie refresh: `httpOnly`, `Secure`, `SameSite=Lax`.
 - CORS chỉ mở cho origin frontend; bật credentials để cookie hoạt động.
 - Access token không lưu `localStorage`.
 

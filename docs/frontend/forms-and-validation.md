@@ -2,7 +2,7 @@
 
 Hai form nhập liệu (Event và Labour) dùng **React Hook Form** + **Zod** qua `@hookform/resolvers/zod`. Schema Zod là **nguồn validate duy nhất** phía client và sinh ra type cho payload.
 
-Schema sống ở **`modules/<feature>/domain/`** (`modules/events/domain/event.ts`, `modules/labour/domain/labour.ts`, `modules/auth/domain/credentials.ts`) — không đặt ở thư mục dùng chung, vì ràng buộc gắn với từng tính năng.
+Schema sống ở **`modules/<feature>/domain/`** (`modules/events/domain/event.ts`, `modules/labour/domain/labour.ts`, `modules/auth/domain/auth.ts`) — không đặt ở thư mục dùng chung, vì ràng buộc gắn với từng tính năng.
 
 ## Nguyên tắc
 
@@ -83,7 +83,7 @@ catch (e) {
 }
 ```
 
-Lỗi toàn form (ví dụ `DUPLICATE_REVENUE_ENTRY`) hiển thị qua `setError('root', ...)` hoặc toast.
+Lỗi toàn form (ví dụ `DUPLICATE_EMAIL`) hiển thị qua `setError('root', ...)` hoặc toast.
 
 ## Trạng thái submit
 

@@ -8,6 +8,8 @@ Mô hình: **`app/` chỉ là lớp composition (route + page mỏng)**; mọi U
 
 ## Cấu trúc thư mục
 
+> **Khớp code hiện tại:** cây dưới đây là cấu trúc **mục tiêu**. Điểm lệch thực tế: mọi route nằm dưới `app/[locale]/` (next-intl `vi`/`en`); không có `modules/<x>/lib/`, `modules/shared/ui/PageHeader`, `labour/ui/labour-ledger/` (chưa triển khai), `adapters/infrastructures/repositories/`, `shared/utils/query-client.ts`; service events thực tế là `events.service.ts`; Theme/Sidebar/Auth/Token đều dùng **Zustand** (thêm `shared/token.ts`, `adapters/infrastructures/storage/`).
+
 ```
 frontend/
 ├── src/
@@ -26,7 +28,7 @@ frontend/
 │   ├── modules/                            # ← TOÀN BỘ LOGIC THEO TÍNH NĂNG
 │   │   ├── auth/
 │   │   │   ├── domain/                     # credentials, kiểu phiên, quy tắc xác thực
-│   │   │   ├── data/                       # api.ts (login/refresh/me/logout) — chỉ HTTP
+│   │   │   ├── data/                       # api.ts (login/refresh/logout) — chỉ HTTP
 │   │   │   │   └── dtos/                   # (tùy chọn) chỉ khi hình dạng API khác domain
 │   │   │   ├── application/
 │   │   │   │   ├── services/auth.service.ts        # use-case: login/refresh/me/logout

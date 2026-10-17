@@ -7,13 +7,13 @@ Hệ thống dùng **JWT stateless** cho API, kèm refresh token trong cookie. C
 | Token | Thời hạn | Nơi lưu | Mục đích |
 | --- | --- | --- | --- |
 | Access token | 15 phút | Bộ nhớ frontend (không localStorage) | Gắn vào header `Authorization: Bearer <token>` |
-| Refresh token | 7 ngày | Cookie `httpOnly`, `Secure`, `SameSite=Strict` | Cấp lại access token khi hết hạn |
+| Refresh token | 7 ngày | Cookie `httpOnly`, `Secure`, `SameSite=Lax` | Cấp lại access token khi hết hạn |
 
 Access token không lưu ở `localStorage` để giảm rủi ro XSS đánh cắp token thường trú.
 
 ## Vai trò và phân quyền
 
-| Vai trò | Đọc dữ liệu | Ghi dữ liệu (revenue/labour/events) | Quản lý người dùng |
+| Vai trò | Đọc dữ liệu | Ghi dữ liệu (events/labour) | Quản lý người dùng |
 | --- | --- | --- | --- |
 | `ADMIN` | ✅ | ✅ | ✅ |
 | `MANAGER` | ✅ | ✅ | ❌ |
@@ -53,6 +53,6 @@ Mọi bản ghi tài chính lưu `createdById` (người tạo). Đây là mức
 
 - [ ] `JWT_*_SECRET` đủ dài và ngẫu nhiên, khác giữa các môi trường.
 - [ ] CORS chỉ mở cho origin frontend thật.
-- [ ] Cookie refresh có `httpOnly` + `Secure` + `SameSite=Strict`.
+- [ ] Cookie refresh có `httpOnly` + `Secure` + `SameSite=Lax`.
 - [ ] Swagger (`/api/docs`) tắt hoặc có bảo vệ ở production.
 - [ ] Không có secret nào trong git history.

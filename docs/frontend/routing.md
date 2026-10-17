@@ -1,6 +1,6 @@
 # Routing
 
-Ứng dụng dùng **Next.js App Router**, kế thừa route group của TailAdmin.
+Ứng dụng dùng **Next.js App Router**, kế thừa route group của TailAdmin. Mọi route nằm dưới segment **`[locale]`** (next-intl): locale `vi` (mặc định) và `en`, `localePrefix: "never"` (URL không chứa locale).
 
 **Page là composition mỏng.** Mỗi `page.tsx` chỉ import thành phần public từ module tương ứng (`@/modules/<feature>`) và lắp ghép; không chứa logic nghiệp vụ. Ranh giới import: xem [`README.md`](./README.md#quy-tắc-module).
 
@@ -8,10 +8,10 @@
 
 | Route | File | Module | Layout | Trang | Đặc tả |
 | --- | --- | --- | --- | --- | --- |
-| `/login` | `(full-width-pages)/login/page.tsx` | `auth` | full-width (không sidebar) | Đăng nhập | [`../features/authentication/login.md`](../features/authentication/login.md) |
-| `/` | `(admin)/page.tsx` | `analytics` | admin (sidebar + header) | Home / Revenue Analytics | [`../features/revenue-analytics/home.md`](../features/revenue-analytics/home.md) |
-| `/forms/event-note` | `(admin)/forms/event-note/page.tsx` | `events` | admin | Tạo sự kiện | [`../features/events/create-event.md`](../features/events/create-event.md) |
-| `/forms/labour-cost` | `(admin)/forms/labour-cost/page.tsx` | `labour` | admin | Ghi chi phí nhân công | [`../features/labour-cost/create-labour-cost.md`](../features/labour-cost/create-labour-cost.md) |
+| `/login` | `[locale]/(full-width-pages)/(auth)/login/page.tsx` | `auth` | full-width (không sidebar) | Đăng nhập | [`../features/authentication/login.md`](../features/authentication/login.md) |
+| `/` | `[locale]/(admin)/page.tsx` | `analytics` | admin (sidebar + header) | Home / Revenue Analytics | [`../features/revenue-analytics/home.md`](../features/revenue-analytics/home.md) |
+| `/forms/event-note` | `[locale]/(admin)/forms/event-note/page.tsx` | `events` | admin | Tạo sự kiện | [`../features/events/create-event.md`](../features/events/create-event.md) |
+| `/forms/labour-cost` | `[locale]/(admin)/forms/labour-cost/page.tsx` | `labour` | admin | Ghi chi phí nhân công | [`../features/labour-cost/create-labour-cost.md`](../features/labour-cost/create-labour-cost.md) |
 
 Ví dụ page mỏng:
 
@@ -28,16 +28,14 @@ export default function Page() {
 - **`(admin)`** — mọi trang trong khu vực đã đăng nhập. `(admin)/layout.tsx` render `AppSidebar` + `AppHeader` (`shared/components/layout/`) và bọc nội dung. Nhóm dấu ngoặc **không** xuất hiện trong URL (`/forms/event-note`, không phải `/admin/forms/...`).
 - **`(full-width-pages)`** — trang không sidebar, dùng cho Login (và sau này là trang lỗi). `layout.tsx` của nhóm canh giữa nội dung toàn màn hình.
 
-## Bảo vệ route (middleware)
+## Bảo vệ route (client-side gates)
 
-`src/middleware.ts` chặn truy cập khu vực `(admin)` khi chưa đăng nhập:
+`src/middleware.ts` hiện **chỉ làm i18n** (next-intl), không có logic xác thực. Bảo vệ route nằm ở **client** bằng hai gate:
 
-```
-Không có phiên hợp lệ + truy cập route admin  → redirect /login
-Đã đăng nhập + truy cập /login                → redirect /
-```
+- `RequireAuth` (gắn ở `(admin)/layout.tsx`): `status = 'loading' | 'unauthenticated'` → `FullPageLoader`; `unauthenticated` → điều hướng `/login`; `authenticated` → render shell + trang.
+- `RequireGuest` (gắn ở `(full-width-pages)/layout.tsx`): `status = 'loading' | 'authenticated'` → `FullPageLoader`; `authenticated` → điều hướng `/`; `unauthenticated` → render form đăng nhập.
 
-Middleware chỉ đọc **dấu hiệu phiên** (ví dụ sự hiện diện của access token trong cookie phiên hoặc một cookie cờ). Kiểm tra quyền thật vẫn do backend thực thi; middleware chỉ để điều hướng UX. Vì access token nằm trong bộ nhớ, việc khôi phục phiên khi tải lại trang dùng refresh token (cookie) → gọi `/api/auth/refresh` để lấy access token mới (xem [`data-fetching.md`](./data-fetching.md#khôi-phục-phiên)).
+Vì access token nằm trong bộ nhớ, việc khôi phục phiên khi tải lại trang dùng refresh token (cookie) → `POST /api/auth/refresh` (trả về `accessToken` + `user`). Xem [`data-fetching.md`](./data-fetching.md#khôi-phục-phiên) và [`state-management.md`](./state-management.md).
 
 ## Điều hướng sidebar
 

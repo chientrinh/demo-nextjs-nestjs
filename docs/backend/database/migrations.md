@@ -31,13 +31,13 @@ Chỉ áp dụng các migration đã có, **không** sinh mới, **không** rese
 Dùng `snake_case`, mô tả thay đổi, tiền tố động từ:
 
 - `init_schema`
-- `add_revenue_entry_unique`
+- `add_event_annotation_index`
 - `add_labour_cost_indexes`
 - `add_event_annotation_shift`
 
 ## Migration đầu tiên (baseline)
 
-Migration `init_schema` tạo: 5 enum, 4 bảng (`users`, `revenue_entries`, `labour_costs`, `event_annotations`), các unique/index mô tả ở [`schema.md`](./schema.md).
+Migration `init_schema` tạo: 5 enum, 4 bảng (`users`, `revenue_entries`, `labour_costs`, `event_annotations`); migration `remove_revenue_entries` sau đó xóa bảng `revenue_entries` (xem [ADR 0007](../../adr/0007-unify-revenue-into-event-annotations.md)). Schema hiện tại còn **3 bảng**.
 
 ## Migration phá vỡ (breaking) — quy trình an toàn
 

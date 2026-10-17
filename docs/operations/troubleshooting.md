@@ -33,7 +33,7 @@ Bảng tra nhanh theo triệu chứng. Nếu sự cố nghiêm trọng, kiểm t
 
 | Triệu chứng | Nguyên nhân | Cách xử lý |
 | --- | --- | --- |
-| `DUPLICATE_REVENUE_ENTRY` | Đã có bản ghi `(entryDate, source)` | Sửa bản ghi cũ (PATCH) thay vì tạo mới; hoặc chọn nguồn khác |
+| `DUPLICATE_EMAIL` | Email đã tồn tại | Dùng email khác khi tạo người dùng |
 | Biểu đồ không đủ 7 cột | Bỏ sót ngày rỗng | Backend phải điền `0` cho mọi ngày trong tuần |
 | `422`/`400` khi gửi event | `title` > 80, `amount` không nguyên hoặc âm | Sửa theo thông báo; event yêu cầu `amount` ≥ 0 |
 | Labour bị từ chối `amount` = 0 | Ràng buộc `amount > 0` | Nhập giá trị dương |

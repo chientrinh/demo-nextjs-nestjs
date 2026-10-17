@@ -15,7 +15,7 @@ Base: `/api`. Luồng xác thực: [`../authentication.md`](../authentication.md
 | Field | Kiểu | Ràng buộc |
 | --- | --- | --- |
 | `email` | string | email hợp lệ, ≤ 255 |
-| `password` | string | 8–72 ký tự |
+| `password` | string | bắt buộc (không ràng buộc độ dài ở DTO) |
 
 **Response `200`**
 
@@ -24,12 +24,14 @@ Base: `/api`. Luồng xác thực: [`../authentication.md`](../authentication.md
   "accessToken": "eyJhbGciOi…",
   "user": {
     "id": "b3f1…", "email": "manager@thebistro.vn",
-    "fullName": "Nguyễn Văn A", "role": "MANAGER"
+    "fullName": "Nguyễn Văn A", "role": "MANAGER",
+    "isActive": true, "tokenVersion": 23,
+    "createdAt": "2026-01-04T02:00:00.000Z", "updatedAt": "2026-01-04T02:00:00.000Z"
   }
 }
 ```
 
-Header kèm `Set-Cookie: refresh_token=…; HttpOnly; Secure; SameSite=Strict; Path=/api/auth`.
+Header kèm `Set-Cookie: refresh_token=…; HttpOnly; Secure; SameSite=Lax; Path=/api/auth`.
 
 **Lỗi:** `400 VALIDATION_ERROR`, `401 INVALID_CREDENTIALS`, `401 ACCOUNT_INACTIVE`, `429 RATE_LIMITED`.
 
@@ -44,10 +46,22 @@ Dùng cookie refresh token để cấp access token mới. Xoay vòng refresh to
 **Response `200`**
 
 ```json
-{ "accessToken": "eyJhbGciOi…" }
+{
+  "accessToken": "eyJhbGciOi…",
+  "user": {
+    "id": "cd70004b-19ac-46ff-a9a8-f7af3d544c63",
+    "email": "admin@bistro.local",
+    "fullName": "Quản trị viên",
+    "role": "ADMIN",
+    "isActive": true,
+    "tokenVersion": 23,
+    "createdAt": "2026-10-17T07:06:22.221Z",
+    "updatedAt": "2026-10-17T13:08:58.948Z"
+  }
+}
 ```
 
-Kèm `Set-Cookie` refresh token mới.
+Kèm `Set-Cookie` refresh token mới. Trả về luôn `user` nên client không cần gọi thêm `GET /api/auth/me`.
 
 **Lỗi:** `401 INVALID_REFRESH_TOKEN`.
 
@@ -57,7 +71,7 @@ Kèm `Set-Cookie` refresh token mới.
 
 Thu hồi phiên: vô hiệu refresh token, xóa cookie.
 
-**Response:** `204 No Content`.
+**Response:** `200` với body `{ "success": true }`.
 
 ---
 
@@ -68,7 +82,7 @@ Trả hồ sơ người dùng đang đăng nhập.
 **Response `200`**
 
 ```json
-{ "id": "b3f1…", "email": "manager@thebistro.vn", "fullName": "Nguyễn Văn A", "role": "MANAGER" }
+{ "user": { "id": "b3f1…", "email": "manager@thebistro.vn", "fullName": "Nguyễn Văn A", "role": "MANAGER", "isActive": true, "tokenVersion": 23, "createdAt": "2026-01-04T02:00:00.000Z", "updatedAt": "2026-01-04T02:00:00.000Z" } }
 ```
 
 ---
@@ -77,17 +91,14 @@ Trả hồ sơ người dùng đang đăng nhập.
 
 Danh sách người dùng (không gồm `passwordHash`).
 
-**Query:** `page`, `pageSize`, `role?`, `isActive?`.
+**Query:** không hỗ trợ lọc/phân trang (trả mảng phẳng).
 
 **Response `200`**
 
 ```json
-{
-  "data": [
-    { "id": "b3f1…", "email": "manager@thebistro.vn", "fullName": "Nguyễn Văn A", "role": "MANAGER", "isActive": true, "createdAt": "2026-01-04T02:00:00.000Z" }
-  ],
-  "meta": { "total": 4, "page": 1, "pageSize": 20 }
-}
+[
+  { "id": "b3f1…", "email": "manager@thebistro.vn", "fullName": "Nguyễn Văn A", "role": "MANAGER", "isActive": true, "tokenVersion": 23, "createdAt": "2026-01-04T02:00:00.000Z", "updatedAt": "2026-01-04T02:00:00.000Z" }
+]
 ```
 
 ---
@@ -105,7 +116,7 @@ Tạo người dùng.
 | Field | Kiểu | Ràng buộc |
 | --- | --- | --- |
 | `email` | string | email hợp lệ, duy nhất |
-| `password` | string | 8–72 ký tự (băm bcrypt trước khi lưu) |
+| `password` | string | ≥ 12 ký tự, đủ độ phức tạp (băm bcrypt trước khi lưu) |
 | `fullName` | string | 1–120 ký tự |
 | `role` | enum | `ADMIN` \| `MANAGER` \| `ANALYST` |
 
@@ -131,8 +142,12 @@ Mọi field tùy chọn; gửi `password` để đổi mật khẩu. **Response 
 
 ---
 
-## `DELETE /api/users/:id` — ADMIN
+## `GET /api/users/:id` — ADMIN
 
-Không xóa cứng — đặt `isActive = false` để bảo toàn `createdById` của dữ liệu tài chính.
+Trả một user theo id.
 
-**Response:** `204`. **Lỗi:** `404 NOT_FOUND`.
+**Response `200`:** đối tượng user (không có `passwordHash`). **Lỗi:** `404 NOT_FOUND`.
+
+---
+
+> **Ghi chú:** không có `DELETE /api/users/:id`. Vô hiệu hóa user bằng `PATCH /api/users/:id` với `isActive: false` để bảo toàn `createdById` của dữ liệu tài chính.

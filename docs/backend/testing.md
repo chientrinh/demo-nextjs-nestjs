@@ -25,7 +25,6 @@ Mỗi e2e test dựng app Nest thật với một **database test riêng** (`DAT
 test/
 ├── app.e2e-spec.ts          # bootstrap, guard, prefix
 ├── auth.e2e-spec.ts
-├── revenue.e2e-spec.ts
 ├── labour.e2e-spec.ts
 ├── events.e2e-spec.ts
 └── analytics.e2e-spec.ts
@@ -37,9 +36,9 @@ Nghiệp vụ, không phải framework. Tập trung:
 
 1. **Service quan trọng** — đặc biệt `AnalyticsService` (gộp 7 ngày, điền `0`, tính KPI).
 2. **Ranh giới phân quyền** — `ANALYST` gọi `POST` phải bị `403`.
-3. **Ràng buộc dữ liệu** — tạo trùng `(entryDate, source)` phải `409 DUPLICATE_REVENUE_ENTRY`.
+3. **Ràng buộc dữ liệu** — tạo trùng email phải `409 DUPLICATE_EMAIL`; nhiều bản ghi cùng ngày/nguồn là hợp lệ (không ràng buộc duy nhất).
 4. **Validate** — `title` > 80 ký tự phải `400`.
-5. **Biên** — `amount` âm bị chặn ở cả revenue, labour và event (`amount >= 0`).
+5. **Biên** — `amount` âm bị chặn (labour `> 0`, event `>= 0`).
 
 Không viết test chỉ để tăng coverage (ví dụ assert rằng một getter trả về field vừa gán).
 

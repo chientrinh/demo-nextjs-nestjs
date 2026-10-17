@@ -99,7 +99,7 @@ Bản ghi bán hàng / doanh thu chi tiết (bán được gì mỗi ngày, tron
 | `amount` | `amount` | Decimal(15,0) | not null, **≥ 0** | Giá trị doanh thu bán được (USD, không âm) |
 | `event_date` | `eventDate` | Date | not null | Ngày phát sinh bán hàng |
 | `shift` | `shift` | WorkShift | not null | Ca làm việc (`CA_NGAY`, `CA_TRUA`, `CA_TOI`, `CA_DEM`) |
-| `note` | `note` | String? | nullable, ≤ 500 | Ghi chú thêm |
+| `note` | `note` | String? | nullable, ≤ 500 (chỉ ở DTO; cột DB không giới hạn độ dài) | Ghi chú thêm |
 | `created_by_id` | `createdById` | String | FK → `users.id`, not null | |
 | `created_at` / `updated_at` | `createdAt` / `updatedAt` | DateTime | | |
 
@@ -118,7 +118,7 @@ Một khoản chi phí nhân công theo ngày và bộ phận.
 | `amount` | `amount` | Decimal(15,0) | not null, > 0 | Số tiền USD |
 | `department` | `department` | Department | not null | `FOH`/`BOH`/`MANAGEMENT`/`STEWARD` |
 | `payment_method` | `paymentMethod` | PaymentMethod | not null | |
-| `note` | `note` | String? | nullable, ≤ 500 | |
+| `note` | `note` | String? | nullable, ≤ 500 (chỉ ở DTO; cột DB không giới hạn độ dài) | |
 | `created_by_id` | `createdById` | String | FK → `users.id`, not null | |
 | `created_at` / `updated_at` | `createdAt` / `updatedAt` | DateTime | | |
 

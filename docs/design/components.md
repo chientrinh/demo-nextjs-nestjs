@@ -10,11 +10,11 @@ Tài liệu này liệt kê component dùng trong dự án: phần **kế thừa
 | `Badge` | `src/shared/components/ui/badge/Badge.tsx` | Delta badge, trạng thái |
 | `Table` (`Table`,`TableHeader`,`TableBody`,`TableRow`,`TableCell`) | `src/shared/components/ui/table/index.tsx` | Sổ nhật ký labour |
 | `Label` | `src/shared/components/form/Label.tsx` | Nhãn form |
-| `Input` (mặc định) | `src/shared/components/form/form-elements/DefaultInputs.tsx` | Input text/số |
-| `TextArea` | `src/shared/components/form/form-elements/TextAreaInput.tsx` | Ghi chú |
-| `SelectInputs` | `src/shared/components/form/form-elements/SelectInputs.tsx` | Chọn bộ phận, ca, phương thức |
-| `RadioButtons` | `src/shared/components/form/form-elements/RadioButtons.tsx` | Chọn nguồn doanh thu |
-| `Loader` / `ErrorState` / `EmptyState` | `src/shared/components/common/` | Trạng thái widget |
+| `Input` (mặc định) | `src/shared/components/form/input/InputField.tsx` | Input text/số |
+| `TextArea` | `src/shared/components/form/input/TextArea.tsx` | Ghi chú |
+| `Select` | `src/shared/components/form/Select.tsx` | Chọn bộ phận, ca, phương thức |
+| `Radio` | `src/shared/components/form/input/Radio.tsx` | Chọn nguồn doanh thu |
+| `FullPageLoader` | `src/shared/components/common/FullPageLoader.tsx` | Loading toàn trang |
 | `ThemeToggle` | `src/shared/components/theme-toggle/` | Header — sáng/tối |
 | `PageBreadCrumb` | `src/shared/components/common/PageBreadCrumb.tsx` | Đầu mỗi trang admin |
 | `ComponentCard` | `src/shared/components/common/ComponentCard.tsx` | Khung nội dung |
@@ -33,7 +33,7 @@ Nguyên tắc: **không viết lại** component TailAdmin đã có. Tùy biến
 | `RevenueTrendChart` | `src/modules/analytics/ui/trend-chart/components/RevenueTrendChart.tsx` | `analytics` | Biểu đồ tuần + annotation | [`../frontend/components/charts.md`](../frontend/components/charts.md) |
 | `EventNoteForm` | `src/modules/events/ui/event-form/components/EventNoteForm.tsx` | `events` | Form ghi sự kiện | [`../features/events/create-event.md`](../features/events/create-event.md) |
 | `LabourCostForm` | `src/modules/labour/ui/labour-form/components/LabourCostForm.tsx` | `labour` | Form chi phí nhân công | [`../features/labour-cost/create-labour-cost.md`](../features/labour-cost/create-labour-cost.md) |
-| `LabourLedgerTable` | `src/modules/labour/ui/labour-ledger/components/LabourLedgerTable.tsx` | `labour` | Bảng sổ nhật ký | [`../features/labour-cost/create-labour-cost.md`](../features/labour-cost/create-labour-cost.md) |
+| `LabourLedgerTable` | `src/modules/labour/ui/labour-ledger/` | `labour` | Bảng sổ nhật ký — **chưa triển khai** | [`../features/labour-cost/create-labour-cost.md`](../features/labour-cost/create-labour-cost.md) |
 | `CurrencyInput` | `src/shared/components/form/CurrencyInput.tsx` | (toàn cục) | Input tiền USD, dùng nhiều form | [`../frontend/forms-and-validation.md`](../frontend/forms-and-validation.md) |
 
 ## Quy ước component
