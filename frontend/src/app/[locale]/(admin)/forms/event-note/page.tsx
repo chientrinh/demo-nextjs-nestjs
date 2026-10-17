@@ -4,7 +4,7 @@ import { EventNoteForm } from "@/modules/events";
 import PageBreadcrumb from "@/shared/components/common/PageBreadCrumb";
 
 export const metadata: Metadata = {
-  title: "Ghi sự kiện | Bistro Analytics",
+  title: "Ghi sự kiện | Demo Analytics",
   description: "Tạo ghi chú sự kiện ảnh hưởng đến doanh thu nhà hàng",
 };
 

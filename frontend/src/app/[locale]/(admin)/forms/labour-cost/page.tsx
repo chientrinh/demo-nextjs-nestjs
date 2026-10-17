@@ -4,7 +4,7 @@ import { LabourCostForm } from "@/modules/labour";
 import PageBreadcrumb from "@/shared/components/common/PageBreadCrumb";
 
 export const metadata: Metadata = {
-  title: "Chi phí nhân công | Bistro Analytics",
+  title: "Chi phí nhân công | Demo Analytics",
   description: "Ghi nhận và theo dõi chi phí nhân công nhà hàng",
 };
 

@@ -3,7 +3,7 @@ import { Role } from '@prisma/client';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class CreateUserDto {
-  @ApiProperty({ example: 'user@bistro.local' })
+  @ApiProperty({ example: 'user@demo.local' })
   @IsEmail({}, { message: 'Email không đúng định dạng' })
   @IsNotEmpty({ message: 'Email không được để trống' })
   email!: string;

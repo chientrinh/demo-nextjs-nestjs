@@ -4,7 +4,7 @@ import { loginSchema } from "./auth";
 describe("loginSchema", () => {
   it("chấp nhận email và mật khẩu hợp lệ", () => {
     expect(
-      loginSchema.safeParse({ email: "admin@bistro.local", password: "123456" }).success,
+      loginSchema.safeParse({ email: "admin@demo.local", password: "123456" }).success,
     ).toBe(true);
   });
 

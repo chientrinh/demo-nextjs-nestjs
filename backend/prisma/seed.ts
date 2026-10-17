@@ -67,10 +67,10 @@ async function main() {
   // 1. Tạo tài khoản demo từ mật khẩu do môi trường cung cấp.
   const adminPassword = await bcrypt.hash(requiredSeedPassword('SEED_ADMIN_PASSWORD'), 10);
   const admin = await prisma.user.upsert({
-    where: { email: 'admin@bistro.local' },
+    where: { email: 'admin@demo.local' },
     update: {},
     create: {
-      email: 'admin@bistro.local',
+      email: 'admin@demo.local',
       fullName: 'Quản trị viên',
       passwordHash: adminPassword,
       role: Role.ADMIN,
@@ -81,10 +81,10 @@ async function main() {
   // 2. Tạo tài khoản Quản lý mẫu
   const managerPassword = await bcrypt.hash(requiredSeedPassword('SEED_MANAGER_PASSWORD'), 10);
   await prisma.user.upsert({
-    where: { email: 'manager@bistro.local' },
+    where: { email: 'manager@demo.local' },
     update: {},
     create: {
-      email: 'manager@bistro.local',
+      email: 'manager@demo.local',
       fullName: 'Nguyễn Văn Quản Lý',
       passwordHash: managerPassword,
       role: Role.MANAGER,
@@ -95,10 +95,10 @@ async function main() {
   // 3. Tạo tài khoản Phân tích mẫu
   const analystPassword = await bcrypt.hash(requiredSeedPassword('SEED_ANALYST_PASSWORD'), 10);
   await prisma.user.upsert({
-    where: { email: 'analyst@bistro.local' },
+    where: { email: 'analyst@demo.local' },
     update: {},
     create: {
-      email: 'analyst@bistro.local',
+      email: 'analyst@demo.local',
       fullName: 'Trần Thị Chuyên Viên',
       passwordHash: analystPassword,
       role: Role.ANALYST,

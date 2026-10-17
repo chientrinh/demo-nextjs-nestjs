@@ -1,27 +1,27 @@
 services:
   database:
     image: postgres:16-alpine
-    container_name: bistro-database
+    container_name: demo-database
     environment:
-      POSTGRES_USER: ${POSTGRES_USER:-bistro}
+      POSTGRES_USER: ${POSTGRES_USER:-demo}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required - copy docker/database/.env.example to docker/database/.env and set it}
-      POSTGRES_DB: ${POSTGRES_DB:-bistro}
+      POSTGRES_DB: ${POSTGRES_DB:-demo}
     ports:
       # Chỉ bind localhost: không phơi DB ra mọi interface (xem docs/operations/security-audit.md, H1).
       - "127.0.0.1:5432:5432"
     volumes:
-      - bistro_pgdata:/var/lib/postgresql/data
+      - demo_pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-bistro} -d ${POSTGRES_DB:-bistro}"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-demo} -d ${POSTGRES_DB:-demo}"]
       interval: 5s
       timeout: 5s
       retries: 10
     networks:
-      - bistro
+      - demo
 
 volumes:
-  bistro_pgdata:
+  demo_pgdata:
 
 networks:
-  bistro:
+  demo:
     external: true

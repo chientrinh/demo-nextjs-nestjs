@@ -64,7 +64,7 @@ export const SignInForm: React.FC = () => {
                 <Input
                   id="signin-email"
                   type="email"
-                  placeholder="admin@bistro.test"
+                  placeholder="admin@demo.test"
                   error={Boolean(errors.email)}
                   hint={errors.email?.message}
                   {...register("email")}

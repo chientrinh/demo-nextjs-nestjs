@@ -1,4 +1,4 @@
-# The Bistro Analytics — Dashboard phân tích doanh thu & chi phí nhân công
+# The Demo Analytics — Dashboard phân tích doanh thu & chi phí nhân công
 
 Đồ án cá nhân dùng để **ứng tuyển**. Monorepo đóng gói bằng **Docker**, gồm:
 
@@ -31,29 +31,29 @@ docker compose version
 ## 1.2 Clone mã nguồn
 
 ```bash
-git clone <REPO_URL> the-bistro
-cd the-bistro
+git clone https://github.com/chientrinh/demo-nextjs-nestjs.git the-demo
+cd the-demo
 ```
 
-> Thay `<REPO_URL>` bằng URL git của repo.
+> Kho lưu trữ: https://github.com/chientrinh/demo-nextjs-nestjs
 
 ## 1.3 Tạo mạng Docker (chạy 1 lần)
 
-Ba service (database, backend, frontend) giao tiếp với nhau qua mạng tên `bistro`:
+Ba service (database, backend, frontend) giao tiếp với nhau qua mạng tên `demo`:
 
 ```bash
-docker network create bistro
+docker network create demo
 ```
 
 ## 1.4 Cấu hình database
 
-Tạo file `.env` cho Postgres (mật khẩu demo là `bistro`):
+Tạo file `.env` cho Postgres (mật khẩu demo là `demo`):
 
 ```bash
 cat > docker/database/.env <<'EOF'
-POSTGRES_USER=bistro
-POSTGRES_PASSWORD=bistro
-POSTGRES_DB=bistro
+POSTGRES_USER=demo
+POSTGRES_PASSWORD=demo
+POSTGRES_DB=demo
 EOF
 ```
 
@@ -65,9 +65,9 @@ Tạo file `.env` cho backend. **Lưu ý:** `DATABASE_URL` phải khớp `POSTGR
 cat > docker/backend/.env <<'EOF'
 NODE_ENV=development
 PORT=3001
-DATABASE_URL=postgresql://bistro:bistro@database:5432/bistro?schema=public
-JWT_SECRET=dev-jwt-access-secret-bistro-analytics-key-2026-min-32-chars
-JWT_REFRESH_SECRET=dev-jwt-refresh-secret-bistro-analytics-key-2026-min-32-chars
+DATABASE_URL=postgresql://demo:demo@database:5432/demo?schema=public
+JWT_SECRET=dev-jwt-access-secret-demo-analytics-key-2026-min-32-chars
+JWT_REFRESH_SECRET=dev-jwt-refresh-secret-demo-analytics-key-2026-min-32-chars
 CORS_ORIGIN=http://localhost:3000,http://frontend:3000
 SEED_ADMIN_PASSWORD=admin123
 SEED_MANAGER_PASSWORD=manager123
@@ -121,9 +121,9 @@ Frontend chạy tại cổng **3000**.
 
 | Email | Mật khẩu | Vai trò | Quyền |
 | --- | --- | --- | --- |
-| admin@bistro.local | admin123 | ADMIN | Đọc + ghi + quản lý người dùng |
-| manager@bistro.local | manager123 | MANAGER | Đọc + ghi |
-| analyst@bistro.local | analyst123 | ANALYST | Chỉ đọc |
+| admin@demo.local | admin123 | ADMIN | Đọc + ghi + quản lý người dùng |
+| manager@demo.local | manager123 | MANAGER | Đọc + ghi |
+| analyst@demo.local | analyst123 | ANALYST | Chỉ đọc |
 
 > **Về dữ liệu demo:** seed tạo dữ liệu cho khoảng ngày **2026-10-05 → 2026-10-24** (tuần mốc 2026-10-12 có tổng doanh thu $16,110, khớp mockup thiết kế). Nếu mở dashboard thấy trống (do ngày hiện tại nằm ngoài khoảng đó), truy cập URL có tham số tuần để xem dữ liệu mẫu:
 
@@ -162,7 +162,7 @@ docker compose -f docker/database/docker-compose.yml down -v
 
 | Triệu chứng | Cách xử lý |
 | --- | --- |
-| `network bistro not found` | Chạy `docker network create bistro` trước |
+| `network demo not found` | Chạy `docker network create demo` trước |
 | Cổng 3000/3001/5432 đã bị chiếm | `docker ps` tìm và dừng tiến trình cũ, hoặc đổi cổng trong compose |
 | Backend báo lỗi kết nối DB | Kiểm tra `DATABASE_URL` trong `docker/backend/.env` khớp `POSTGRES_PASSWORD` trong `docker/database/.env` |
 | Build lần đầu lâu | Bình thường — image đang cài dependencies; lần sau dùng cache |
@@ -174,7 +174,7 @@ docker compose -f docker/database/docker-compose.yml down -v
 
 ## 2.1 Bài toán
 
-The Bistro là hệ thống dashboard cho **ban điều hành nhà hàng**, giúp trả lời ngay trong một màn hình:
+The Demo là hệ thống dashboard cho **ban điều hành nhà hàng**, giúp trả lời ngay trong một màn hình:
 
 - Tuần này doanh thu bao nhiêu, đến từ đâu (bán tại quầy `POS` hay app đối tác `EATCLUB`)?
 - Chi phí nhân công theo ngày là bao nhiêu?
@@ -198,7 +198,7 @@ Thay vì gộp sổ sách cuối ngày, hệ thống ghi **từng giao dịch b�
 Monorepo 3 tầng, mỗi tầng một Docker image riêng:
 
 ```
-the-bistro/
+the-demo/
 ├── frontend/        # Next.js 16 — UI, theo kiến trúc module + ports & adapters
 ├── backend/         # NestJS 12 — REST API, controller → service → repository → Prisma
 ├── docker/          # Dockerfile + docker-compose cho từng layer
@@ -240,7 +240,7 @@ Controller → Service → Repository → PrismaService → PostgreSQL
 | GET | `/api/analytics/summary` | KPI tổng hợp |
 | GET | `/api/health`, `/api/health/db` | Health check |
 
-## 2.5 Những điểm kỹ thuật nổi bật (đáng nói khi phỏng vấn)
+## 2.5 Những điểm kỹ thuật nổi bật 
 
 - **Refresh token rotation + `tokenVersion`:** mỗi lần refresh xoay vòng refresh token; logout/đổi mật khẩu tăng `tokenVersion` để **vô hiệu mọi refresh token cũ**. Access token giữ **trong bộ nhớ** (không localStorage) → giảm rủi ro XSS.
 - **Xử lý lỗi theo `code`:** envelope `{ statusCode, code, message, details, timestamp, path }` với `code` ổn định (`VALIDATION_ERROR`, `DUPLICATE_EMAIL`, `FORBIDDEN`…), client lập trình theo `code` thay vì so khớp chuỗi.

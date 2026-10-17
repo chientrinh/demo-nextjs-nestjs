@@ -47,8 +47,8 @@ async function bootstrap() {
   // Swagger Documentation: /api/docs (chỉ bật ở development)
   if (configService.getOrThrow<string>('NODE_ENV') !== 'production') {
     const config = new DocumentBuilder()
-      .setTitle('Bistro Revenue & Labour API')
-      .setDescription('Hệ thống quản lý doanh thu và chi phí nhân công nhà hàng Bistro')
+      .setTitle('Demo Revenue & Labour API')
+      .setDescription('Hệ thống quản lý doanh thu và chi phí nhân công nhà hàng Demo')
       .setVersion('1.0')
       .addBearerAuth()
       .build();

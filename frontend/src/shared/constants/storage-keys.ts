@@ -1,4 +1,4 @@
 export const STORAGE_KEYS = {
-  theme: "bistro.theme",
-  session: "bistro.session",
+  theme: "demo.theme",
+  session: "demo.session",
 } as const;

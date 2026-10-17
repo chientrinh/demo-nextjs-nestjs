@@ -11,7 +11,7 @@ vi.mock('bcryptjs');
 
 const user = {
   id: 'u1',
-  email: 'admin@bistro.local',
+  email: 'admin@demo.local',
   passwordHash: 'hashed',
   fullName: 'Quản trị viên',
   role: 'ADMIN',
@@ -71,14 +71,14 @@ describe('AuthService', () => {
       usersService.findRawByEmail.mockResolvedValue(user);
       vi.mocked(bcrypt.compare).mockResolvedValue(true);
       jwtService.signAsync.mockResolvedValue('token');
-      usersService.sanitize.mockReturnValue({ id: 'u1', email: 'admin@bistro.local' });
+      usersService.sanitize.mockReturnValue({ id: 'u1', email: 'admin@demo.local' });
 
-      const result = await service.login({ email: 'admin@bistro.local', password: '123456' });
+      const result = await service.login({ email: 'admin@demo.local', password: '123456' });
 
       expect(result.accessToken).toBe('token');
       expect(result.refreshToken).toBe('token');
       expect(usersService.sanitize).toHaveBeenCalledWith(user);
-      expect(result.user).toEqual({ id: 'u1', email: 'admin@bistro.local' });
+      expect(result.user).toEqual({ id: 'u1', email: 'admin@demo.local' });
     });
   });
 
@@ -98,13 +98,13 @@ describe('AuthService', () => {
       usersService.findRawById.mockResolvedValue(user);
       usersService.incrementTokenVersion.mockResolvedValue({ ...user, tokenVersion: 1 });
       jwtService.signAsync.mockResolvedValue('new-token');
-      usersService.sanitize.mockReturnValue({ id: 'u1', email: 'admin@bistro.local' });
+      usersService.sanitize.mockReturnValue({ id: 'u1', email: 'admin@demo.local' });
 
       const result = await service.refresh('token');
 
       expect(usersService.incrementTokenVersion).toHaveBeenCalledWith('u1');
       expect(result.accessToken).toBe('new-token');
-      expect(result.user).toEqual({ id: 'u1', email: 'admin@bistro.local' });
+      expect(result.user).toEqual({ id: 'u1', email: 'admin@demo.local' });
     });
   });
 

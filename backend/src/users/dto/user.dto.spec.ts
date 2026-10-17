@@ -2,12 +2,12 @@ import { validate } from 'class-validator';
 import { CreateUserDto } from './create-user.dto.js';
 import { UpdateUserDto } from './update-user.dto.js';
 
-const strongPassword = 'BistroAnalytics@2026';
+const strongPassword = 'DemoAnalytics@2026';
 
 describe('User DTO validation', () => {
   it('rejects a weak password when creating a user', async () => {
     const dto = Object.assign(new CreateUserDto(), {
-      email: 'user@bistro.local',
+      email: 'user@demo.local',
       fullName: 'Nguyễn Văn A',
       password: 'weakpass',
     });

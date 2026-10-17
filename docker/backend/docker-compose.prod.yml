@@ -4,19 +4,19 @@ services:
       context: ../..
       dockerfile: docker/backend/Dockerfile
       target: runtime
-    container_name: bistro-backend-prod
+    container_name: demo-backend-prod
     ports:
       - "127.0.0.1:3001:3001"
     environment:
       NODE_ENV: production
       PORT: 3001
-      DATABASE_URL: ${DATABASE_URL:-postgresql://bistro:bistro@database:5432/bistro?schema=public}
+      DATABASE_URL: ${DATABASE_URL:-postgresql://demo:demo@database:5432/demo?schema=public}
       JWT_SECRET: ${JWT_SECRET}
       JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET}
       CORS_ORIGIN: ${CORS_ORIGIN:-http://frontend:3000}
     networks:
-      - bistro
+      - demo
 
 networks:
-  bistro:
+  demo:
     external: true

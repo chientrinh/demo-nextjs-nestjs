@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 import { DashboardView } from "@/modules/analytics";
 
 export const metadata: Metadata = {
-  title: "Tổng quan doanh thu | Bistro Analytics",
+  title: "Tổng quan doanh thu | Demo Analytics",
   description: "Theo dõi doanh thu, xu hướng tuần và chi phí nhân công nhà hàng",
 };
 

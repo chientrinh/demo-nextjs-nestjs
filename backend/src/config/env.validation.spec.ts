@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { validateEnvironment } from './env.validation.js';
 
 const validEnvironment = {
-  DATABASE_URL: 'postgresql://bistro:password@localhost:5432/bistro?schema=public',
+  DATABASE_URL: 'postgresql://demo:password@localhost:5432/demo?schema=public',
   JWT_SECRET: 'access-secret-that-is-at-least-thirty-two-characters',
   JWT_REFRESH_SECRET: 'refresh-secret-that-is-at-least-thirty-two-characters',
   CORS_ORIGIN: 'http://localhost:3000',

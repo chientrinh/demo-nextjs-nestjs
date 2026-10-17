@@ -5,11 +5,11 @@ function emit(level: LogLevel, message: string, meta?: unknown) {
 
   const payload = meta === undefined ? "" : meta;
   if (level === "error") {
-    console.error(`[bistro] ${message}`, payload);
+    console.error(`[demo] ${message}`, payload);
   } else if (level === "warn") {
-    console.warn(`[bistro] ${message}`, payload);
+    console.warn(`[demo] ${message}`, payload);
   } else {
-    console.info(`[bistro] ${message}`, payload);
+    console.info(`[demo] ${message}`, payload);
   }
 }
 

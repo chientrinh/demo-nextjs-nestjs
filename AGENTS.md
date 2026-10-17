@@ -13,7 +13,7 @@ Chạy trong thư mục tầng tương ứng: dev `npm run start:dev` (backend) 
 
 - Trước khi mở PR: `npm run lint` rồi `npm run test` (thứ tự này).
 - Cổng dev: frontend `3000`, backend `3001` (tiền tố `/api`), Postgres `5432`. Swagger ở `/api/docs`, health ở `/api/health` và `/api/health/db`.
-- DB: `docker network create bistro` + `docker compose -f docker/database/docker-compose.yml up -d`; backend: `npx prisma migrate dev` → `npx prisma generate` → `npm run seed` (tạo admin mẫu).
+- DB: `docker network create demo` + `docker compose -f docker/database/docker-compose.yml up -d`; backend: `npx prisma migrate dev` → `npx prisma generate` → `npm run seed` (tạo admin mẫu).
 - Backend cần `JWT_SECRET` và `JWT_REFRESH_SECRET` **khác nhau**; thiếu thì fail-fast. Không commit `.env`.
 
 ## Git
