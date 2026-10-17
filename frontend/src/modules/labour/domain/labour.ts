@@ -4,7 +4,7 @@ import { DEPARTMENTS, PAYMENT_METHODS } from "@/modules/shared";
 import type { Department, PaymentMethod } from "@/modules/shared";
 
 export const labourCostSchema = z.object({
-  entryDate: z
+  expenseDate: z
     .string()
     .regex(/^\d{4}-\d{2}-\d{2}$/, "Ngày phải theo định dạng YYYY-MM-DD"),
   amount: z
@@ -20,7 +20,7 @@ export type LabourCostInput = z.infer<typeof labourCostSchema>;
 
 export type LabourCost = {
   id: string;
-  entryDate: string;
+  expenseDate: string;
   amount: number;
   department: Department;
   paymentMethod: PaymentMethod;

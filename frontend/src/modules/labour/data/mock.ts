@@ -5,7 +5,7 @@ import type { CreateLabourCostInput, LabourCost } from "../domain/labour";
 const seed: LabourCost[] = [
   {
     id: "lab-1",
-    entryDate: todayKey(),
+    expenseDate: todayKey(),
     amount: 380,
     department: "FOH",
     paymentMethod: "CASH_TILL",
@@ -14,7 +14,7 @@ const seed: LabourCost[] = [
   },
   {
     id: "lab-2",
-    entryDate: todayKey(),
+    expenseDate: todayKey(),
     amount: 420,
     department: "BOH",
     paymentMethod: "BANK_TRANSFER",
@@ -23,7 +23,7 @@ const seed: LabourCost[] = [
   },
   {
     id: "lab-3",
-    entryDate: addDays(todayKey(), -1),
+    expenseDate: addDays(todayKey(), -1),
     amount: 120,
     department: "STEWARD",
     paymentMethod: "PETTY_CASH",
@@ -32,7 +32,7 @@ const seed: LabourCost[] = [
   },
   {
     id: "lab-4",
-    entryDate: addDays(todayKey(), -2),
+    expenseDate: addDays(todayKey(), -2),
     amount: 280,
     department: "MANAGEMENT",
     paymentMethod: "BANK_TRANSFER",
@@ -45,14 +45,14 @@ let store: LabourCost[] = [...seed];
 
 export function listLabour(): LabourCost[] {
   return [...store].sort((a, b) =>
-    a.entryDate < b.entryDate ? 1 : a.entryDate > b.entryDate ? -1 : 0,
+    a.expenseDate < b.expenseDate ? 1 : a.expenseDate > b.expenseDate ? -1 : 0,
   );
 }
 
 export function insertLabour(input: CreateLabourCostInput): LabourCost {
   const created: LabourCost = {
     id: `lab-${Date.now()}`,
-    entryDate: input.entryDate,
+    expenseDate: input.expenseDate,
     amount: input.amount,
     department: input.department,
     paymentMethod: input.paymentMethod,

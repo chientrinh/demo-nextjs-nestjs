@@ -35,7 +35,7 @@ const PAYMENT_OPTIONS = PAYMENT_METHODS.map((method) => ({
 }));
 
 const defaultValues: LabourCostInput = {
-  entryDate: todayKey(),
+  expenseDate: todayKey(),
   amount: 0,
   department: "FOH",
   paymentMethod: "CASH_TILL",
@@ -63,7 +63,7 @@ export const LabourCostForm: React.FC = () => {
       toast.success("Đã lưu chi phí nhân công");
       reset({
         ...defaultValues,
-        entryDate: values.entryDate,
+        expenseDate: values.expenseDate,
         department: values.department,
       });
     } catch (error) {
@@ -91,9 +91,9 @@ export const LabourCostForm: React.FC = () => {
           <Input
             id="labour-date"
             type="date"
-            error={Boolean(errors.entryDate)}
-            hint={errors.entryDate?.message}
-            {...register("entryDate")}
+            error={Boolean(errors.expenseDate)}
+            hint={errors.expenseDate?.message}
+            {...register("expenseDate")}
           />
         </div>
 
