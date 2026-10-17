@@ -1,59 +1,83 @@
 "use client";
 
 import type React from "react";
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useMemo,
-  useState,
-} from "react";
+import { create } from "zustand";
 
+import { storage } from "@/adapters/infrastructures/storage";
 import type { AuthSession, AuthUser } from "../../domain/auth";
 import { authService } from "../services/auth.service";
 
-type SessionContextType = {
+export type SessionStatus = "loading" | "authenticated" | "unauthenticated";
+
+export interface AuthState {
   user: AuthUser | null;
-  accessToken: string | null;
+  status: SessionStatus;
   isAuthenticated: boolean;
   login: (session: AuthSession) => void;
   logout: () => Promise<void>;
-};
+  setUser: (user: AuthUser | null) => void;
+}
 
-const SessionContext = createContext<SessionContextType | undefined>(undefined);
+export const SESSION_STORAGE_KEY = "bistro_auth_session";
+
+function getInitialSession(): { user: AuthUser | null; token: string | null } {
+  try {
+    const raw = storage.get(SESSION_STORAGE_KEY);
+    if (!raw) return { user: null, token: null };
+    const parsed = JSON.parse(raw) as AuthSession;
+    return {
+      user: parsed?.user ?? null,
+      token: parsed?.accessToken ?? null,
+    };
+  } catch {
+    return { user: null, token: null };
+  }
+}
+
+const initial = getInitialSession();
+
+export const useAuthStore = create<AuthState>()((set) => ({
+  user: initial.user,
+  status: initial.token ? "authenticated" : "unauthenticated",
+  isAuthenticated: !!initial.token,
+  login: (s: AuthSession) => {
+    storage.set(SESSION_STORAGE_KEY, JSON.stringify(s));
+    set({
+      user: s.user,
+      status: "authenticated",
+      isAuthenticated: true,
+    });
+  },
+  logout: async () => {
+    try {
+      await authService.logout();
+    } finally {
+      storage.remove(SESSION_STORAGE_KEY);
+      set({
+        user: null,
+        status: "unauthenticated",
+        isAuthenticated: false,
+      });
+    }
+  },
+  setUser: (user) => {
+    set({ user });
+    if (user) {
+      try {
+        const raw = storage.get(SESSION_STORAGE_KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          storage.set(SESSION_STORAGE_KEY, JSON.stringify({ ...parsed, user }));
+        }
+      } catch {
+        /* ignore parsing error */
+      }
+    }
+  },
+}));
+
+export const useAuth = () => useAuthStore();
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
-}) => {
-  const [session, setSession] = useState<AuthSession | null>(null);
-
-  const login = useCallback((s: AuthSession) => {
-    setSession(s);
-  }, []);
-
-  const logout = useCallback(async () => {
-    await authService.logout();
-    setSession(null);
-  }, []);
-
-  const value = useMemo(
-    () => ({
-      user: session?.user ?? null,
-      accessToken: session?.accessToken ?? null,
-      isAuthenticated: Boolean(session?.accessToken),
-      login,
-      logout,
-    }),
-    [session, login, logout],
-  );
-
-  return (
-    <SessionContext.Provider value={value}>{children}</SessionContext.Provider>
-  );
-};
-
-export function useAuth() {
-  const ctx = useContext(SessionContext);
-  if (!ctx) throw new Error("useAuth must be used within AuthProvider");
-  return ctx;
-}
+}) => <>{children}</>;

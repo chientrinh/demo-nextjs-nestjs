@@ -67,16 +67,11 @@ export const EventNoteForm: React.FC = () => {
     setValue,
     setError,
     reset,
-    watch,
     formState: { errors, isSubmitting },
   } = useForm<EventNoteInput>({
     resolver: zodResolver(eventNoteSchema),
     defaultValues,
   });
-
-  const shift = watch("shift");
-  const source = watch("source");
-  const amount = watch("amount");
 
   const onSubmit = handleSubmit(async (values) => {
     setSaved(false);
@@ -159,19 +154,25 @@ export const EventNoteForm: React.FC = () => {
 
       <div>
         <Label htmlFor="event-source-pos">Nguồn doanh thu</Label>
-        <div className="flex flex-wrap gap-6 pt-1">
-          {REVENUE_SOURCES.map((option) => (
-            <Radio
-              key={option}
-              id={`event-source-${option.toLowerCase()}`}
-              name="source"
-              value={option}
-              label={REVENUE_SOURCE_LABELS[option]}
-              checked={source === option}
-              onChange={() => setValue("source", option, { shouldValidate: true })}
-            />
-          ))}
-        </div>
+        <Controller
+          control={control}
+          name="source"
+          render={({ field }) => (
+            <div className="flex flex-wrap gap-6 pt-1">
+              {REVENUE_SOURCES.map((option) => (
+                <Radio
+                  key={option}
+                  id={`event-source-${option.toLowerCase()}`}
+                  name="source"
+                  value={option}
+                  label={REVENUE_SOURCE_LABELS[option]}
+                  checked={field.value === option}
+                  onChange={() => field.onChange(option)}
+                />
+              ))}
+            </div>
+          )}
+        />
         {errors.source ? (
           <p className="mt-1.5 text-xs text-error-500">
             {errors.source.message}
@@ -185,18 +186,20 @@ export const EventNoteForm: React.FC = () => {
           control={control}
           name="amount"
           render={({ field }) => (
-            <CurrencyInput
-              id="event-amount"
-              value={field.value}
-              onChange={field.onChange}
-              error={Boolean(errors.amount)}
-              hint={errors.amount?.message}
-            />
+            <>
+              <CurrencyInput
+                id="event-amount"
+                value={field.value}
+                onChange={field.onChange}
+                error={Boolean(errors.amount)}
+                hint={errors.amount?.message}
+              />
+              <p className="mt-1.5 text-xs text-gray-500 dark:text-gray-400">
+                {readVietnameseAmount(field.value || 0)}
+              </p>
+            </>
           )}
         />
-        <p className="mt-1.5 text-xs text-gray-500 dark:text-gray-400">
-          {readVietnameseAmount(amount || 0)}
-        </p>
       </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -213,15 +216,17 @@ export const EventNoteForm: React.FC = () => {
 
         <div>
           <Label htmlFor="event-shift">Ca</Label>
-          <Select
-            key={`shift-${shift}`}
-            options={SHIFT_OPTIONS}
-            defaultValue={shift}
-            onChange={(value) =>
-              setValue("shift", value as EventNoteInput["shift"], {
-                shouldValidate: true,
-              })
-            }
+          <Controller
+            control={control}
+            name="shift"
+            render={({ field }) => (
+              <Select
+                key={`shift-${field.value}`}
+                options={SHIFT_OPTIONS}
+                defaultValue={field.value}
+                onChange={field.onChange}
+              />
+            )}
           />
           {errors.shift ? (
             <p className="mt-1.5 text-xs text-error-500">

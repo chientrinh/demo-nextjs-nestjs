@@ -52,19 +52,13 @@ export const LabourCostForm: React.FC = () => {
     control,
     register,
     handleSubmit,
-    setValue,
     setError,
     reset,
-    watch,
     formState: { errors, isSubmitting },
   } = useForm<LabourCostInput>({
     resolver: zodResolver(labourCostSchema),
     defaultValues,
   });
-
-  const department = watch("department");
-  const paymentMethod = watch("paymentMethod");
-  const amount = watch("amount");
 
   const onSubmit = handleSubmit(async (values) => {
     setSaved(false);
@@ -125,33 +119,37 @@ export const LabourCostForm: React.FC = () => {
             control={control}
             name="amount"
             render={({ field }) => (
-              <CurrencyInput
-                id="labour-amount"
-                value={field.value}
-                onChange={field.onChange}
-                error={Boolean(errors.amount)}
-                hint={errors.amount?.message}
-              />
+              <>
+                <CurrencyInput
+                  id="labour-amount"
+                  value={field.value}
+                  onChange={field.onChange}
+                  error={Boolean(errors.amount)}
+                  hint={errors.amount?.message}
+                />
+                <p className="text-xs mt-1 text-gray-500 dark:text-gray-400">
+                  {readVietnameseAmount(field.value || 0)}
+                </p>
+              </>
             )}
           />
-          <p className="text-xs mt-1 text-gray-500 dark:text-gray-400">
-            {readVietnameseAmount(amount || 0)}
-          </p>
         </div>
       </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div>
           <Label htmlFor="labour-department">Bộ phận</Label>
-          <Select
-            key={`department-${department}`}
-            options={DEPARTMENT_OPTIONS}
-            defaultValue={department}
-            onChange={(value) =>
-              setValue("department", value as LabourCostInput["department"], {
-                shouldValidate: true,
-              })
-            }
+          <Controller
+            control={control}
+            name="department"
+            render={({ field }) => (
+              <Select
+                key={`department-${field.value}`}
+                options={DEPARTMENT_OPTIONS}
+                defaultValue={field.value}
+                onChange={field.onChange}
+              />
+            )}
           />
           {errors.department ? (
             <p className="mt-1.5 text-xs text-error-500">
@@ -162,17 +160,17 @@ export const LabourCostForm: React.FC = () => {
 
         <div>
           <Label htmlFor="labour-payment">Phương thức thanh toán</Label>
-          <Select
-            key={`payment-${paymentMethod}`}
-            options={PAYMENT_OPTIONS}
-            defaultValue={paymentMethod}
-            onChange={(value) =>
-              setValue(
-                "paymentMethod",
-                value as LabourCostInput["paymentMethod"],
-                { shouldValidate: true },
-              )
-            }
+          <Controller
+            control={control}
+            name="paymentMethod"
+            render={({ field }) => (
+              <Select
+                key={`payment-${field.value}`}
+                options={PAYMENT_OPTIONS}
+                defaultValue={field.value}
+                onChange={field.onChange}
+              />
+            )}
           />
           {errors.paymentMethod ? (
             <p className="mt-1.5 text-xs text-error-500">

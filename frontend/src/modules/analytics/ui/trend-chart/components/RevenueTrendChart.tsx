@@ -52,7 +52,6 @@ export const RevenueTrendChart = forwardRef<RevenueTrendChartRef, RevenueTrendCh
       weekStart,
       days,
       prevDays,
-      events,
       showPos = true,
       showEatclub = true,
       showLabour = true,
@@ -372,21 +371,21 @@ export const RevenueTrendChart = forwardRef<RevenueTrendChartRef, RevenueTrendCh
           points: isCompare
             ? []
             : [
-                {
-                  x: "Fri",
-                  y: hasLiveData ? undefined : 2340,
-                  marker: {
-                    size: 0, // marker hidden; icon overlay handles the visual
-                  },
+              {
+                x: "Fri",
+                y: hasLiveData ? undefined : 2340,
+                marker: {
+                  size: 0, // marker hidden; icon overlay handles the visual
                 },
-                {
-                  x: "Sat",
-                  y: hasLiveData ? undefined : 3140,
-                  marker: {
-                    size: 0,
-                  },
+              },
+              {
+                x: "Sat",
+                y: hasLiveData ? undefined : 3140,
+                marker: {
+                  size: 0,
                 },
-              ],
+              },
+            ],
         },
       }),
       [categories, colors, hasLiveData, isDark, isCompare, readIconPositions],

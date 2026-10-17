@@ -36,6 +36,7 @@ const CurrencyInput: React.FC<CurrencyInputProps> = ({
   useEffect(() => {
     if (value !== lastEmitted.current) {
       lastEmitted.current = value;
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setText(value == null ? "" : format(value));
     }
   }, [value]);

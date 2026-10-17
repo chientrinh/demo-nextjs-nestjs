@@ -1,100 +1,94 @@
 "use client";
 
 import type React from "react";
-import { createContext, useContext, useEffect, useState } from "react";
+import { useEffect } from "react";
+import { create } from "zustand";
 
-type ThemeMode = "light" | "dark" | "auto";
-type ResolvedTheme = "light" | "dark";
+export type ThemeMode = "light" | "dark" | "auto";
+export type ResolvedTheme = "light" | "dark";
 
-type ThemeContextType = {
-  theme: ResolvedTheme; // Resolved theme actually active ("light" or "dark")
-  themeMode: ThemeMode; // The configured preference ("light", "dark", or "auto")
+export interface ThemeStoreState {
+  theme: ResolvedTheme;
+  themeMode: ThemeMode;
+  isInitialized: boolean;
   setThemeMode: (mode: ThemeMode) => void;
   toggleTheme: () => void;
-};
+  initTheme: () => void;
+}
 
-const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
+function resolveTheme(mode: ThemeMode): ResolvedTheme {
+  if (mode === "auto") {
+    if (typeof window !== "undefined") {
+      return window.matchMedia("(prefers-color-scheme: dark)").matches
+        ? "dark"
+        : "light";
+    }
+    return "light";
+  }
+  return mode;
+}
+
+function applyThemeDom(resolved: ResolvedTheme) {
+  if (typeof document === "undefined") return;
+  if (resolved === "dark") {
+    document.documentElement.classList.add("dark");
+    document.documentElement.setAttribute("data-color-scheme", "dark");
+  } else {
+    document.documentElement.classList.remove("dark");
+    document.documentElement.setAttribute("data-color-scheme", "light");
+  }
+}
+
+export const useThemeStore = create<ThemeStoreState>()((set, get) => ({
+  theme: "light",
+  themeMode: "light",
+  isInitialized: false,
+  setThemeMode: (mode: ThemeMode) => {
+    const resolved = resolveTheme(mode);
+    if (typeof window !== "undefined") {
+      localStorage.setItem("theme-mode", mode);
+      localStorage.setItem("theme", resolved);
+    }
+    applyThemeDom(resolved);
+    set({ themeMode: mode, theme: resolved });
+  },
+  toggleTheme: () => {
+    const current = get().theme;
+    const next = current === "light" ? "dark" : "light";
+    get().setThemeMode(next);
+  },
+  initTheme: () => {
+    if (typeof window === "undefined") return;
+    const savedMode =
+      (localStorage.getItem("theme-mode") as ThemeMode) || "light";
+    const resolved = resolveTheme(savedMode);
+    applyThemeDom(resolved);
+    set({ themeMode: savedMode, theme: resolved, isInitialized: true });
+  },
+}));
+
+export const useTheme = () => useThemeStore();
 
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [themeMode, setThemeModeState] = useState<ThemeMode>("light");
-  const [theme, setTheme] = useState<ResolvedTheme>("light");
-  const [isInitialized, setIsInitialized] = useState(false);
+  const initTheme = useThemeStore((s) => s.initTheme);
+  const themeMode = useThemeStore((s) => s.themeMode);
+  const setThemeMode = useThemeStore((s) => s.setThemeMode);
 
   useEffect(() => {
-    // This code will only run on the client side
-    const savedMode = localStorage.getItem("theme-mode") as ThemeMode | null;
-    const legacySavedTheme = localStorage.getItem(
-      "theme",
-    ) as ResolvedTheme | null;
-    const initialMode = savedMode || (legacySavedTheme as ThemeMode) || "light";
-
-    setThemeModeState(initialMode);
-    setIsInitialized(true);
-  }, []);
+    initTheme();
+  }, [initTheme]);
 
   useEffect(() => {
-    if (!isInitialized) return;
+    if (themeMode !== "auto") return;
+    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+    const handleChange = () => {
+      setThemeMode("auto");
+    };
+    mediaQuery.addEventListener("change", handleChange);
+    return () => mediaQuery.removeEventListener("change", handleChange);
+  }, [themeMode, setThemeMode]);
 
-    localStorage.setItem("theme-mode", themeMode);
-
-    if (themeMode === "auto") {
-      const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-
-      const handleChange = () => {
-        const resolved = mediaQuery.matches ? "dark" : "light";
-        setTheme(resolved);
-      };
-
-      handleChange();
-
-      mediaQuery.addEventListener("change", handleChange);
-      return () => {
-        mediaQuery.removeEventListener("change", handleChange);
-      };
-    } else {
-      setTheme(themeMode as ResolvedTheme);
-    }
-  }, [themeMode, isInitialized]);
-
-  useEffect(() => {
-    if (isInitialized) {
-      localStorage.setItem("theme", theme);
-      if (theme === "dark") {
-        document.documentElement.classList.add("dark");
-        document.documentElement.setAttribute("data-color-scheme", "dark");
-      } else {
-        document.documentElement.classList.remove("dark");
-        document.documentElement.setAttribute("data-color-scheme", "light");
-      }
-    }
-  }, [theme, isInitialized]);
-
-  const setThemeMode = (mode: ThemeMode) => {
-    setThemeModeState(mode);
-  };
-
-  const toggleTheme = () => {
-    setThemeModeState((prevMode) => {
-      const currentResolved = theme;
-      return currentResolved === "light" ? "dark" : "light";
-    });
-  };
-
-  return (
-    <ThemeContext.Provider
-      value={{ theme, themeMode, setThemeMode, toggleTheme }}
-    >
-      {children}
-    </ThemeContext.Provider>
-  );
-};
-
-export const useTheme = () => {
-  const context = useContext(ThemeContext);
-  if (context === undefined) {
-    throw new Error("useTheme must be used within a ThemeProvider");
-  }
-  return context;
+  return <>{children}</>;
 };

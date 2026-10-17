@@ -1,39 +1,37 @@
-import { DEPARTMENTS } from "@/modules/shared";
-
-import { createLabourCost, fetchLabourCosts } from "../../data/api";
+import {
+  createLabourCost,
+  deleteLabourCost,
+  fetchLabourCosts,
+  updateLabourCost,
+} from "../../data/api";
 import type {
   CreateLabourCostInput,
   LabourCost,
-  LabourLedger,
 } from "../../domain/labour";
 
 type ListParams = {
+  from: string;
+  to: string;
+  department?: string;
+  paymentMethod?: string;
   page?: number;
   pageSize?: number;
 };
 
+type LabourPage = {
+  data: LabourCost[];
+  meta: { total: number; page: number; pageSize: number };
+};
+
 export const labourService = {
+  list: (params: ListParams): Promise<LabourPage> =>
+    fetchLabourCosts(params),
+
   create: (input: CreateLabourCostInput): Promise<LabourCost> =>
     createLabourCost(input),
 
-  list: async ({ page = 1, pageSize = 8 }: ListParams = {}): Promise<LabourLedger> => {
-    const all = await fetchLabourCosts();
+  update: (id: string, input: Partial<CreateLabourCostInput>): Promise<LabourCost> =>
+    updateLabourCost(id, input),
 
-    const totalsByDepartment = DEPARTMENTS.map((department) => ({
-      department,
-      total: all
-        .filter((entry) => entry.department === department)
-        .reduce((sum, entry) => sum + entry.amount, 0),
-    })).filter((row) => row.total > 0);
-
-    const start = (page - 1) * pageSize;
-
-    return {
-      items: all.slice(start, start + pageSize),
-      total: all.length,
-      page,
-      pageSize,
-      totalsByDepartment,
-    };
-  },
+  remove: (id: string): Promise<void> => deleteLabourCost(id),
 };

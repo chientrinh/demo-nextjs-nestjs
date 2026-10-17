@@ -1,20 +1,28 @@
-import type { AnalyticsSummary, WeeklyTrend } from "../domain/types";
-import { buildSummary, buildWeeklyTrend } from "./mock";
+import { httpClient } from "@/adapters/infrastructures/clients/HttpClient";
 
-const LATENCY_MS = 250;
-
-function resolve<T>(value: T): Promise<T> {
-  return new Promise((done) => setTimeout(() => done(value), LATENCY_MS));
-}
+import type { WeeklyTrend, AnalyticsSummary } from "../domain/types";
 
 export async function fetchWeeklyTrend(weekStart: string): Promise<WeeklyTrend> {
-  return resolve(buildWeeklyTrend(weekStart));
+  const { data } = await httpClient.get<WeeklyTrend>("/analytics/weekly-trend", {
+    params: { weekStart },
+  });
+  return data;
 }
 
 export async function fetchSummary(
   from: string,
   to: string,
 ): Promise<AnalyticsSummary> {
-  void to;
-  return resolve(buildSummary(from));
+  const { data } = await httpClient.get<Omit<AnalyticsSummary, "from" | "to"> & { daysWithData: number }>(
+    "/analytics/summary",
+    { params: { from, to } },
+  );
+  // Backend không trả from/to trong response → bổ sung từ params
+  return {
+    from,
+    to,
+    totalRevenue: data.totalRevenue,
+    averagePerDay: data.averagePerDay,
+    totalCovers: data.totalCovers,
+  };
 }

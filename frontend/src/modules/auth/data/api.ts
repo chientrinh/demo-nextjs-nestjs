@@ -1,76 +1,52 @@
-import { ERROR_CODES, ApiError } from "@/shared/utils/errors";
+import { httpClient } from "@/adapters/infrastructures/clients/HttpClient";
+import { storage } from "@/adapters/infrastructures/storage";
 
-import type { AuthSession, LoginInput } from "../domain/auth";
+import type { AuthSession, AuthUser, LoginInput } from "../domain/auth";
 
-const LATENCY_MS = 350;
+const SESSION_STORAGE_KEY = "bistro_auth_session";
 
-type MockAccount = {
-  email: string;
-  password: string;
-  id: string;
-  name: string;
-  role: "ADMIN" | "ANALYST";
+type AuthResponseDto = {
+  accessToken: string;
+  user: {
+    id: string;
+    email: string;
+    fullName: string;
+    role: string;
+  };
 };
 
-const ACCOUNTS: MockAccount[] = [
-  {
-    email: "admin@bistro.test",
-    password: "123456",
-    id: "usr-admin",
-    name: "Quản trị viên",
-    role: "ADMIN",
-  },
-  {
-    email: "analyst@bistro.test",
-    password: "123456",
-    id: "usr-analyst",
-    name: "Chuyên viên phân tích",
-    role: "ANALYST",
-  },
-];
-
-function resolve<T>(value: T): Promise<T> {
-  return new Promise((done) => setTimeout(() => done(value), LATENCY_MS));
+function mapUser(dto: AuthResponseDto["user"]): AuthUser {
+  return {
+    id: dto.id,
+    email: dto.email,
+    name: dto.fullName,
+    role: dto.role as AuthUser["role"],
+  };
 }
 
 export async function login(input: LoginInput): Promise<AuthSession> {
-  const account = ACCOUNTS.find(
-    (candidate) =>
-      candidate.email === input.email.trim().toLowerCase() &&
-      candidate.password === input.password,
+  const { data } = await httpClient.post<AuthResponseDto>(
+    "/auth/login",
+    input,
   );
-
-  if (!account) {
-    throw new ApiError(
-      401,
-      ERROR_CODES.invalidCredentials,
-      "Email hoặc mật khẩu không đúng",
-    );
-  }
-
-  return resolve({
-    accessToken: `mock-access-token-${account.id}`,
-    user: {
-      id: account.id,
-      email: account.email,
-      name: account.name,
-      role: account.role,
-    },
-  });
+  const session: AuthSession = {
+    accessToken: data.accessToken,
+    user: mapUser(data.user),
+  };
+  storage.set(SESSION_STORAGE_KEY, JSON.stringify(session));
+  return session;
 }
 
 export async function refresh(): Promise<AuthSession> {
-  return resolve({
-    accessToken: "mock-access-token-usr-admin",
-    user: {
-      id: "usr-admin",
-      email: "admin@bistro.test",
-      name: "Quản trị viên",
-      role: "ADMIN",
-    },
-  });
+  const { data } = await httpClient.post<AuthResponseDto>("/auth/refresh");
+  const session: AuthSession = {
+    accessToken: data.accessToken,
+    user: mapUser(data.user),
+  };
+  storage.set(SESSION_STORAGE_KEY, JSON.stringify(session));
+  return session;
 }
 
 export async function logout(): Promise<void> {
-  return resolve(undefined);
+  await httpClient.post("/auth/logout");
 }

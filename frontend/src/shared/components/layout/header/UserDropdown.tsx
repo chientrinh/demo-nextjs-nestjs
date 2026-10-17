@@ -1,8 +1,8 @@
 "use client";
 
+import { useAuthStore } from "@/modules/auth";
 import { useClickOutside } from "@/shared/hooks/useClickOutside";
 import { getLanguage, languages } from "@/i18n/languages";
-import Link from "next/link";
 import { usePathname, useRouter } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { ChevronDownIcon } from "@/shared/components/icons";
@@ -11,13 +11,14 @@ import { useLocale, useTranslations } from "next-intl";
 import Image from "next/image";
 import { useRef, useState } from "react";
 import { Dropdown } from "../../ui/dropdown/Dropdown";
-import { DropdownItem } from "../../ui/dropdown/DropdownItem";
 
 export default function UserDropdown() {
   const t = useTranslations("userDropdown");
   const locale = useLocale() as Locale;
   const router = useRouter();
   const pathname = usePathname();
+  const user = useAuthStore((s) => s.user);
+  const logout = useAuthStore((s) => s.logout);
   const [isOpen, setIsOpen] = useState(false);
   const [isSubDropdownOpen, setIsSubDropdownOpen] = useState(false);
   const subDropdownRef = useRef<HTMLLIElement>(null);
@@ -46,6 +47,12 @@ export default function UserDropdown() {
     setIsSubDropdownOpen(false);
   };
 
+  const handleSignOut = async () => {
+    closeDropdown();
+    await logout();
+    router.push("/login");
+  };
+
   return (
     <div className="relative">
       <button
@@ -61,11 +68,14 @@ export default function UserDropdown() {
           />
         </span>
 
-        <span className="me-1 block text-theme-sm font-medium">Musharof</span>
+        <span className="me-1 block text-theme-sm font-medium">
+          {user?.name || "Người dùng"}
+        </span>
 
         <ChevronDownIcon
-          className={`size-5 text-gray-500 transition-transform duration-200 dark:text-gray-400 ${isOpen ? "rotate-180" : ""
-            }`}
+          className={`size-5 text-gray-500 transition-transform duration-200 dark:text-gray-400 ${
+            isOpen ? "rotate-180" : ""
+          }`}
         />
       </button>
 
@@ -76,15 +86,14 @@ export default function UserDropdown() {
       >
         <div>
           <span className="block text-theme-sm font-medium text-gray-700 dark:text-gray-400">
-            Musharof Chowdhury
+            {user?.name || "Người dùng"}
           </span>
           <span className="mt-0.5 block text-theme-xs text-gray-500 dark:text-gray-400">
-            randomuser@pimjo.com
+            {user?.email || ""}
           </span>
         </div>
 
         <ul className="flex flex-col gap-1 border-b border-gray-200 pt-4 pb-3 dark:border-gray-800">
-
           <li className="relative" ref={subDropdownRef}>
             <button
               type="button"
@@ -171,12 +180,13 @@ export default function UserDropdown() {
             )}
           </li>
         </ul>
-        <Link
-          href="/signin"
-          className="group mt-3 flex items-center justify-center gap-3 rounded-lg border border-gray-200 px-3 py-2 text-theme-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-700 dark:border-gray-800 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
+        <button
+          type="button"
+          onClick={handleSignOut}
+          className="group mt-3 flex items-center justify-center gap-3 rounded-lg border border-gray-200 px-3 py-2 text-theme-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-700 dark:border-gray-800 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300 cursor-pointer"
         >
           {t("signOut")}
-        </Link>
+        </button>
       </Dropdown>
     </div>
   );

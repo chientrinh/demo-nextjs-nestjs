@@ -1,25 +1,24 @@
+import Image from "next/image";
 import type { Locale } from "./routing";
 
-// Simple flag icons as inline SVG spans
+// Simple flag icons
 const ViFlagIcon = ({ className }: { className?: string }) => (
-  <img
+  <Image
     className={className}
     src="/images/flag/flag-vi.svg"
     alt="VI"
-    onError={(e) => {
-      (e.target as HTMLImageElement).style.display = "none";
-    }}
+    width={20}
+    height={20}
   />
 );
 
 const EnFlagIcon = ({ className }: { className?: string }) => (
-  <img
+  <Image
     className={className}
     src="/images/flag/flag-en.svg"
     alt="EN"
-    onError={(e) => {
-      (e.target as HTMLImageElement).style.display = "none";
-    }}
+    width={20}
+    height={20}
   />
 );
 
