@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { formatNumber, formatVnd } from "@/modules/shared";
+import { formatNumber, formatUsd } from "@/modules/shared";
 
 type KpiCardProps = {
   label: string;
@@ -23,7 +23,7 @@ export const KpiCard: React.FC<KpiCardProps> = ({
       ? fallbackText
       : value !== undefined && value > 0
         ? format === "currency"
-          ? formatVnd(value)
+          ? formatUsd(value)
           : formatNumber(value)
         : fallbackText || "0";
 

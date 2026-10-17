@@ -4,7 +4,7 @@ import { useSearchParams } from "next/navigation";
 import { useRef, useState } from "react";
 
 import { addDays, startOfWeek, todayKey } from "@/shared/utils/time";
-import { formatVnd } from "@/modules/shared";
+import { formatNumber, formatUsd } from "@/modules/shared";
 import { useSummary } from "../hooks/use-summary";
 import { useWeeklyTrend } from "../hooks/use-weekly-trend";
 import {
@@ -68,12 +68,12 @@ export const DashboardView: React.FC = () => {
       if (isCompare && prev > 0) {
         const pct = ((cur - prev) / prev) * 100;
         delta = {
-          prefix: `vs ${formatVnd(prev)}`,
+          prefix: `vs ${formatUsd(prev)}`,
           pct: `(${pct >= 0 ? "+" : ""}${pct.toFixed(1)}%)`,
           isPositive: pct >= 0,
         };
       }
-      return { value: formatVnd(cur), delta };
+      return { value: formatUsd(cur), delta };
     }
     return {
       value: isCompare ? "$16,469" : "$16,110",
@@ -89,12 +89,12 @@ export const DashboardView: React.FC = () => {
       if (isCompare && prev > 0) {
         const pct = ((cur - prev) / prev) * 100;
         delta = {
-          prefix: `vs ${formatVnd(prev)}`,
+          prefix: `vs ${formatUsd(prev)}`,
           pct: `(${pct >= 0 ? "+" : ""}${pct.toFixed(1)}%)`,
           isPositive: pct >= 0,
         };
       }
-      return { value: formatVnd(cur), delta };
+      return { value: formatUsd(cur), delta };
     }
     return {
       value: isCompare ? "$2,353" : "$2,301",
@@ -110,12 +110,12 @@ export const DashboardView: React.FC = () => {
       if (isCompare && prev > 0) {
         const pct = ((cur - prev) / prev) * 100;
         delta = {
-          prefix: `vs ${prev.toLocaleString()}`,
+          prefix: `vs ${formatNumber(prev)}`,
           pct: `(${pct >= 0 ? "+" : ""}${pct.toFixed(1)}%)`,
           isPositive: pct >= 0,
         };
       }
-      return { value: cur.toLocaleString(), delta };
+      return { value: formatNumber(cur), delta };
     }
     return {
       value: isCompare ? "911" : "905",

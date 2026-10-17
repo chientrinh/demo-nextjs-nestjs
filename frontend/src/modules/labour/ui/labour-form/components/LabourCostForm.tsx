@@ -16,7 +16,7 @@ import {
   DEPARTMENT_LABELS,
   PAYMENT_METHODS,
   PAYMENT_METHOD_LABELS,
-  readVietnameseAmount,
+  readEnglishAmount,
 } from "@/modules/shared";
 import { ROUTES } from "@/shared/constants/routes";
 import { ERROR_CODES, isApiError } from "@/shared/utils/errors";
@@ -114,7 +114,7 @@ export const LabourCostForm: React.FC = () => {
         </div>
 
         <div>
-          <Label htmlFor="labour-amount">Số tiền (VND)</Label>
+          <Label htmlFor="labour-amount">Số tiền ($)</Label>
           <Controller
             control={control}
             name="amount"
@@ -128,7 +128,7 @@ export const LabourCostForm: React.FC = () => {
                   hint={errors.amount?.message}
                 />
                 <p className="text-xs mt-1 text-gray-500 dark:text-gray-400">
-                  {readVietnameseAmount(field.value || 0)}
+                  {readEnglishAmount(field.value || 0)}
                 </p>
               </>
             )}

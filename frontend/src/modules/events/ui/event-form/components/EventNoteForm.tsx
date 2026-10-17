@@ -17,7 +17,7 @@ import {
   REVENUE_SOURCE_LABELS,
   WORK_SHIFTS,
   WORK_SHIFT_LABELS,
-  readVietnameseAmount,
+  readEnglishAmount,
 } from "@/modules/shared";
 import { ROUTES } from "@/shared/constants/routes";
 import { isApiError, ERROR_CODES } from "@/shared/utils/errors";
@@ -35,15 +35,15 @@ const SHIFT_OPTIONS = WORK_SHIFTS.map((shift) => ({
 const PRESETS: { label: string; values: Partial<EventNoteInput> }[] = [
   {
     label: "Live nhạc tối",
-    values: { title: "Live nhạc tối", source: "POS", shift: "CA_TOI", amount: 500_000 },
+    values: { title: "Live nhạc tối", source: "POS", shift: "CA_TOI", amount: 500 },
   },
   {
     label: "Khuyến mãi trưa",
-    values: { title: "Khuyến mãi trưa", source: "EATCLUB", shift: "CA_TRUA", amount: 200_000 },
+    values: { title: "Khuyến mãi trưa", source: "EATCLUB", shift: "CA_TRUA", amount: 200 },
   },
   {
     label: "Sự kiện tư nhân",
-    values: { title: "Sự kiện tư nhân", source: "POS", shift: "CA_DEM", amount: 1_500_000 },
+    values: { title: "Sự kiện tư nhân", source: "POS", shift: "CA_DEM", amount: 1500 },
   },
 ];
 
@@ -181,7 +181,7 @@ export const EventNoteForm: React.FC = () => {
       </div>
 
       <div>
-        <Label htmlFor="event-amount">Số tiền (VND)</Label>
+        <Label htmlFor="event-amount">Số tiền ($)</Label>
         <Controller
           control={control}
           name="amount"
@@ -195,7 +195,7 @@ export const EventNoteForm: React.FC = () => {
                 hint={errors.amount?.message}
               />
               <p className="mt-1.5 text-xs text-gray-500 dark:text-gray-400">
-                {readVietnameseAmount(field.value || 0)}
+                {readEnglishAmount(field.value || 0)}
               </p>
             </>
           )}

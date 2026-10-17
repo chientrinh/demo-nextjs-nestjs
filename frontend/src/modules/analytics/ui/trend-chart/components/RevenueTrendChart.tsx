@@ -13,7 +13,7 @@ import React, {
 } from "react";
 
 import { useTheme } from "@/shared/providers/theme-provider";
-import { formatCompactVnd, formatVnd } from "@/modules/shared";
+import { formatCompactUsd, formatUsd } from "@/modules/shared";
 import type { TrendEvent, WeeklyTrendDay } from "../../../domain/types";
 
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
@@ -345,7 +345,7 @@ export const RevenueTrendChart = forwardRef<RevenueTrendChartRef, RevenueTrendCh
               fontSize: "12px",
             },
             formatter: (val: number) => {
-              if (hasLiveData) return formatCompactVnd(val);
+              if (hasLiveData) return formatCompactUsd(val);
               if (val >= 1000) return `${(val / 1000).toFixed(val % 1000 === 0 ? 0 : 2)}k`;
               return `${val}k`;
             },
@@ -358,7 +358,7 @@ export const RevenueTrendChart = forwardRef<RevenueTrendChartRef, RevenueTrendCh
           y: {
             formatter: (val: number) => {
               if (val == null) return "";
-              return hasLiveData ? formatVnd(val) : `$${val.toLocaleString()}`;
+              return formatUsd(val);
             },
           },
         },

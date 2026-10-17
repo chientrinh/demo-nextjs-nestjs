@@ -15,7 +15,7 @@ interface CurrencyInputProps {
 }
 
 const format = (value: number): string =>
-  new Intl.NumberFormat("vi-VN").format(Math.abs(value));
+  new Intl.NumberFormat("en-US").format(Math.abs(value));
 
 const CurrencyInput: React.FC<CurrencyInputProps> = ({
   id,

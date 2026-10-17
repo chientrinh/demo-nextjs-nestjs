@@ -6,17 +6,11 @@ import type {
   WeeklyTrend,
 } from "../domain/types";
 
-const POS_REVENUE = [
-  1_320_000, 1_480_000, 1_610_000, 1_890_000, 2_340_000, 2_760_000, 2_530_000,
-];
+const POS_REVENUE = [1320, 1480, 1610, 1890, 2340, 2760, 2530];
 
-const EATCLUB_REVENUE = [
-  180_000, 210_000, 260_000, 320_000, 410_000, 480_000, 320_000,
-];
+const EATCLUB_REVENUE = [180, 210, 260, 320, 410, 480, 320];
 
-const LABOUR_COST = [
-  180_000, 180_000, 220_000, 240_000, 260_000, 320_000, 300_000,
-];
+const LABOUR_COST = [500, 540, 640, 720, 880, 1040, 950];
 
 const COVERS = [112, 118, 124, 131, 145, 152, 123];
 
@@ -24,13 +18,13 @@ const EVENT_TEMPLATES: Omit<TrendEvent, "id" | "eventDate">[] = [
   {
     title: "Khuyến mãi giờ trưa",
     source: "EATCLUB",
-    amount: -200_000,
+    amount: -200,
     shift: "CA_TRUA",
   },
   {
     title: "Live nhạc cuối tuần",
     source: "POS",
-    amount: 500_000,
+    amount: 500,
     shift: "CA_TOI",
   },
 ];
