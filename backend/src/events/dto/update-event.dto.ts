@@ -27,7 +27,7 @@ export class UpdateEventDto {
 
   @ApiPropertyOptional({
     example: 2500000,
-    description: 'Ảnh hưởng doanh thu VND (số nguyên, có thể âm)',
+    description: 'Ảnh hưởng doanh thu USD (số nguyên, có thể âm)',
   })
   @IsOptional()
   @IsInt({ message: 'amount phải là số nguyên' })

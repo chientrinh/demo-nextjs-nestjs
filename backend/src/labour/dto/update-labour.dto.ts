@@ -16,7 +16,7 @@ export class UpdateLabourDto {
   @IsDateString({}, { message: 'expenseDate phải có định dạng YYYY-MM-DD' })
   expenseDate?: string;
 
-  @ApiPropertyOptional({ example: 1800000, description: 'Chi phí nhân công VND (> 0)' })
+  @ApiPropertyOptional({ example: 1800000, description: 'Chi phí nhân công USD (> 0)' })
   @IsOptional()
   @IsInt({ message: 'amount phải là số nguyên' })
   @Min(1, { message: 'amount phải lớn hơn 0' })

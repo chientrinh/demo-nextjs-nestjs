@@ -9,15 +9,16 @@ const RANGE_END = '2026-10-24';
 
 type SeedDay = { date: string; pos: number; eatclub: number; labour: number };
 
-// Tuần mốc 2026-10-12 → 2026-10-18 (Th2 → CN), khớp docs/design/home.html.
+// Tuần mốc 2026-10-12 → 2026-10-18 (Th2 → CN), khớp docs/design/home.html:
+// tổng doanh thu tuần = 16,110 USD, trung bình/ngày = 2,301 USD.
 const sampleWeekDays: SeedDay[] = [
-  { date: '2026-10-12', pos: 17200000, eatclub: 5200000, labour: 6800000 },
-  { date: '2026-10-13', pos: 18200000, eatclub: 3800000, labour: 6500000 },
-  { date: '2026-10-14', pos: 18200000, eatclub: 3800000, labour: 9200000 },
-  { date: '2026-10-15', pos: 20300000, eatclub: 4200000, labour: 7400000 },
-  { date: '2026-10-16', pos: 19800000, eatclub: 3600000, labour: 6600000 },
-  { date: '2026-10-17', pos: 23600000, eatclub: 7800000, labour: 9400000 },
-  { date: '2026-10-18', pos: 24000000, eatclub: 4400000, labour: 12200000 },
+  { date: '2026-10-12', pos: 1320, eatclub: 180, labour: 500 },
+  { date: '2026-10-13', pos: 1480, eatclub: 210, labour: 540 },
+  { date: '2026-10-14', pos: 1610, eatclub: 260, labour: 640 },
+  { date: '2026-10-15', pos: 1890, eatclub: 320, labour: 720 },
+  { date: '2026-10-16', pos: 2340, eatclub: 410, labour: 880 },
+  { date: '2026-10-17', pos: 2760, eatclub: 480, labour: 1040 },
+  { date: '2026-10-18', pos: 2530, eatclub: 320, labour: 950 },
 ];
 
 // Hệ số so với tuần mốc, theo từng thứ Th2 → CN. Nhân cho cả doanh thu lẫn chi
