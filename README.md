@@ -13,7 +13,7 @@
 
 ## 📹 DEMO VIDEO
 
-[https://www.youtube.com/watch?v=LsNcbQzMs8s](https://www.youtube.com/watch?v=LsNcbQzMs8s)
+ <a href="https://www.youtube.com/watch?v=LsNcbQzMs8s" target="_blank">https://www.youtube.com/watch?v=LsNcbQzMs8s</a>
 
 ---
 
