@@ -11,6 +11,12 @@
 
 ---
 
+## 📹 DEMO VIDEO
+
+https://www.youtube.com/watch?v=LsNcbQzMs8s
+
+---
+
 # Phần 1 — Hướng dẫn cài đặt demo lên máy local (Docker)
 
 Toàn bộ demo chạy bằng **Docker Compose** — không cần cài Node/npm trên máy host. Mọi lệnh dưới đây chỉ cần **copy và dán** vào terminal.
