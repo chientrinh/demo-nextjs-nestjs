@@ -34,19 +34,15 @@ type RevenueTrendChartProps = {
   loading?: boolean;
 };
 
-// Default fallback values matching docs/design/home.html & docs/design/home_compare.html
 const DEFAULT_DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-const DEFAULT_POS = [1720, 1820, 1820, 2030, 1980, 2360, 2400];
-const DEFAULT_EATCLUB = [520, 380, 380, 420, 360, 780, 440];
-const DEFAULT_LABOUR = [680, 650, 920, 740, 660, 940, 1220];
+const DEFAULT_POS = [0, 0, 0, 0, 0, 0, 0];
+const DEFAULT_EATCLUB = [0, 0, 0, 0, 0, 0, 0];
+const DEFAULT_LABOUR = [0, 0, 0, 0, 0, 0, 0];
 
-// Previous period mock matching docs/design/home_compare.html
-const DEFAULT_PREV_POS = [1640, 1540, 1620, 1510, 1640, 2050, 2030];
-const DEFAULT_PREV_EATCLUB = [480, 360, 380, 340, 360, 700, 420];
-const DEFAULT_PREV_LABOUR = [640, 540, 800, 550, 600, 800, 1050];
+const DEFAULT_PREV_POS = [0, 0, 0, 0, 0, 0, 0];
+const DEFAULT_PREV_EATCLUB = [0, 0, 0, 0, 0, 0, 0];
+const DEFAULT_PREV_LABOUR = [0, 0, 0, 0, 0, 0, 0];
 
-// Trend-impact icons embedded as SVG data URIs for ApexCharts point annotations.
-// Tailwind/JSX cannot be used here, so the mockup's circle badge is reproduced in SVG.
 const TREND_ICON_SVG = {
   gain: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="#F0FDF4" stroke="#BBF7D0" stroke-width="1.5"/><g transform="translate(4.5, 4.5) scale(0.625)"><path d="M23 6l-9.5 9.5-5-5L1 18m22-12h-6m6 0v6" fill="none" stroke="#16A34A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></g></svg>`,
   drop: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="#FFF1F2" stroke="#FECDD3" stroke-width="1.5"/><g transform="translate(4.5, 4.5) scale(0.625)"><path d="M23 18l-9.5-9.5-5 5L1 6m22 12h-6m6 0v-6" fill="none" stroke="#E11D48" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></g></svg>`,
