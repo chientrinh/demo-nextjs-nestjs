@@ -2,6 +2,7 @@ import { SidebarProvider } from "@/context/SidebarContext";
 import { ThemeProvider } from "@/shared/providers/theme-provider";
 import { QueryProvider } from "@/shared/providers/query-provider";
 import { AuthProvider } from "@/modules/auth";
+import { Toaster } from "@/shared/components/ui/sonner";
 import { isRtl } from "@/i18n/languages";
 import { type Locale, routing } from "@/i18n/routing";
 import "flatpickr/dist/flatpickr.css";
@@ -42,7 +43,10 @@ export default async function RootLayout({
           <ThemeProvider>
             <SidebarProvider>
               <QueryProvider>
-                <AuthProvider>{children}</AuthProvider>
+                <AuthProvider>
+                  {children}
+                  <Toaster />
+                </AuthProvider>
               </QueryProvider>
             </SidebarProvider>
           </ThemeProvider>

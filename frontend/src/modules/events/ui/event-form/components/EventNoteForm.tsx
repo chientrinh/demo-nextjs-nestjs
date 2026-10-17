@@ -1,9 +1,8 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import Link from "next/link";
-import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 import Button from "@/shared/components/ui/button/Button";
 import CurrencyInput from "@/shared/components/form/CurrencyInput";
@@ -19,7 +18,6 @@ import {
   WORK_SHIFT_LABELS,
   readEnglishAmount,
 } from "@/modules/shared";
-import { ROUTES } from "@/shared/constants/routes";
 import { isApiError, ERROR_CODES } from "@/shared/utils/errors";
 import { todayKey } from "@/shared/utils/time";
 
@@ -57,7 +55,6 @@ const defaultValues: EventNoteInput = {
 };
 
 export const EventNoteForm: React.FC = () => {
-  const [saved, setSaved] = useState(false);
   const createEvent = useCreateEvent();
 
   const {
@@ -74,10 +71,9 @@ export const EventNoteForm: React.FC = () => {
   });
 
   const onSubmit = handleSubmit(async (values) => {
-    setSaved(false);
     try {
       await createEvent.mutateAsync(values);
-      setSaved(true);
+      toast.success("Đã lưu ghi chú sự kiện");
       reset(defaultValues);
     } catch (error) {
       if (isApiError(error) && error.code === ERROR_CODES.validationError) {
@@ -88,14 +84,13 @@ export const EventNoteForm: React.FC = () => {
         );
         return;
       }
-      setError("root", {
-        message: isApiError(error) ? error.message : "Không thể lưu sự kiện",
-      });
+      toast.error(
+        isApiError(error) ? error.message : "Không thể lưu sự kiện",
+      );
     }
   });
 
   const applyPreset = (values: Partial<EventNoteInput>) => {
-    setSaved(false);
     (Object.keys(values) as (keyof EventNoteInput)[]).forEach((key) => {
       setValue(key, values[key] as never, { shouldValidate: true });
     });
@@ -103,18 +98,6 @@ export const EventNoteForm: React.FC = () => {
 
   return (
     <form onSubmit={onSubmit} noValidate className="space-y-6">
-      {saved ? (
-        <div
-          role="status"
-          className="rounded-xl border border-success-500/40 bg-success-50 px-4 py-3 text-sm text-success-700 dark:border-success-500/30 dark:bg-success-500/10 dark:text-success-400"
-        >
-          Đã lưu ghi chú sự kiện.{" "}
-          <Link href={ROUTES.home} className="font-medium underline">
-            Về trang tổng quan
-          </Link>
-        </div>
-      ) : null}
-
       <div>
         <span className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-400">
           Điền nhanh
@@ -252,10 +235,6 @@ export const EventNoteForm: React.FC = () => {
           )}
         />
       </div>
-
-      {errors.root ? (
-        <p className="text-sm text-error-500">{errors.root.message}</p>
-      ) : null}
 
       <div className="flex justify-end">
         <Button type="submit" disabled={isSubmitting}>

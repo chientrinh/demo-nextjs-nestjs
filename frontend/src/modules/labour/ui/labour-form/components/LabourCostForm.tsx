@@ -1,9 +1,8 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import Link from "next/link";
-import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 import CurrencyInput from "@/shared/components/form/CurrencyInput";
 import Input from "@/shared/components/form/input/InputField";
@@ -18,7 +17,6 @@ import {
   PAYMENT_METHOD_LABELS,
   readEnglishAmount,
 } from "@/modules/shared";
-import { ROUTES } from "@/shared/constants/routes";
 import { ERROR_CODES, isApiError } from "@/shared/utils/errors";
 import { todayKey } from "@/shared/utils/time";
 
@@ -45,7 +43,6 @@ const defaultValues: LabourCostInput = {
 };
 
 export const LabourCostForm: React.FC = () => {
-  const [saved, setSaved] = useState(false);
   const createLabour = useCreateLabourCost();
 
   const {
@@ -61,10 +58,9 @@ export const LabourCostForm: React.FC = () => {
   });
 
   const onSubmit = handleSubmit(async (values) => {
-    setSaved(false);
     try {
       await createLabour.mutateAsync(values);
-      setSaved(true);
+      toast.success("Đã lưu chi phí nhân công");
       reset({
         ...defaultValues,
         entryDate: values.entryDate,
@@ -79,28 +75,16 @@ export const LabourCostForm: React.FC = () => {
         );
         return;
       }
-      setError("root", {
-        message: isApiError(error)
+      toast.error(
+        isApiError(error)
           ? error.message
           : "Không thể lưu chi phí nhân công",
-      });
+      );
     }
   });
 
   return (
     <form onSubmit={onSubmit} noValidate className="space-y-6">
-      {saved ? (
-        <div
-          role="status"
-          className="rounded-xl border border-success-500/40 bg-success-50 px-4 py-3 text-sm text-success-700 dark:border-success-500/30 dark:bg-success-500/10 dark:text-success-400"
-        >
-          Đã lưu chi phí nhân công.{" "}
-          <Link href={ROUTES.home} className="font-medium underline">
-            Về trang tổng quan
-          </Link>
-        </div>
-      ) : null}
-
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div>
           <Label htmlFor="labour-date">Ngày</Label>
@@ -196,10 +180,6 @@ export const LabourCostForm: React.FC = () => {
           )}
         />
       </div>
-
-      {errors.root ? (
-        <p className="text-sm text-error-500">{errors.root.message}</p>
-      ) : null}
 
       <div className="flex justify-end">
         <Button type="submit" disabled={isSubmitting}>
