@@ -6,10 +6,16 @@ import { logger } from "@/shared/utils/logger";
 
 import type { IHttpClient } from "../interfaces/IHttpClient";
 
-import { accessToken, setAccessToken, clearAccessToken } from "@/shared/token";
+import {
+  getAccessToken,
+  setAccessToken,
+  clearAccessToken,
+  isTokenExpired,
+} from "@/shared/token";
 
 function getStoredAccessToken(): string | null {
-  return accessToken && accessToken.length > 0 ? accessToken : null;
+  const token = getAccessToken();
+  return token && token.length > 0 ? token : null;
 }
 
 function updateStoredSession(data: { accessToken: string }): void {
@@ -59,28 +65,9 @@ function setAuthHeader(config: AxiosRequestConfig, token: string) {
 
 function redirectToLogin() {
   if (typeof window !== "undefined") {
-    const isEn = window.location.pathname.startsWith("/en");
-    const loginPath = isEn ? "/en/login" : "/vi/login";
     if (!window.location.pathname.includes("/login")) {
-      window.location.href = loginPath;
+      window.location.href = "/login";
     }
-  }
-}
-
-function isTokenExpired(token: string | null): boolean {
-  if (!token) return false;
-  try {
-    const parts = token.split(".");
-    if (parts.length !== 3) return false;
-    const payloadStr =
-      typeof window !== "undefined"
-        ? window.atob(parts[1])
-        : Buffer.from(parts[1], "base64").toString("utf-8");
-    const payload = JSON.parse(payloadStr);
-    if (!payload.exp) return false;
-    return payload.exp * 1000 <= Date.now() + 5000;
-  } catch {
-    return false;
   }
 }
 

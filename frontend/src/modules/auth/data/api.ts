@@ -4,23 +4,33 @@ import type { AuthSession, AuthUser, LoginInput } from "../domain/auth";
 
 import { setAccessToken, clearAccessToken } from "@/shared/token";
 
-type AuthResponseDto = {
-  accessToken: string;
-  user: {
-    id: string;
-    email: string;
-    fullName: string;
-    role: string;
-    isActive: boolean;
-    createdAt: string;
-    updatedAt: string;
-  };
+type UserDto = {
+  id: string;
+  email: string;
+  fullName: string;
+  role: string;
+  isActive: boolean;
+  tokenVersion: number;
+  createdAt: string;
+  updatedAt: string;
 };
 
-function mapUser(dto: AuthResponseDto["user"]): AuthUser {
+type AuthResponseDto = {
+  accessToken: string;
+  user: UserDto;
+};
+
+function mapUser(dto: UserDto): AuthUser {
   return {
     ...dto,
     role: dto.role as AuthUser["role"],
+  };
+}
+
+function toSession(data: AuthResponseDto): AuthSession {
+  return {
+    accessToken: data.accessToken,
+    user: mapUser(data.user),
   };
 }
 
@@ -29,20 +39,14 @@ export async function login(input: LoginInput): Promise<AuthSession> {
     "/auth/login",
     input,
   );
-  const session: AuthSession = {
-    accessToken: data.accessToken,
-    user: mapUser(data.user),
-  };
+  const session = toSession(data);
   setAccessToken(data.accessToken);
   return session;
 }
 
 export async function refresh(): Promise<AuthSession> {
   const { data } = await httpClient.post<AuthResponseDto>("/auth/refresh");
-  const session: AuthSession = {
-    accessToken: data.accessToken,
-    user: mapUser(data.user),
-  };
+  const session = toSession(data);
   setAccessToken(data.accessToken);
   return session;
 }

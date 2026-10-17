@@ -1,4 +1,7 @@
 {
+  "common": {
+    "loading": "Đang tải..."
+  },
   "sidebar": {
     "groups": {
       "menu": "Menu",
