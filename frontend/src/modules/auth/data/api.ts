@@ -12,14 +12,16 @@ type AuthResponseDto = {
     email: string;
     fullName: string;
     role: string;
+    isActive: boolean;
+    tokenVersion: number;
+    createdAt: string;
+    updatedAt: string;
   };
 };
 
 function mapUser(dto: AuthResponseDto["user"]): AuthUser {
   return {
-    id: dto.id,
-    email: dto.email,
-    name: dto.fullName,
+    ...dto,
     role: dto.role as AuthUser["role"],
   };
 }

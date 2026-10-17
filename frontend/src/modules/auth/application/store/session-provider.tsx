@@ -1,6 +1,7 @@
 "use client";
 
 import type React from "react";
+import { useEffect } from "react";
 import { create } from "zustand";
 
 import { storage } from "@/adapters/infrastructures/storage";
@@ -13,6 +14,7 @@ export interface AuthState {
   user: AuthUser | null;
   status: SessionStatus;
   isAuthenticated: boolean;
+  hydrate: () => void;
   login: (session: AuthSession) => void;
   logout: () => Promise<void>;
   setUser: (user: AuthUser | null) => void;
@@ -20,7 +22,7 @@ export interface AuthState {
 
 export const SESSION_STORAGE_KEY = "bistro_auth_session";
 
-function getInitialSession(): { user: AuthUser | null; token: string | null } {
+function readSession(): { user: AuthUser | null; token: string | null } {
   try {
     const raw = storage.get(SESSION_STORAGE_KEY);
     if (!raw) return { user: null, token: null };
@@ -34,12 +36,20 @@ function getInitialSession(): { user: AuthUser | null; token: string | null } {
   }
 }
 
-const initial = getInitialSession();
-
 export const useAuthStore = create<AuthState>()((set) => ({
-  user: initial.user,
-  status: initial.token ? "authenticated" : "unauthenticated",
-  isAuthenticated: !!initial.token,
+  // Trạng thái khởi tạo cố định (null/"loading") để HTML server và client khớp
+  // nhau; phiên đã lưu chỉ được nạp sau khi mount qua `hydrate`.
+  user: null,
+  status: "loading",
+  isAuthenticated: false,
+  hydrate: () => {
+    const { user, token } = readSession();
+    set({
+      user,
+      status: token ? "authenticated" : "unauthenticated",
+      isAuthenticated: !!token,
+    });
+  },
   login: (s: AuthSession) => {
     storage.set(SESSION_STORAGE_KEY, JSON.stringify(s));
     set({
@@ -80,4 +90,10 @@ export const useAuth = () => useAuthStore();
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
-}) => <>{children}</>;
+}) => {
+  useEffect(() => {
+    useAuthStore.getState().hydrate();
+  }, []);
+
+  return <>{children}</>;
+};

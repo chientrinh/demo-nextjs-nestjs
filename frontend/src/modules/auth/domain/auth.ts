@@ -15,8 +15,12 @@ export type LoginInput = z.infer<typeof loginSchema>;
 export type AuthUser = {
   id: string;
   email: string;
-  name: string;
+  fullName: string;
   role: Role;
+  isActive: boolean;
+  tokenVersion: number;
+  createdAt: string;
+  updatedAt: string;
 };
 
 export type AuthSession = {

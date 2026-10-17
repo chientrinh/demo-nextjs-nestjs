@@ -1,6 +1,4 @@
 import GridShape from "@/shared/components/common/GridShape";
-import ThemeTogglerTwo from "@/shared/components/common/ThemeTogglerTwo";
-import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
@@ -18,22 +16,13 @@ export default function AuthLayout({
             <GridShape />
             <div className="flex max-w-xs flex-col items-center">
               <Link href="/" className="mb-4 block">
-                <Image
-                  width={180}
-                  height={40}
-                  src="/images/logo/logo-dark.svg"
-                  alt="Bistro Analytics"
-                  style={{ width: "auto", height: "auto" }}
-                />
+                <h1 className="text-4xl font-bold text-white">Admin</h1>
               </Link>
               <p className="text-center text-gray-400 dark:text-white/60">
                 Hệ thống phân tích doanh thu nhà hàng
               </p>
             </div>
           </div>
-        </div>
-        <div className="fixed bottom-6 right-6 z-50 hidden sm:block">
-          <ThemeTogglerTwo />
         </div>
       </div>
     </div>

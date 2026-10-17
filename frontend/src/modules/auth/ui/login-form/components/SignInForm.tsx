@@ -147,8 +147,7 @@ export const SignInForm: React.FC = () => {
 
               <div className="mt-4 rounded-lg border border-gray-200 bg-gray-50 px-4 py-3 text-xs text-gray-500 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400">
                 <p className="font-medium mb-1">Tài khoản mẫu:</p>
-                <p>admin@bistro.test / 123456 (Admin)</p>
-                <p>analyst@bistro.test / 123456 (Analyst)</p>
+                <p>admin@bistro.local / Admin@123456 (Admin)</p>
               </div>
             </div>
           </form>

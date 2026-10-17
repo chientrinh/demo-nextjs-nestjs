@@ -24,7 +24,6 @@ export default function UserDropdown() {
   const subDropdownRef = useRef<HTMLLIElement>(null);
 
   const currentLang = getLanguage(locale);
-  const CurrentFlagIcon = currentLang.FlagIcon;
 
   useClickOutside(subDropdownRef, () => {
     setIsSubDropdownOpen(false);
@@ -69,13 +68,12 @@ export default function UserDropdown() {
         </span>
 
         <span className="me-1 block text-theme-sm font-medium">
-          {user?.name || "Người dùng"}
+          {user?.fullName || "Người dùng"}
         </span>
 
         <ChevronDownIcon
-          className={`size-5 text-gray-500 transition-transform duration-200 dark:text-gray-400 ${
-            isOpen ? "rotate-180" : ""
-          }`}
+          className={`size-5 text-gray-500 transition-transform duration-200 dark:text-gray-400 ${isOpen ? "rotate-180" : ""
+            }`}
         />
       </button>
 
@@ -86,7 +84,7 @@ export default function UserDropdown() {
       >
         <div>
           <span className="block text-theme-sm font-medium text-gray-700 dark:text-gray-400">
-            {user?.name || "Người dùng"}
+            {user?.fullName || "Người dùng"}
           </span>
           <span className="mt-0.5 block text-theme-xs text-gray-500 dark:text-gray-400">
             {user?.email || ""}
@@ -127,7 +125,6 @@ export default function UserDropdown() {
 
               <span className="flex items-center gap-1.5 rounded-lg border border-gray-200 bg-gray-50 px-2 py-1 text-theme-xs font-medium text-gray-700 dark:border-gray-800 dark:bg-white/3 dark:text-gray-300">
                 <span>{currentLang.shortName}</span>
-                <CurrentFlagIcon className="size-3.5 shrink-0 overflow-hidden rounded-full" />
               </span>
             </button>
 
@@ -136,7 +133,6 @@ export default function UserDropdown() {
                 <ul className="flex flex-col gap-1">
                   {languages.map((language) => {
                     const isSelected = locale === language.id;
-                    const FlagIcon = language.FlagIcon;
 
                     return (
                       <li key={language.id}>
@@ -162,7 +158,6 @@ export default function UserDropdown() {
                                   : "opacity-0",
                               )}
                             />
-                            <FlagIcon className="size-5 shrink-0 overflow-hidden rounded-full" />
                             <span className="truncate">{language.name}</span>
                           </span>
 
