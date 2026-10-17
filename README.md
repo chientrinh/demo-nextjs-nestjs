@@ -170,6 +170,12 @@ docker compose -f docker/database/docker-compose.yml down -v
 
 ---
 
+## 📹 DEMO VIDEO
+
+https://www.youtube.com/watch?v=LsNcbQzMs8s
+
+---
+
 # Phần 2 — Giới thiệu dự án
 
 ## 2.1 Bài toán
