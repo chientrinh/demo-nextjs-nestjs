@@ -75,10 +75,7 @@ export const DashboardView: React.FC = () => {
       }
       return { value: formatUsd(cur), delta };
     }
-    return {
-      value: isCompare ? "$16,469" : "$16,110",
-      delta: isCompare ? { prefix: "vs $15,126", pct: "(+8.9%)", isPositive: true } : null,
-    };
+    return { value: formatUsd(0), delta: null };
   })();
 
   const avgKpi = (() => {
@@ -96,10 +93,7 @@ export const DashboardView: React.FC = () => {
       }
       return { value: formatUsd(cur), delta };
     }
-    return {
-      value: isCompare ? "$2,353" : "$2,301",
-      delta: isCompare ? { prefix: "vs $2,161", pct: "(+8.9%)", isPositive: true } : null,
-    };
+    return { value: formatUsd(0), delta: null };
   })();
 
   const covKpi = (() => {
@@ -117,10 +111,7 @@ export const DashboardView: React.FC = () => {
       }
       return { value: formatNumber(cur), delta };
     }
-    return {
-      value: isCompare ? "911" : "905",
-      delta: isCompare ? { prefix: "vs 837", pct: "(+8.8%)", isPositive: true } : null,
-    };
+    return { value: formatNumber(0), delta: null };
   })();
 
   return (
