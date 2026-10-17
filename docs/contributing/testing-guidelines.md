@@ -42,7 +42,7 @@ npm run test
 ### Bắt buộc có test
 
 - Validate form: `title` ≤ 80, `amount` theo quy tắc từng form, trường bắt buộc.
-- `formatVnd` và `amountToVietnameseWords` (dự án thêm).
+- `formatUsd` và `readEnglishAmount` (dự án thêm).
 - KPI card render giá trị đã định dạng; biểu đồ render 7 điểm không lỗi (mock ApexCharts).
 
 ## Quy tắc chung

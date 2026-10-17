@@ -52,7 +52,7 @@ Tạo sự kiện để ghim lên biểu đồ.
 | --- | --- | --- | --- |
 | `title` | string | **bắt buộc, 1–80 ký tự** | Cắt khoảng trắng đầu/cuối |
 | `source` | enum | `POS` \| `EATCLUB` | Nguồn bị ảnh hưởng |
-| `amount` | number | số nguyên, **có thể âm** | Ảnh hưởng VND; âm = giảm |
+| `amount` | number | số nguyên, **có thể âm** | Ảnh hưởng USD; âm = giảm |
 | `eventDate` | date | `YYYY-MM-DD` | |
 | `shift` | enum | `CA_NGAY` \| `CA_TRUA` \| `CA_TOI` \| `CA_DEM` | |
 | `note` | string? | ≤ 500 | |

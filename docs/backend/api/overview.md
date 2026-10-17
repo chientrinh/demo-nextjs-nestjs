@@ -6,7 +6,7 @@
 - **Định dạng:** JSON cho cả request và response. Header bắt buộc khi có body: `Content-Type: application/json`.
 - **Xác thực:** Bearer JWT trên mọi endpoint trừ `POST /api/auth/login` và `POST /api/auth/refresh`.
 - **Ngày:** tham số và field ngày dùng `YYYY-MM-DD` (date-only).
-- **Tiền:** số nguyên VND trong JSON (`"amount": 1250000`).
+- **Tiền:** số nguyên USD trong JSON (`"amount": 1250000`).
 - **Enum:** UPPER_SNAKE_CASE, khớp [`database/schema.md`](../database/schema.md).
 - **Tên khóa JSON:** `camelCase` (`entryDate`, `paymentMethod`, `totalRevenue`), khớp field Prisma. Khác tên cột DB `snake_case`. Frontend chỉ thêm `src/modules/<x>/data/dtos` khi hình dạng API khác domain — xem [`../../frontend/data-fetching.md`](../../frontend/data-fetching.md).
 

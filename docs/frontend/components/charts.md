@@ -16,7 +16,7 @@ Trang Home dùng **ApexCharts** để vẽ biểu đồ xu hướng tuần. Comp
 
 **Trục X:** 7 ngày của tuần (`days[].date`), hiển thị thứ trong tuần (T2…CN).
 
-**Trục Y:** định dạng VND rút gọn (`1,2tr`, `800k`) để nhãn gọn; giá trị đầy đủ trong tooltip.
+**Trục Y:** định dạng USD rút gọn (`$1.2M`, `$800K`) để nhãn gọn; giá trị đầy đủ trong tooltip.
 
 ## Props
 
@@ -34,7 +34,7 @@ Dữ liệu lấy từ **một** hook `useWeeklyTrend(weekStart)` trong `modules
 Mỗi `event` biến thành một **annotation** đặt tại `x = eventDate`:
 
 - Nhãn ngắn = `title` (cắt bớt nếu dài).
-- Tooltip annotation hiển thị `title`, `amount` (VND), `shift`.
+- Tooltip annotation hiển thị `title`, `amount` (USD), `shift`.
 - Màu sắc hiển thị theo tác động sự kiện dương (`#16A34A` / `#3C50E0`).
 
 ```ts

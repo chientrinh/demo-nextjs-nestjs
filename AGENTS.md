@@ -26,7 +26,7 @@ Chạy trong thư mục tầng tương ứng: dev `npm run start:dev` (backend) 
 ## Quy ước dễ đoán sai
 
 - **Đặt tên:** cột Postgres `snake_case`; field Prisma `camelCase` + `@map("snake_case")`; tên bảng `snake_case` số nhiều qua `@@map`; **JSON API `camelCase`** (khớp field Prisma). Frontend cũng `camelCase` → `data/dtos/` là **tùy chọn**, chỉ tạo khi hình dạng API khác type domain.
-- **Tiền:** VND, **số nguyên**, đơn vị đồng. Prisma `Decimal @db.Decimal(15, 0)`; JSON là `number`.
+- **Tiền:** USD, **số nguyên**, đơn vị đô-la Mỹ (`$`). Prisma `Decimal @db.Decimal(15, 0)`; JSON là `number`; hiển thị `en-US` (xem ADR 0008).
 - **Ngày:** date-only `YYYY-MM-DD`, Postgres kiểu `date`, **không** timezone.
 - **ID:** UUID v4.
 - **Enum:** API dùng `UPPER_SNAKE_CASE`; UI hiển thị nhãn tiếng Việt.

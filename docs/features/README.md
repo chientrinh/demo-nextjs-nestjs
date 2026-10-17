@@ -35,6 +35,6 @@ Thuật ngữ cốt lõi (định nghĩa chi tiết ở [`../AGENT_INSTRUCTIONS.
 ## Quy ước chung mọi tính năng
 
 - Mọi trang admin cần đăng nhập; vai trò `ANALYST` chỉ đọc.
-- Tiền là **VND, số nguyên**; ngày là **date-only**.
+- Tiền là **USD, số nguyên**; ngày là **date-only**.
 - Sau thao tác ghi: toast xác nhận + invalidate query liên quan (bảng ở [`../frontend/state-management.md`](../frontend/state-management.md#invalidate-sau-khi-ghi)).
 - Trạng thái tải/rỗng/lỗi theo [`../design/components.md`](../design/components.md#trạng-thái-chuẩn-của-một-widget).

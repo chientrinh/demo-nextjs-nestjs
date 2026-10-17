@@ -23,7 +23,7 @@ npm run test:e2e        # nếu đã cấu hình Playwright
 Kiểm thử **hành vi người dùng**, không phải chi tiết cài đặt:
 
 1. **Form** — nhập sai (title > 80, amount âm ở labour) hiển thị lỗi đúng field; submit hợp lệ gọi đúng API.
-2. **Định dạng** — `formatVnd(16110000)` → `"16.110.000 ₫"` (`modules/shared/lib/format.ts`).
+2. **Định dạng** — `formatUsd(16110)` → `"$16,110"` (`modules/shared/lib/format.ts`).
 3. **KPI card** — nhận props và render số đã định dạng; trạng thái rỗng hiển thị `0`.
 4. **Biểu đồ** — nhận `days` (7 phần tử) và `events`, không ném lỗi; (mock `react-apexcharts`).
 5. **Luồng lỗi** — API trả `DUPLICATE_REVENUE_ENTRY` hiển thị thông báo tương ứng.
@@ -42,8 +42,8 @@ it('báo lỗi khi tiêu đề vượt 80 ký tự', async () => {
 ## Ví dụ — định dạng
 
 ```ts
-it('formatVnd dùng định dạng Việt Nam', () => {
-  expect(formatVnd(16110000)).toBe('16.110.000 ₫');
+it('formatUsd dùng định dạng en-US', () => {
+  expect(formatUsd(16110)).toBe('$16,110');
 });
 ```
 

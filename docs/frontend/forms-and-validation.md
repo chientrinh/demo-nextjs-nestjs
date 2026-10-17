@@ -34,12 +34,12 @@ const form = useForm<EventNoteInput>({ resolver: zodResolver(eventNoteSchema), d
 
 ## Các field chuyên biệt
 
-### Tiền tệ VND
+### Tiền tệ USD
 
 Input tiền dùng `CurrencyInput` — component UI toàn cục đặt ở `src/shared/components/form/CurrencyInput.tsx` (xem [`../design/components.md`](../design/components.md)):
 
-- Người dùng gõ số, hiển thị phân tách nghìn (`1.234.567`).
-- Giá trị lưu trong form là **số nguyên** (`number`), không phải chuỗi có dấu chấm.
+- Người dùng gõ số, hiển thị phân tách nghìn (`1,234,567`).
+- Giá trị lưu trong form là **số nguyên** (`number`), không phải chuỗi có dấu phân cách.
 - Không cho nhập phần thập phân.
 
 ```ts

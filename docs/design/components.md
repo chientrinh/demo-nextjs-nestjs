@@ -34,7 +34,7 @@ Nguyên tắc: **không viết lại** component TailAdmin đã có. Tùy biến
 | `EventNoteForm` | `src/modules/events/ui/event-form/components/EventNoteForm.tsx` | `events` | Form ghi sự kiện | [`../features/events/create-event.md`](../features/events/create-event.md) |
 | `LabourCostForm` | `src/modules/labour/ui/labour-form/components/LabourCostForm.tsx` | `labour` | Form chi phí nhân công | [`../features/labour-cost/create-labour-cost.md`](../features/labour-cost/create-labour-cost.md) |
 | `LabourLedgerTable` | `src/modules/labour/ui/labour-ledger/components/LabourLedgerTable.tsx` | `labour` | Bảng sổ nhật ký | [`../features/labour-cost/create-labour-cost.md`](../features/labour-cost/create-labour-cost.md) |
-| `CurrencyInput` | `src/shared/components/form/CurrencyInput.tsx` | (toàn cục) | Input tiền VND, dùng nhiều form | [`../frontend/forms-and-validation.md`](../frontend/forms-and-validation.md) |
+| `CurrencyInput` | `src/shared/components/form/CurrencyInput.tsx` | (toàn cục) | Input tiền USD, dùng nhiều form | [`../frontend/forms-and-validation.md`](../frontend/forms-and-validation.md) |
 
 ## Quy ước component
 

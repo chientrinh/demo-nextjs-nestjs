@@ -16,7 +16,7 @@
 - **DTO** với `class-validator` cho mọi đầu vào; `ValidationPipe` toàn cục (`whitelist: true`, `forbidNonWhitelisted: true`, `transform: true`).
 - Ném lỗi qua **exception chuẩn** (`BadRequestException`, `NotFoundException`, `ForbiddenException`), không trả object lỗi thủ công. Xem [`../backend/api/error-handling.md`](../backend/api/error-handling.md).
 - **Không tin client:** kiểm tra quyền ở tầng server bằng `RolesGuard`, không chỉ ẩn nút ở UI.
-- **Decimal/ngày:** serialize `Prisma.Decimal` → số nguyên VND; giữ ngày date-only.
+- **Decimal/ngày:** serialize `Prisma.Decimal` → số nguyên USD; giữ ngày date-only.
 - **Không log** dữ liệu nhạy cảm.
 
 ### Ví dụ DTO

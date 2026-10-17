@@ -62,14 +62,14 @@ frontend/
 │   │   │   ├── domain/                     # LabourCost, labourCostSchema (Zod)
 │   │   │   ├── data/                       # api.ts + dtos (tùy chọn) — chỉ HTTP
 │   │   │   ├── application/services/labour.service.ts     # use-case: createLabourCost, listLabour
-│   │   │   ├── lib/amount-to-words.ts      # hàm thuần: số → chữ (VND)
+│   │   │   ├── lib/                        # hàm thuần riêng của module (nếu có)
 │   │   │   ├── ui/
 │   │   │   │   ├── labour-form/{components,hooks,index.ts}
 │   │   │   │   └── labour-ledger/{components,hooks,index.ts}
 │   │   │   └── index.ts
 │   │   └── shared/                         # nghiệp vụ dùng chung ≥2 module
 │   │       ├── domain/{enums.ts,labels.ts} # enum chung + nhãn tiếng Việt
-│   │       ├── lib/format.ts               # formatVnd, formatNumber, formatDate
+│   │       ├── lib/format.ts               # formatUsd, formatCompactUsd, readEnglishAmount, formatNumber, formatDate
 │   │       └── ui/                         # PageHeader (widget nghiệp vụ dùng chung ≥2 module)
 │   │
 │   ├── adapters/                           # LỚP HẠ TẦNG (ports & adapters) — giao tiếp ra ngoài
@@ -112,7 +112,7 @@ Các luật dưới đây là **bắt buộc**; vi phạm sẽ bị nêu trong r
 5. **`data/` chỉ làm HTTP.** `data/api.ts` gọi backend qua `httpClient` (hoặc repository trong `adapters/`) và trả domain type; **không** chứa hook React, không chứa use-case. `ui/` không bao giờ thấy `axios`.
 6. **`application/services/` là tầng use-case.** Hook ở `ui/<area>/hooks` gọi **service** (`<feature>.service.ts`), **không** gọi thẳng `data/`. Service điều phối `data/api.ts`, áp quy tắc, và (nếu cần) ghi `application/store/`. Service **không** phụ thuộc React.
 7. **`application/store/` cho client state.** Chỉ tạo khi state cần chia sẻ giữa nhiều component (ví dụ `session-provider.tsx`, một `<x>-store.ts`); state cục bộ một component để ngay trong component.
-8. **`lib/` trong module** chỉ chứa hàm thuần của chính module đó (ví dụ `amount-to-words`).
+8. **`lib/` trong module** chỉ chứa hàm thuần của chính module đó (ví dụ một helper định dạng riêng; helper dùng chung ≥2 module đặt ở `modules/shared/lib/` như `readEnglishAmount`).
 9. **`modules/shared/`** dành cho nghiệp vụ **≥2 module** dùng chung (enum, nhãn tiếng Việt, `format`); nếu chỉ một module dùng, để trong module đó.
 10. **`shared/` (app-shared)** chỉ chứa thứ **không gắn nghiệp vụ** và dùng chung toàn app (UI primitive, hook, util, constant, style, provider); không nhét logic tính năng vào đây.
 11. **Barrel `index.ts`** của module là hợp đồng công khai: chỉ export thứ bên ngoài được phép dùng.

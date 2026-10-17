@@ -50,7 +50,7 @@ Ghi một khoản chi phí nhân công.
 | Field | Kiểu | Ràng buộc |
 | --- | --- | --- |
 | `expenseDate` | date | `YYYY-MM-DD` |
-| `amount` | number | số nguyên **> 0** (VND) |
+| `amount` | number | số nguyên **> 0** (USD) |
 | `department` | enum | `FOH` \| `BOH` \| `MANAGEMENT` \| `STEWARD` |
 | `paymentMethod` | enum | `CASH_TILL` \| `BANK_TRANSFER` \| `PETTY_CASH` |
 | `note` | string? | ≤ 500 |

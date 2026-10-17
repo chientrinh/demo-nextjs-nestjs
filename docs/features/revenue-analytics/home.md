@@ -53,7 +53,7 @@ Hình dạng response đầy đủ: [`../backend/api/endpoints/revenue.md`](../.
 
 - [ ] Biểu đồ vẽ **đủ 7 cột** kể cả ngày không có dữ liệu (giá trị `0`), không đứt trục.
 - [ ] Ba chuỗi đúng màu/nhãn: POS (primary), Eatclub (so sánh), Labour (cảnh báo).
-- [ ] KPI khớp mockup về cấu trúc (giá trị thực theo dữ liệu); định dạng VND.
+- [ ] KPI khớp mockup về cấu trúc (giá trị thực theo dữ liệu); định dạng USD.
 - [ ] Sự kiện trong tuần xuất hiện dưới dạng annotation có tooltip (title, amount ±, ca).
 - [ ] Đổi tuần cập nhật đồng thời biểu đồ, KPI, sự kiện.
 - [ ] Export PNG tải được ảnh biểu đồ.

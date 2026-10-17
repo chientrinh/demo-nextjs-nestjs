@@ -17,7 +17,7 @@ Bảng tra nhanh theo triệu chứng. Nếu sự cố nghiêm trọng, kiểm t
 | --- | --- | --- |
 | `migrate deploy` báo lệch lịch sử | Migration đã chạy/sửa tay | `npx prisma migrate status`; `migrate resolve --applied/--rolled-back` sau đối chiếu |
 | Cột mới `null` ở dữ liệu cũ | Thêm cột not-null không default | Làm theo expand→migrate→contract ([`database-migrations.md`](./database-migrations.md)) |
-| `Decimal` hiện thành object trong JSON | Chưa serialize `Prisma.Decimal` | Chuyển sang số nguyên VND ở DTO/service |
+| `Decimal` hiện thành object trong JSON | Chưa serialize `Prisma.Decimal` | Chuyển sang số nguyên USD ở DTO/service |
 | Ngày lệch 1 ngày | Trộn `Date` có timezone với `@db.Date` | Luôn dùng date-only `YYYY-MM-DD`; không đổi múi giờ khi lưu ngày |
 
 ## Xác thực & phiên

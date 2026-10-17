@@ -45,7 +45,7 @@ Dùng đúng các thuật ngữ sau trong code, commit, và tài liệu. Chúng 
 
 ## Quy tắc bất biến về kỹ thuật
 
-- **Tiền tệ:** mọi số tiền là **VND, số nguyên, đơn vị đồng**. Không dùng số thập phân cho tiền. Type ở Prisma là `Decimal @db.Decimal(15, 0)`, ở JSON là `number`.
+- **Tiền tệ:** mọi số tiền là **USD, số nguyên, đơn vị đô-la Mỹ (`$`)**. Không dùng số thập phân cho tiền. Type ở Prisma là `Decimal @db.Decimal(15, 0)`, ở JSON là `number`; hiển thị theo `en-US` (dấu `,` phân tách nghìn, tiền tố `$`).
 - **Ngày:** mọi ngày nghiệp vụ là **date-only** (`YYYY-MM-DD`), lưu ở Postgres kiểu `date`. Không thêm timezone vào ngày nghiệp vụ.
 - **ID:** UUID v4 cho mọi bản ghi.
 - **Xác thực:** mọi endpoint trừ `POST /api/auth/login` và `POST /api/auth/refresh` đều yêu cầu Bearer token.

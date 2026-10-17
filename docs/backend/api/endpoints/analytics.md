@@ -1,6 +1,6 @@
 # Endpoints — Analytics (Doanh thu & Chi phí)
 
-Base: `/api`. Kiểu tiền: số nguyên VND. Ngày: `YYYY-MM-DD`. Đặc tả dữ liệu: [`../../database/schema.md`](../../database/schema.md).
+Base: `/api`. Kiểu tiền: số nguyên USD. Ngày: `YYYY-MM-DD`. Đặc tả dữ liệu: [`../../database/schema.md`](../../database/schema.md).
 
 <a id="analytics"></a>
 
@@ -49,8 +49,8 @@ KPI tổng hợp cho khoảng ngày.
 
 ```json
 {
-  "totalRevenue": 16110000,
-  "averagePerDay": 2301000,
+  "totalRevenue": 16110,
+  "averagePerDay": 2301,
   "totalCovers": 14,
   "daysWithData": 7
 }
@@ -59,7 +59,7 @@ KPI tổng hợp cho khoảng ngày.
 | Field | Công thức |
 | --- | --- |
 | `totalRevenue` | `SUM(event_annotations.amount)` trong khoảng (cả POS + EATCLUB) |
-| `averagePerDay` | `totalRevenue / số ngày trong khoảng` (làm tròn tới đồng) |
+| `averagePerDay` | `totalRevenue / số ngày trong khoảng` (làm tròn tới đô-la) |
 | `totalCovers` | `COUNT(event_annotations)` (tổng số giao dịch / lần bán trong khoảng) |
 | `daysWithData` | số ngày có ít nhất một bản ghi bán hàng phát sinh |
 

@@ -10,7 +10,7 @@ Ba bảng nghiệp vụ: `users`, `labour_costs`, `event_annotations`.
 - Khóa chính `id` kiểu `String` (UUID v4), sinh bằng `@default(uuid())`.
 - Có `createdAt`/`updatedAt` (`@default(now())` / `@updatedAt`), map xuống `created_at`/`updated_at`.
 - Bản ghi do người dùng tạo có `createdById` (`@map("created_by_id")`) trỏ tới `users.id`.
-- **Tiền:** `Decimal @db.Decimal(15, 0)` — VND, số nguyên đồng, không thập phân.
+- **Tiền:** `Decimal @db.Decimal(15, 0)` — USD, số nguyên, không thập phân.
 - **Ngày nghiệp vụ:** `DateTime @db.Date` — date-only, không timezone.
 
 Prisma đặt **field `camelCase`**, ánh xạ xuống cột `snake_case` bằng `@map`; tên model giữ PascalCase, **tên bảng `snake_case` plural** qua `@@map`. Nhờ vậy code Prisma/TypeScript và JSON API đều dùng `camelCase`, còn DB vẫn `snake_case`. Ví dụ:
@@ -96,7 +96,7 @@ Bản ghi bán hàng / doanh thu chi tiết (bán được gì mỗi ngày, tron
 | `id` | `id` | String (UUID) | PK | |
 | `title` | `title` | String | not null, **≤ 80 ký tự** | Tiêu đề món/sự kiện/lần bán hàng |
 | `source` | `source` | RevenueSource | not null | Nguồn doanh thu: `POS` hoặc `EATCLUB` |
-| `amount` | `amount` | Decimal(15,0) | not null, **≥ 0** | Giá trị doanh thu bán được (VND, không âm) |
+| `amount` | `amount` | Decimal(15,0) | not null, **≥ 0** | Giá trị doanh thu bán được (USD, không âm) |
 | `event_date` | `eventDate` | Date | not null | Ngày phát sinh bán hàng |
 | `shift` | `shift` | WorkShift | not null | Ca làm việc (`CA_NGAY`, `CA_TRUA`, `CA_TOI`, `CA_DEM`) |
 | `note` | `note` | String? | nullable, ≤ 500 | Ghi chú thêm |
@@ -115,7 +115,7 @@ Một khoản chi phí nhân công theo ngày và bộ phận.
 | --- | --- | --- | --- | --- |
 | `id` | `id` | String (UUID) | PK | |
 | `expense_date` | `expenseDate` | Date | not null | Ngày chi |
-| `amount` | `amount` | Decimal(15,0) | not null, > 0 | Số tiền VND |
+| `amount` | `amount` | Decimal(15,0) | not null, > 0 | Số tiền USD |
 | `department` | `department` | Department | not null | `FOH`/`BOH`/`MANAGEMENT`/`STEWARD` |
 | `payment_method` | `paymentMethod` | PaymentMethod | not null | |
 | `note` | `note` | String? | nullable, ≤ 500 | |

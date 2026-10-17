@@ -50,7 +50,7 @@
 
 ## Database
 
-**PostgreSQL 16** — quan hệ rõ ràng, kiểu `date` và `Decimal`, index tốt cho truy vấn theo khoảng ngày. Đơn vị lưu tiền: VND số nguyên (`Decimal(15,0)`).
+**PostgreSQL 16** — quan hệ rõ ràng, kiểu `date` và `Decimal`, index tốt cho truy vấn theo khoảng ngày. Đơn vị lưu tiền: USD số nguyên (`Decimal(15,0)`).
 
 ## Hạ tầng
 

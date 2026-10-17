@@ -13,6 +13,7 @@ ADR ghi lại **quyết định kiến trúc quan trọng**, bối cảnh, và h
 | [0005](./0005-docker-per-layer-compose.md) | Docker tách riêng từng layer | Accepted |
 | [0006](./0006-html-to-image-dashboard-export.md) | Sử dụng html-to-image để xuất báo cáo Dashboard sang PNG | Accepted |
 | [0007](./0007-unify-revenue-into-event-annotations.md) | Hợp nhất ghi nhận doanh thu vào bảng event_annotations và xóa bảng revenue_entries | Accepted |
+| [0008](./0008-usd-currency-unit.md) | Đổi đơn vị tiền tệ sang USD (đô-la Mỹ) | Accepted |
 
 ## Khi nào viết một ADR
 

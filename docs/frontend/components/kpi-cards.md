@@ -6,11 +6,11 @@ Ba thẻ KPI ở đầu trang Home, hiển thị số liệu tổng hợp từ `
 
 | Thẻ | Field API | Nhãn | Định dạng |
 | --- | --- | --- | --- |
-| Tổng doanh thu | `totalRevenue` | Total Revenue | `1.234.567 ₫` |
-| Trung bình mỗi ngày | `averagePerDay` | Average per Day | `1.234.567 ₫` |
+| Tổng doanh thu | `totalRevenue` | Total Revenue | `$16,110` |
+| Trung bình mỗi ngày | `averagePerDay` | Average per Day | `$2,301` |
 | Tổng lượt khách | `totalCovers` | Total Covers | `905` (số nguyên, phân tách nghìn) |
 
-Giá trị khớp mockup: Total Revenue `$16,110`, Average per Day `$2,301`, Total Covers `905` — nhưng dự án hiển thị **VND** với định dạng Việt Nam (dấu `.` phân tách nghìn, hậu tố `₫`).
+Tuần mốc trong dữ liệu demo có `totalRevenue = 16,110` USD → hiển thị `$16,110` (khớp mockup). Định dạng **USD** `en-US`: tiền tố `$`, dấu `,` phân tách nghìn.
 
 ## `KpiCard`
 
@@ -21,7 +21,7 @@ Vị trí: `src/modules/analytics/ui/kpi-cards/components/KpiCard.tsx` (export q
 ```ts
 type KpiCardProps = {
   label: string;              // "Tổng doanh thu"
-  value: number;              // 16110000
+  value: number;              // 16110
   format?: 'currency' | 'number';
   icon?: ReactNode;           // Material Symbols
   trend?: { value: number; direction: 'up' | 'down' }; // tùy chọn
@@ -30,7 +30,7 @@ type KpiCardProps = {
 
 **Hành vi**
 
-- `format: 'currency'` → `formatVnd(value)`; `'number'` → phân tách nghìn.
+- `format: 'currency'` → `formatUsd(value)`; `'number'` → phân tách nghìn.
 - `loading` (nếu dùng) hiển thị skeleton cùng kích thước để tránh nhảy layout.
 - `trend` tùy chọn hiển thị mũi tên tăng/giảm; giai đoạn này chưa cần so sánh kỳ trước nên có thể bỏ.
 
@@ -39,14 +39,14 @@ type KpiCardProps = {
 `src/modules/shared/lib/format.ts`:
 
 ```ts
-export const formatVnd = (n: number) =>
-  new Intl.NumberFormat('vi-VN').format(n) + ' ₫';
+export const formatUsd = (n: number) =>
+  '$' + new Intl.NumberFormat('en-US').format(n);
 
 export const formatNumber = (n: number) =>
-  new Intl.NumberFormat('vi-VN').format(n);
+  new Intl.NumberFormat('en-US').format(n);
 ```
 
-Dùng `Intl.NumberFormat('vi-VN')` — không tự viết regex chèn dấu chấm.
+Dùng `Intl.NumberFormat('en-US')` — không tự viết regex chèn dấu phẩy. Xem thêm `formatCompactUsd` (rút gọn `$1.2M`, `$800K`) trong cùng file.
 
 ## Bố cục
 
@@ -67,7 +67,7 @@ Lấy từ `useSummary(from, to)` trong `modules/analytics/ui/dashboard/hooks/` 
 | Đang tải | Skeleton 3 thẻ |
 | Có dữ liệu | Số đã định dạng |
 | Lỗi | Thẻ hiển thị "—" + nút thử lại |
-| Rỗng (0) | Hiển thị `0 ₫` / `0`, không ẩn thẻ |
+| Rỗng (0) | Hiển thị `$0` / `0`, không ẩn thẻ |
 
 ## Liên quan
 

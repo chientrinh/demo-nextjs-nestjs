@@ -17,7 +17,7 @@ Ghi lại các giao dịch bán hàng / sự kiện phát sinh doanh thu chi ti�
 Theo mockup `docs/design/create-event.html`:
 
 - Tiêu đề trang: **Event & Note**.
-- Form gồm: tiêu đề sự kiện, nguồn doanh thu (radio POS/Eatclub), số tiền ảnh hưởng (VND), ngày sự kiện, ca làm việc, ghi chú.
+- Form gồm: tiêu đề sự kiện, nguồn doanh thu (radio POS/Eatclub), số tiền ảnh hưởng (USD), ngày sự kiện, ca làm việc, ghi chú.
 - Khu **quick-fill presets** điền nhanh một số trường hợp thường gặp.
 - Xem trước: vị trí sự kiện sẽ ghim trên biểu đồ (nếu có).
 

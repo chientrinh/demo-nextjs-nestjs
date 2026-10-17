@@ -111,5 +111,5 @@ Quy tắc invalidate: sau mọi thao tác ghi (POST/PATCH/DELETE), invalidate đ
 ## Biến đổi dữ liệu quan trọng
 
 - **Gộp theo ngày:** backend trả về 7 ngày liên tiếp kể cả ngày không có dữ liệu (giá trị `0`), để biểu đồ không bị đứt trục.
-- **Tiền tệ:** không làm tròn ở backend; VND là số nguyên. Định dạng hiển thị (`1.234.567 ₫`) do frontend lo.
+- **Tiền tệ:** không làm tròn ở backend; USD là số nguyên. Định dạng hiển thị (`$1,234,567`) do frontend lo.
 - **Ngày:** mọi so sánh khoảng ngày dùng `entry_date`/`expense_date`/`event_date` kiểu `date`, không dính timezone.
