@@ -137,11 +137,10 @@ export const DashboardView: React.FC = () => {
               className="flex items-center gap-2 cursor-pointer select-none text-[14px] text-gray-800 font-medium dark:text-gray-200"
             >
               <div
-                className={`w-[18px] h-[18px] rounded ${
-                  showPos
+                className={`w-[18px] h-[18px] rounded ${showPos
                     ? "bg-[#27272A] text-white"
                     : "border border-gray-300 bg-white dark:bg-gray-800 dark:border-gray-600"
-                } flex items-center justify-center transition-colors`}
+                  } flex items-center justify-center transition-colors`}
               >
                 {showPos && (
                   <svg
@@ -165,11 +164,10 @@ export const DashboardView: React.FC = () => {
               className="flex items-center gap-2 cursor-pointer select-none text-[14px] text-gray-800 font-medium dark:text-gray-200"
             >
               <div
-                className={`w-[18px] h-[18px] rounded ${
-                  showEatclub
+                className={`w-[18px] h-[18px] rounded ${showEatclub
                     ? "bg-[#27272A] text-white"
                     : "border border-gray-300 bg-white dark:bg-gray-800 dark:border-gray-600"
-                } flex items-center justify-center transition-colors`}
+                  } flex items-center justify-center transition-colors`}
               >
                 {showEatclub && (
                   <svg
@@ -193,11 +191,10 @@ export const DashboardView: React.FC = () => {
               className="flex items-center gap-2 cursor-pointer select-none text-[14px] text-gray-800 font-medium dark:text-gray-200"
             >
               <div
-                className={`w-[18px] h-[18px] rounded ${
-                  showLabour
+                className={`w-[18px] h-[18px] rounded ${showLabour
                     ? "bg-[#27272A] text-white"
                     : "border border-gray-300 bg-white dark:bg-gray-800 dark:border-gray-600"
-                } flex items-center justify-center transition-colors`}
+                  } flex items-center justify-center transition-colors`}
               >
                 {showLabour && (
                   <svg
@@ -219,11 +216,10 @@ export const DashboardView: React.FC = () => {
             <button
               type="button"
               onClick={handleToggleCompare}
-              className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl font-medium text-[14px] transition-all cursor-pointer shadow-sm ${
-                isCompare
+              className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl font-medium text-[14px] transition-all cursor-pointer shadow-sm ${isCompare
                   ? "bg-[#27272A] text-white dark:bg-white dark:text-gray-900"
                   : "bg-white border border-[#E5E7EB] hover:bg-gray-50 text-[#374151] dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-700"
-              }`}
+                }`}
             >
               <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M4 19h4V9H4v10zm6 0h4V5h-4v14zm6 0h4v-7h-4v7z"></path>
@@ -263,9 +259,8 @@ export const DashboardView: React.FC = () => {
                 </span>
                 {revKpi.delta && (
                   <span
-                    className={`text-[13px] font-semibold ${
-                      revKpi.delta.isPositive ? "text-[#16A34A]" : "text-[#E11D48]"
-                    }`}
+                    className={`text-[13px] font-semibold ${revKpi.delta.isPositive ? "text-[#16A34A]" : "text-[#E11D48]"
+                      }`}
                   >
                     {revKpi.delta.text}
                   </span>
@@ -282,9 +277,8 @@ export const DashboardView: React.FC = () => {
                 </span>
                 {avgKpi.delta && (
                   <span
-                    className={`text-[13px] font-semibold ${
-                      avgKpi.delta.isPositive ? "text-[#16A34A]" : "text-[#E11D48]"
-                    }`}
+                    className={`text-[13px] font-semibold ${avgKpi.delta.isPositive ? "text-[#16A34A]" : "text-[#E11D48]"
+                      }`}
                   >
                     {avgKpi.delta.text}
                   </span>
@@ -301,9 +295,8 @@ export const DashboardView: React.FC = () => {
                 </span>
                 {covKpi.delta && (
                   <span
-                    className={`text-[13px] font-semibold ${
-                      covKpi.delta.isPositive ? "text-[#16A34A]" : "text-[#E11D48]"
-                    }`}
+                    className={`text-[13px] font-semibold ${covKpi.delta.isPositive ? "text-[#16A34A]" : "text-[#E11D48]"
+                      }`}
                   >
                     {covKpi.delta.text}
                   </span>
@@ -330,98 +323,98 @@ export const DashboardView: React.FC = () => {
 
           {/* Bottom Legend matching docs/design/home.html & docs/design/home_compare.html */}
           {isCompare ? (
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-[13px] text-gray-700 font-medium dark:text-gray-300">
-            <div className="flex items-center gap-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-[#27272A]"></span>
-              <span>POS Revenue (Current)</span>
+            <div className="mt-8 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-[13px] text-gray-700 font-medium dark:text-gray-300">
+              <div className="flex items-center gap-2">
+                <span className="w-2.5 h-2.5 rounded-full bg-[#27272A]"></span>
+                <span>POS Revenue (Current)</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="w-2.5 h-2.5 rounded-full bg-[#525FE1]"></span>
+                <span>Eatclub Revenue (Current)</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="w-2.5 h-2.5 rounded-full bg-[#EA580C]"></span>
+                <span>Labour Costs (Current)</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="w-2.5 h-2.5 rounded-full bg-[#9CA3AF]"></span>
+                <span>Direct Revenue (Previous)</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="w-2.5 h-2.5 rounded-full bg-[#C7D2FE]"></span>
+                <span>Total Revenue (Previous)</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="w-2.5 h-2.5 rounded-full bg-[#FED7AA]"></span>
+                <span>Labour Costs (Previous)</span>
+              </div>
+              <div className="h-4 w-px bg-gray-300 mx-1 dark:bg-gray-700"></div>
+              <div className="flex items-center gap-2 text-[#16A34A]">
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M23 6l-9.5 9.5-5-5L1 18m22-12h-6m6 0v6"></path>
+                </svg>
+                <span className="text-gray-700 dark:text-gray-300">Positive Event Impact</span>
+              </div>
+              <div className="flex items-center gap-2 text-[#E11D48]">
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M23 18l-9.5-9.5-5 5L1 6m22 12h-6m6 0v-6"></path>
+                </svg>
+                <span className="text-gray-700 dark:text-gray-300">Negative Event Impact</span>
+              </div>
             </div>
-            <div className="flex items-center gap-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-[#525FE1]"></span>
-              <span>Eatclub Revenue (Current)</span>
+          ) : (
+            <div className="mt-8 flex flex-wrap items-center justify-center gap-x-7 gap-y-3 text-[14px] text-gray-700 font-medium dark:text-gray-300">
+              <div className="flex items-center gap-2.5">
+                <span className="w-3 h-3 rounded-full bg-[#27272A]"></span>
+                <span>POS Revenue</span>
+              </div>
+              <div className="flex items-center gap-2.5">
+                <span className="w-3 h-3 rounded-full bg-[#525FE1]"></span>
+                <span>Eatclub Revenue</span>
+              </div>
+              <div className="flex items-center gap-2.5">
+                <span className="w-3 h-3 rounded-full bg-[#EA580C]"></span>
+                <span>Labour Costs</span>
+              </div>
+              <div className="h-4 w-px bg-gray-300 mx-1 dark:bg-gray-700"></div>
+              <div className="flex items-center gap-2 text-[#16A34A]">
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M23 6l-9.5 9.5-5-5L1 18m22-12h-6m6 0v6"></path>
+                </svg>
+                <span className="text-gray-700 dark:text-gray-300">Positive Event Impact</span>
+              </div>
+              <div className="flex items-center gap-2 text-[#E11D48]">
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M23 18l-9.5-9.5-5 5L1 6m22 12h-6m6 0v-6"></path>
+                </svg>
+                <span className="text-gray-700 dark:text-gray-300">Negative Event Impact</span>
+              </div>
             </div>
-            <div className="flex items-center gap-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-[#EA580C]"></span>
-              <span>Labour Costs (Current)</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-[#9CA3AF]"></span>
-              <span>Direct Revenue (Previous)</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-[#C7D2FE]"></span>
-              <span>Total Revenue (Previous)</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-[#FED7AA]"></span>
-              <span>Labour Costs (Previous)</span>
-            </div>
-            <div className="h-4 w-px bg-gray-300 mx-1 dark:bg-gray-700"></div>
-            <div className="flex items-center gap-2 text-[#16A34A]">
-              <svg
-                className="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.5"
-                viewBox="0 0 24 24"
-              >
-                <path d="M23 6l-9.5 9.5-5-5L1 18m22-12h-6m6 0v6"></path>
-              </svg>
-              <span className="text-gray-700 dark:text-gray-300">Positive Event Impact</span>
-            </div>
-            <div className="flex items-center gap-2 text-[#E11D48]">
-              <svg
-                className="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.5"
-                viewBox="0 0 24 24"
-              >
-                <path d="M23 18l-9.5-9.5-5 5L1 6m22 12h-6m6 0v-6"></path>
-              </svg>
-              <span className="text-gray-700 dark:text-gray-300">Negative Event Impact</span>
-            </div>
-          </div>
-        ) : (
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-x-7 gap-y-3 text-[14px] text-gray-700 font-medium dark:text-gray-300">
-            <div className="flex items-center gap-2.5">
-              <span className="w-3 h-3 rounded-full bg-[#27272A]"></span>
-              <span>POS Revenue</span>
-            </div>
-            <div className="flex items-center gap-2.5">
-              <span className="w-3 h-3 rounded-full bg-[#525FE1]"></span>
-              <span>Eatclub Revenue</span>
-            </div>
-            <div className="flex items-center gap-2.5">
-              <span className="w-3 h-3 rounded-full bg-[#EA580C]"></span>
-              <span>Labour Costs</span>
-            </div>
-            <div className="h-4 w-px bg-gray-300 mx-1 dark:bg-gray-700"></div>
-            <div className="flex items-center gap-2 text-[#16A34A]">
-              <svg
-                className="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.5"
-                viewBox="0 0 24 24"
-              >
-                <path d="M23 6l-9.5 9.5-5-5L1 18m22-12h-6m6 0v6"></path>
-              </svg>
-              <span className="text-gray-700 dark:text-gray-300">Positive Event Impact</span>
-            </div>
-            <div className="flex items-center gap-2 text-[#E11D48]">
-              <svg
-                className="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.5"
-                viewBox="0 0 24 24"
-              >
-                <path d="M23 18l-9.5-9.5-5 5L1 6m22 12h-6m6 0v-6"></path>
-              </svg>
-              <span className="text-gray-700 dark:text-gray-300">Negative Event Impact</span>
-            </div>
-          </div>
-        )}
+          )}
         </div>
       </div>
     </div>

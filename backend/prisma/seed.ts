@@ -3,6 +3,51 @@ import bcrypt from 'bcryptjs';
 
 const prisma = new PrismaClient();
 
+// ── Phạm vi dữ liệu demo: Thứ Hai 2026-10-05 → Thứ Bảy 2026-10-24 ───────────
+const RANGE_START = '2026-10-05';
+const RANGE_END = '2026-10-24';
+
+type SeedDay = { date: string; pos: number; eatclub: number; labour: number };
+
+// Tuần mốc 2026-10-12 → 2026-10-18 (Th2 → CN), khớp docs/design/home.html.
+const sampleWeekDays: SeedDay[] = [
+  { date: '2026-10-12', pos: 17200000, eatclub: 5200000, labour: 6800000 },
+  { date: '2026-10-13', pos: 18200000, eatclub: 3800000, labour: 6500000 },
+  { date: '2026-10-14', pos: 18200000, eatclub: 3800000, labour: 9200000 },
+  { date: '2026-10-15', pos: 20300000, eatclub: 4200000, labour: 7400000 },
+  { date: '2026-10-16', pos: 19800000, eatclub: 3600000, labour: 6600000 },
+  { date: '2026-10-17', pos: 23600000, eatclub: 7800000, labour: 9400000 },
+  { date: '2026-10-18', pos: 24000000, eatclub: 4400000, labour: 12200000 },
+];
+
+// Hệ số so với tuần mốc, theo từng thứ Th2 → CN. Nhân cho cả doanh thu lẫn chi
+// phí nhân công nên lợi nhuận biến thiên cùng chiều — icon tăng/giảm rơi đúng
+// ngày mong muốn. Tuần trước để Th2 giảm, Th3 tăng, ... xen kẽ; tuần sau đảo
+// lại, nhờ vậy cùng một thứ luôn luân phiên tăng/giảm qua các tuần.
+const PREV_WEEK_FACTORS = [0.9, 1.12, 0.9, 1.12, 0.9, 1.12, 0.9];
+const NEXT_WEEK_FACTORS = [0.86, 1.06, 0.86, 1.06, 0.86, 1.06, 0.86];
+
+const shiftDays = (iso: string, days: number): string => {
+  const d = new Date(`${iso}T00:00:00.000Z`);
+  d.setUTCDate(d.getUTCDate() + days);
+  return d.toISOString().slice(0, 10);
+};
+
+const scaleDay = (day: SeedDay, factor: number, offsetDays: number): SeedDay => ({
+  date: shiftDays(day.date, offsetDays),
+  pos: Math.round(day.pos * factor),
+  eatclub: Math.round(day.eatclub * factor),
+  labour: Math.round(day.labour * factor),
+});
+
+// 3 tuần liền nhau: tuần trước (10-05), tuần mốc (10-12), tuần sau (10-19).
+// Cắt theo RANGE_END nên tuần thứ ba dừng ở Thứ Bảy 2026-10-24.
+const seedDays: SeedDay[] = [
+  ...sampleWeekDays.map((d, i) => scaleDay(d, PREV_WEEK_FACTORS[i], -7)),
+  ...sampleWeekDays,
+  ...sampleWeekDays.map((d, i) => scaleDay(d, NEXT_WEEK_FACTORS[i], 7)),
+].filter((d) => d.date >= RANGE_START && d.date <= RANGE_END);
+
 async function main() {
   console.log('🌱 Bắt đầu khởi tạo dữ liệu mẫu (Seeding)...');
 
@@ -50,18 +95,22 @@ async function main() {
 
   console.log(`✅ Đã tạo tài khoản quản trị: ${admin.email}`);
 
-  // 4. Dữ liệu bán hàng & sự kiện mẫu cho tuần hiện tại (2026-10-12 đến 2026-10-18)
-  const sampleWeekDays = [
-    { date: '2026-10-12', pos: 17200000, eatclub: 5200000, labour: 6800000 },
-    { date: '2026-10-13', pos: 18200000, eatclub: 3800000, labour: 6500000 },
-    { date: '2026-10-14', pos: 18200000, eatclub: 3800000, labour: 9200000 },
-    { date: '2026-10-15', pos: 20300000, eatclub: 4200000, labour: 7400000 },
-    { date: '2026-10-16', pos: 19800000, eatclub: 3600000, labour: 6600000 },
-    { date: '2026-10-17', pos: 23600000, eatclub: 7800000, labour: 9400000 },
-    { date: '2026-10-18', pos: 24000000, eatclub: 4400000, labour: 12200000 },
-  ];
+  // 4. Dữ liệu demo 3 tuần liền nhau (2026-10-05 → 2026-10-24)
+  // Xoá dữ liệu cũ trong phạm vi trước, để seed chạy lại luôn cho ra đúng một
+  // bộ số (nếu chỉ create thì chạy lại sẽ nhân đôi doanh thu).
+  const rangeStart = new Date(`${RANGE_START}T00:00:00.000Z`);
+  const rangeEnd = new Date(`${RANGE_END}T23:59:59.999Z`);
+  const clearedEvents = await prisma.eventAnnotation.deleteMany({
+    where: { eventDate: { gte: rangeStart, lte: rangeEnd } },
+  });
+  const clearedLabours = await prisma.labourCost.deleteMany({
+    where: { expenseDate: { gte: rangeStart, lte: rangeEnd } },
+  });
+  console.log(
+    `🧹 Đã xoá ${clearedEvents.count} bản ghi doanh thu và ${clearedLabours.count} chi phí nhân công cũ trong phạm vi.`,
+  );
 
-  for (const item of sampleWeekDays) {
+  for (const item of seedDays) {
     const entryDate = new Date(item.date);
 
     // POS Sales
@@ -91,41 +140,25 @@ async function main() {
     });
 
     // Labour Cost
-    const existingLabour = await prisma.labourCost.findFirst({
-      where: { expenseDate: entryDate, createdById: admin.id },
-    });
-    if (!existingLabour) {
-      await prisma.labourCost.create({
-        data: {
-          expenseDate: entryDate,
-          amount: item.labour,
-          department: Department.FOH,
-          paymentMethod: PaymentMethod.BANK_TRANSFER,
-          note: 'Chi phí nhân công trong ngày',
-          createdById: admin.id,
-        },
-      });
-    }
-  }
-
-  // 5. Sự kiện mẫu
-  const eventDate = new Date('2026-10-17');
-  const existingEvent = await prisma.eventAnnotation.findFirst({
-    where: { eventDate },
-  });
-  if (!existingEvent) {
-    await prisma.eventAnnotation.create({
+    await prisma.labourCost.create({
       data: {
-        title: 'Live nhạc Acoustic cuối tuần',
-        source: RevenueSource.POS,
-        amount: 3500000,
-        eventDate,
-        shift: WorkShift.CA_TOI,
-        note: 'Đêm nhạc acoustic thu hút thêm khách đặt bàn',
+        expenseDate: entryDate,
+        amount: item.labour,
+        department: Department.FOH,
+        paymentMethod: PaymentMethod.BANK_TRANSFER,
+        note: 'Chi phí nhân công trong ngày',
         createdById: admin.id,
       },
     });
   }
+
+  const profitLine = seedDays
+    .map((d) => {
+      const profit = d.pos + d.eatclub - d.labour;
+      return `   ${d.date}  LN=${profit.toLocaleString('en-US')}`;
+    })
+    .join('\n');
+  console.log(`✅ Đã tạo ${seedDays.length} ngày dữ liệu demo:\n${profitLine}`);
 
   console.log('✅ Khởi tạo dữ liệu mẫu hoàn tất!');
 }

@@ -1,10 +1,9 @@
 "use client";
 
-import type { ApexOptions } from "apexcharts";
+import type { ApexAnnotations, ApexOptions } from "apexcharts";
 import type ApexCharts from "apexcharts";
 import dynamic from "next/dynamic";
 import React, {
-  useCallback,
   useEffect,
   useImperativeHandle,
   useMemo,
@@ -46,6 +45,16 @@ const DEFAULT_PREV_POS = [1640, 1540, 1620, 1510, 1640, 2050, 2030];
 const DEFAULT_PREV_EATCLUB = [480, 360, 380, 340, 360, 700, 420];
 const DEFAULT_PREV_LABOUR = [640, 540, 800, 550, 600, 800, 1050];
 
+// Trend-impact icons embedded as SVG data URIs for ApexCharts point annotations.
+// Tailwind/JSX cannot be used here, so the mockup's circle badge is reproduced in SVG.
+const TREND_ICON_SVG = {
+  gain: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="#F0FDF4" stroke="#BBF7D0" stroke-width="1.5"/><g transform="translate(4.5, 4.5) scale(0.625)"><path d="M23 6l-9.5 9.5-5-5L1 18m22-12h-6m6 0v6" fill="none" stroke="#16A34A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></g></svg>`,
+  drop: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="#FFF1F2" stroke="#FECDD3" stroke-width="1.5"/><g transform="translate(4.5, 4.5) scale(0.625)"><path d="M23 18l-9.5-9.5-5 5L1 6m22 12h-6m6 0v-6" fill="none" stroke="#E11D48" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></g></svg>`,
+} as const;
+
+const trendIconDataUri = (type: "gain" | "drop") =>
+  `data:image/svg+xml;utf8,${encodeURIComponent(TREND_ICON_SVG[type])}`;
+
 export const RevenueTrendChart = forwardRef<RevenueTrendChartRef, RevenueTrendChartProps>(
   (
     {
@@ -63,13 +72,13 @@ export const RevenueTrendChart = forwardRef<RevenueTrendChartRef, RevenueTrendCh
     const { theme } = useTheme();
     const isDark = theme === "dark";
     const chartInstanceRef = useRef<ApexCharts | null>(null);
-    const containerRef = useRef<HTMLDivElement>(null);
-
-    type IconPos = { cx: number; cy: number };
-    const [iconPositions, setIconPositions] = useState<{
-      drop: IconPos | null;
-      gain: IconPos | null;
-    }>({ drop: null, gain: null });
+    const containerRef = useRef<HTMLDivElement | null>(null);
+    // Plot-area width, read off the ApexCharts instance after render, used to
+    // centre the per-day impact icons over the revenue column instead of the
+    // group centre. This bundle never calls `chart.events.mounted/updated`, so
+    // the instance is captured via react-apexcharts' `chartRef` prop and polled
+    // until the chart has measured itself.
+    const [gridWidth, setGridWidth] = useState(0);
 
     const hasLiveData =
       days && days.length === 7 && days.some((d) => d.posRevenue > 0 || d.eatclubRevenue > 0);
@@ -222,57 +231,57 @@ export const RevenueTrendChart = forwardRef<RevenueTrendChartRef, RevenueTrendCh
       prevEatclubData,
       prevLabourData,
     ]);
-    // Compute which day index is the biggest drop/gain for compare mode
-    const compareTargets = useMemo(() => {
-      if (!isCompare) return { dropIdx: 4, gainIdx: 5 };
-      const deltas = posData.map((pos, i) => {
-        const curr = pos + eatclubData[i];
-        const prev = prevPosData[i] + prevEatclubData[i];
-        return prev > 0 ? ((curr - prev) / prev) * 100 : 0;
-      });
-      let dropIdx = 0;
-      let gainIdx = 0;
-      deltas.forEach((d, i) => {
-        if (d < deltas[dropIdx]) dropIdx = i;
-        if (d > deltas[gainIdx]) gainIdx = i;
-      });
-      return { dropIdx, gainIdx };
-    }, [isCompare, posData, eatclubData, prevPosData, prevEatclubData]);
+    // Per-day impact badge: green when the day's revenue-minus-cost beats the
+    // same weekday last week, red otherwise. Rendered straight through
+    // ApexCharts point annotations. `marker.size = 0` alone still paints the
+    // default 2px marker stroke, which showed up as mystery dots on the column
+    // tops — so `strokeWidth` must be zeroed too. The badge itself comes from
+    // the `image` data URI.
+    const annotationPoints = useMemo<NonNullable<ApexAnnotations["points"]>>(() => {
+      const xDivision = gridWidth / categories.length;
+      // The group's first (revenue) column sits left of the group centre at a
+      // fixed fraction of one slot: -0.17 of a slot for the 2-group layout
+      // (68% columnWidth) and -0.27 for the 4-group compare layout (72%).
+      // The <style> block below nudges the revenue bars with a CSS
+      // translateX(-2px | -4px), which the annotation coordinate space does not
+      // include, so fold that shift in to land on the column's visual centre.
+      const columnOffset = isCompare ? -0.27 : -0.17;
+      const cssShift = isCompare ? -4 : -2;
 
-    // Read actual SVG bar positions after chart renders
-    const readIconPositions = useCallback(() => {
-      if (!containerRef.current) return;
-      const container = containerRef.current;
-      const cRect = container.getBoundingClientRect();
+      return categories.map((day, dayIdx) => {
+        const currentProfit = posData[dayIdx] + eatclubData[dayIdx] - labourData[dayIdx];
+        const previousProfit =
+          prevPosData[dayIdx] + prevEatclubData[dayIdx] - prevLabourData[dayIdx];
+        const type: "gain" | "drop" = currentProfit > previousProfit ? "gain" : "drop";
+        const topOfColumn =
+          (showPos ? posData[dayIdx] : 0) + (showEatclub ? eatclubData[dayIdx] : 0);
 
-      // The topmost stacked series: Eatclub Revenue (or Total Revenue for prev period)
-      const topSeriesSelector = isCompare
-        ? '.apexcharts-series[seriesName*="Eatclub"][seriesName*="Current"]'
-        : '.apexcharts-series[seriesName*="Eatclub"]';
-
-      const topSeries = container.querySelector(topSeriesSelector);
-      if (!topSeries) return;
-
-      const paths = topSeries.querySelectorAll<SVGPathElement>("path");
-      if (paths.length < 7) return;
-
-      const getPos = (idx: number): IconPos | null => {
-        const path = paths[idx];
-        if (!path) return null;
-        const r = path.getBoundingClientRect();
-        if (r.width === 0 && r.height === 0) return null;
         return {
-          cx: r.left + r.width / 2 - cRect.left,   // center-x of bar
-          cy: r.top - cRect.top - 28,               // 28px above bar top (icon height + 4px gap)
+          x: day,
+          y: topOfColumn,
+          marker: { size: 0, strokeWidth: 0 },
+          image: {
+            path: trendIconDataUri(type),
+            width: 24,
+            height: 24,
+            offsetX: columnOffset * xDivision + cssShift,
+            offsetY: -16,
+          },
         };
-      };
-
-      const { dropIdx, gainIdx } = compareTargets;
-      setIconPositions({
-        drop: getPos(isCompare ? dropIdx : 4),
-        gain: getPos(isCompare ? gainIdx : 5),
       });
-    }, [isCompare, compareTargets]);
+    }, [
+      gridWidth,
+      isCompare,
+      categories,
+      posData,
+      eatclubData,
+      labourData,
+      prevPosData,
+      prevEatclubData,
+      prevLabourData,
+      showPos,
+      showEatclub,
+    ]);
 
     const options: ApexOptions = useMemo(
       () => ({
@@ -284,19 +293,6 @@ export const RevenueTrendChart = forwardRef<RevenueTrendChartRef, RevenueTrendCh
           fontFamily: "inherit",
           toolbar: { show: false },
           background: "transparent",
-          events: {
-            mounted: (chart) => {
-              chartInstanceRef.current = chart;
-              setTimeout(readIconPositions, 150);
-            },
-            updated: (chart) => {
-              chartInstanceRef.current = chart;
-              setTimeout(readIconPositions, 150);
-            },
-            animationEnd: () => {
-              readIconPositions();
-            },
-          },
         },
         colors,
         plotOptions: {
@@ -367,35 +363,60 @@ export const RevenueTrendChart = forwardRef<RevenueTrendChartRef, RevenueTrendCh
           },
         },
         annotations: {
-          // Annotation markers only — labels replaced by HTML icon overlays
-          points: isCompare
-            ? []
-            : [
-              {
-                x: "Fri",
-                y: hasLiveData ? undefined : 2340,
-                marker: {
-                  size: 0, // marker hidden; icon overlay handles the visual
-                },
-              },
-              {
-                x: "Sat",
-                y: hasLiveData ? undefined : 3140,
-                marker: {
-                  size: 0,
-                },
-              },
-            ],
+          points: annotationPoints,
         },
       }),
-      [categories, colors, hasLiveData, isDark, isCompare, readIconPositions],
+      [
+        annotationPoints,
+        categories,
+        colors,
+        hasLiveData,
+        isDark,
+        isCompare,
+      ],
     );
 
-    // Re-read icon positions whenever data or mode changes
+    // Keep `gridWidth` in step with the rendered plot area. There is no chart
+    // event to hook here (see note above), so poll on the next frame until the
+    // instance exposes its layout, and re-read on container resize.
     useEffect(() => {
-      const timer = setTimeout(readIconPositions, 200);
-      return () => clearTimeout(timer);
-    }, [series, isCompare, readIconPositions]);
+      const read = () => {
+        const ctx = chartInstanceRef.current as unknown as
+          | { w?: { layout?: { gridWidth?: number } } }
+          | null;
+        const gw = ctx?.w?.layout?.gridWidth;
+        if (typeof gw === "number" && gw > 0) {
+          setGridWidth((prev) => (prev === gw ? prev : gw));
+          return true;
+        }
+        return false;
+      };
+
+      let raf = 0;
+      let tries = 0;
+      const poll = () => {
+        // ~2s of frames: enough for the chart to measure itself, but bounded so
+        // a placeholder (chart not yet mounted) cannot spin forever.
+        if (!read() && tries++ < 120) raf = requestAnimationFrame(poll);
+      };
+      raf = requestAnimationFrame(poll);
+
+      const el = containerRef.current;
+      const ro =
+        el && typeof ResizeObserver !== "undefined"
+          ? new ResizeObserver(() => {
+            cancelAnimationFrame(raf);
+            tries = 0;
+            raf = requestAnimationFrame(poll);
+          })
+          : null;
+      ro?.observe(el as Element);
+
+      return () => {
+        cancelAnimationFrame(raf);
+        ro?.disconnect();
+      };
+    }, [options, series]);
 
     return (
       <div
@@ -468,47 +489,14 @@ export const RevenueTrendChart = forwardRef<RevenueTrendChartRef, RevenueTrendCh
         {loading ? (
           <div className="h-[360px] w-full animate-pulse rounded-xl bg-gray-100 dark:bg-gray-800" />
         ) : (
-          <>
-            <Chart options={options} series={series} type="bar" height={360} width="100%" />
-
-            {/* Trend icon overlays: drop (red) + gain (green) — compare mode only */}
-            {isCompare && (iconPositions.drop || iconPositions.gain) && (
-              <div className="absolute inset-0 pointer-events-none" style={{ overflow: 'visible' }}>
-                {iconPositions.drop && (
-                  <div
-                    className="absolute flex items-center justify-center"
-                    style={{
-                      left: `${iconPositions.drop.cx}px`,
-                      top: `${iconPositions.drop.cy}px`,
-                      transform: 'translateX(-50%)',
-                    }}
-                  >
-                    <div className="w-6 h-6 rounded-full bg-[#FFF1F2] border border-[#FECDD3] flex items-center justify-center text-[#E11D48] shadow-sm">
-                      <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                        <path d="M23 18l-9.5-9.5-5 5L1 6m22 12h-6m6 0v-6" />
-                      </svg>
-                    </div>
-                  </div>
-                )}
-                {iconPositions.gain && (
-                  <div
-                    className="absolute flex items-center justify-center"
-                    style={{
-                      left: `${iconPositions.gain.cx}px`,
-                      top: `${iconPositions.gain.cy}px`,
-                      transform: 'translateX(-50%)',
-                    }}
-                  >
-                    <div className="w-6 h-6 rounded-full bg-[#F0FDF4] border border-[#BBF7D0] flex items-center justify-center text-[#16A34A] shadow-sm">
-                      <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                        <path d="M23 6l-9.5 9.5-5-5L1 18m22-12h-6m6 0v6" />
-                      </svg>
-                    </div>
-                  </div>
-                )}
-              </div>
-            )}
-          </>
+          <Chart
+            chartRef={chartInstanceRef}
+            options={options}
+            series={series}
+            type="bar"
+            height={360}
+            width="100%"
+          />
         )}
       </div>
     );
