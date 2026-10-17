@@ -27,11 +27,10 @@ Mọi file tính năng theo cấu trúc:
 
 Thuật ngữ cốt lõi (định nghĩa chi tiết ở [`../AGENT_INSTRUCTIONS.md`](../AGENT_INSTRUCTIONS.md#từ-vựng-bắt-buộc-ubiquitous-language)):
 
-- **Revenue Entry** — doanh thu theo `(entryDate, source)`; `source ∈ {POS, EATCLUB}`.
+- **Event Annotation** — bản ghi bán hàng / sự kiện phát sinh doanh thu theo `(eventDate, source, shift)`; `source ∈ {POS, EATCLUB}`.
 - **Labour Cost** — chi phí nhân công theo `(expenseDate, department, paymentMethod)`.
-- **Event Annotation** — sự kiện có ảnh hưởng doanh thu, ghim lên biểu đồ tuần.
-- **Covers** — số lượt khách trong ngày.
-- **Trend** — chuỗi 7 ngày cho biểu đồ Home.
+- **Covers** — số lượt bán / giao dịch phát sinh trong kỳ.
+- **Trend** — chuỗi 7 ngày cho biểu đồ Home (cột doanh thu POS & Eatclub từ `event_annotations`, đường chi phí từ `labour_costs`).
 
 ## Quy ước chung mọi tính năng
 

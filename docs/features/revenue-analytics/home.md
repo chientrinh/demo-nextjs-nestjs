@@ -41,12 +41,12 @@ Hình dạng response đầy đủ: [`../backend/api/endpoints/revenue.md`](../.
 
 | Thành phần | Nguồn | Ghi chú |
 | --- | --- | --- |
-| POS Revenue (bar) | `days[].posRevenue` | `sum(revenue_entries.amount where source=POS)` |
-| Eatclub Revenue (bar) | `days[].eatclubRevenue` | `sum(... source=EATCLUB)` |
+| POS Revenue (bar) | `days[].posRevenue` | `sum(event_annotations.amount where source=POS)` |
+| Eatclub Revenue (bar) | `days[].eatclubRevenue` | `sum(event_annotations.amount where source=EATCLUB)` |
 | Labour Costs (line) | `days[].labourCost` | `sum(labour_costs.amount)` mọi bộ phận |
-| Tổng doanh thu | `summary.totalRevenue` | POS + EATCLUB |
+| Tổng doanh thu | `summary.totalRevenue` | POS + EATCLUB (tổng doanh thu từ `event_annotations`) |
 | Trung bình/ngày | `summary.averagePerDay` | chia số ngày lịch trong khoảng |
-| Tổng covers | `summary.totalCovers` | `sum(revenue_entries.covers)` |
+| Tổng lượt bán / covers | `summary.totalCovers` | `count(event_annotations)` trong khoảng |
 | Annotation | `events[]` | mỗi sự kiện một ghim tại `eventDate` |
 
 ## Tiêu chí chấp nhận

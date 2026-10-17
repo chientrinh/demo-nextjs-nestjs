@@ -12,6 +12,7 @@ ADR ghi lại **quyết định kiến trúc quan trọng**, bối cảnh, và h
 | [0004](./0004-single-location-scope.md) | Phạm vi một địa điểm (không đa chi nhánh) | Accepted |
 | [0005](./0005-docker-per-layer-compose.md) | Docker tách riêng từng layer | Accepted |
 | [0006](./0006-html-to-image-dashboard-export.md) | Sử dụng html-to-image để xuất báo cáo Dashboard sang PNG | Accepted |
+| [0007](./0007-unify-revenue-into-event-annotations.md) | Hợp nhất ghi nhận doanh thu vào bảng event_annotations và xóa bảng revenue_entries | Accepted |
 
 ## Khi nào viết một ADR
 

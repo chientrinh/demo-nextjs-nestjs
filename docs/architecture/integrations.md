@@ -13,18 +13,17 @@ Hai nguồn doanh thu là khái niệm cốt lõi, không phải kết nối m�
 | `POS` | Máy bán hàng tại quầy | Doanh thu ghi nhận trực tiếp tại nhà hàng |
 | `EATCLUB` | App đối tác Eatclub | Doanh thu qua đặt bàn/khuyến mãi của đối tác |
 
-Cả hai nguồn cùng tồn tại theo ngày. Một ngày có thể có bản ghi cho `POS`, cho `EATCLUB`, hoặc cả hai. Ràng buộc duy nhất `(entry_date, source)` đảm bảo mỗi nguồn chỉ có một bản ghi/ngày (xem [`backend/database/schema.md`](../backend/database/schema.md)).
+Cả hai nguồn cùng tồn tại theo ngày. Trong một ngày có thể có nhiều bản ghi bán hàng phát sinh cho `POS` và `EATCLUB` trong bảng `event_annotations` (xem [`backend/database/schema.md`](../backend/database/schema.md)).
 
 ## Lộ trình tích hợp tự động (tương lai)
 
 Khi chuyển từ nhập tay sang đồng bộ tự động, đây là hướng thiết kế đã dự trù:
 
-- **Điểm vào:** một module `IngestionModule` mới ghi vào cùng bảng `revenue_entries`, không đổi schema.
-- **Nguồn POS:** import file CSV/Excel cuối ngày do máy POS xuất.
+- **Điểm vào:** một module `IngestionModule` mới ghi vào cùng bảng `event_annotations`, không đổi schema.
+- **Nguồn POS:** import file CSV/Excel giao dịch bán hàng do máy POS xuất.
 - **Nguồn Eatclub:** gọi API đối tác (cần credential riêng) hoặc nhận file đối soát.
-- **Idempotency:** dùng khóa `(entry_date, source)` để upsert, tránh trùng khi đồng bộ lại.
 
-Các endpoint hiện tại (`POST /api/revenue`) vẫn giữ nguyên; đồng bộ tự động chỉ là một client khác của cùng tầng dịch vụ.
+Các endpoint hiện tại (`POST /api/events`) vẫn giữ nguyên; đồng bộ tự động chỉ là một client khác của cùng tầng dịch vụ.
 
 ## Tích hợp trong nội bộ hệ thống
 

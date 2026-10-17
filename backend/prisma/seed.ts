@@ -50,54 +50,42 @@ async function main() {
 
   console.log(`✅ Đã tạo tài khoản quản trị: ${admin.email}`);
 
-  // 4. Dữ liệu doanh thu mẫu cho tuần hiện tại (2026-10-12 đến 2026-10-18)
+  // 4. Dữ liệu bán hàng & sự kiện mẫu cho tuần hiện tại (2026-10-12 đến 2026-10-18)
   const sampleWeekDays = [
-    { date: '2026-10-12', pos: 17200000, eatclub: 5200000, covers: 142, labour: 6800000 },
-    { date: '2026-10-13', pos: 18200000, eatclub: 3800000, covers: 135, labour: 6500000 },
-    { date: '2026-10-14', pos: 18200000, eatclub: 3800000, covers: 138, labour: 9200000 },
-    { date: '2026-10-15', pos: 20300000, eatclub: 4200000, covers: 156, labour: 7400000 },
-    { date: '2026-10-16', pos: 19800000, eatclub: 3600000, covers: 149, labour: 6600000 },
-    { date: '2026-10-17', pos: 23600000, eatclub: 7800000, covers: 180, labour: 9400000 },
-    { date: '2026-10-18', pos: 24000000, eatclub: 4400000, covers: 175, labour: 12200000 },
+    { date: '2026-10-12', pos: 17200000, eatclub: 5200000, labour: 6800000 },
+    { date: '2026-10-13', pos: 18200000, eatclub: 3800000, labour: 6500000 },
+    { date: '2026-10-14', pos: 18200000, eatclub: 3800000, labour: 9200000 },
+    { date: '2026-10-15', pos: 20300000, eatclub: 4200000, labour: 7400000 },
+    { date: '2026-10-16', pos: 19800000, eatclub: 3600000, labour: 6600000 },
+    { date: '2026-10-17', pos: 23600000, eatclub: 7800000, labour: 9400000 },
+    { date: '2026-10-18', pos: 24000000, eatclub: 4400000, labour: 12200000 },
   ];
 
   for (const item of sampleWeekDays) {
     const entryDate = new Date(item.date);
 
-    // POS Revenue
-    await prisma.revenueEntry.upsert({
-      where: {
-        entryDate_source: {
-          entryDate,
-          source: RevenueSource.POS,
-        },
-      },
-      update: {},
-      create: {
-        entryDate,
+    // POS Sales
+    await prisma.eventAnnotation.create({
+      data: {
+        title: 'Bán hàng POS tại quầy',
         source: RevenueSource.POS,
         amount: item.pos,
-        covers: Math.floor(item.covers * 0.7),
-        note: 'Doanh thu POS tại quầy',
+        eventDate: entryDate,
+        shift: WorkShift.CA_NGAY,
+        note: 'Doanh thu POS tại quầy trong ngày',
         createdById: admin.id,
       },
     });
 
-    // Eatclub Revenue
-    await prisma.revenueEntry.upsert({
-      where: {
-        entryDate_source: {
-          entryDate,
-          source: RevenueSource.EATCLUB,
-        },
-      },
-      update: {},
-      create: {
-        entryDate,
+    // Eatclub Sales
+    await prisma.eventAnnotation.create({
+      data: {
+        title: 'Bán hàng app đối tác Eatclub',
         source: RevenueSource.EATCLUB,
         amount: item.eatclub,
-        covers: Math.floor(item.covers * 0.3),
-        note: 'Doanh thu đối tác Eatclub',
+        eventDate: entryDate,
+        shift: WorkShift.CA_NGAY,
+        note: 'Doanh thu đối tác Eatclub trong ngày',
         createdById: admin.id,
       },
     });

@@ -4,7 +4,7 @@ import { ERROR_CODES } from '../common/constants/error-codes.js';
 
 @Injectable()
 export class AnalyticsService {
-  constructor(private readonly analyticsRepo: AnalyticsRepository) {}
+  constructor(private readonly analyticsRepo: AnalyticsRepository) { }
 
   async getWeeklyTrend(weekStartStr: string) {
     const startDate = new Date(`${weekStartStr}T00:00:00.000Z`);
@@ -32,8 +32,7 @@ export class AnalyticsService {
 
     const endDate = new Date(`${dateStrList[6]}T23:59:59.999Z`);
 
-    const [revenues, labours, events] = await Promise.all([
-      this.analyticsRepo.findRevenueBetween(startDate, endDate),
+    const [labours, events] = await Promise.all([
       this.analyticsRepo.findLabourBetween(startDate, endDate),
       this.analyticsRepo.findEventsBetween(startDate, endDate),
     ]);
@@ -42,14 +41,14 @@ export class AnalyticsService {
       let posRevenue = 0;
       let eatclubRevenue = 0;
 
-      for (const r of revenues) {
-        const rDate = r.entryDate instanceof Date
-          ? r.entryDate.toISOString().split('T')[0]
-          : String(r.entryDate).split('T')[0];
+      for (const e of events) {
+        const eDate = e.eventDate instanceof Date
+          ? e.eventDate.toISOString().split('T')[0]
+          : String(e.eventDate).split('T')[0];
 
-        if (rDate === dateStr) {
-          if (r.source === 'POS') posRevenue += Number(r.amount);
-          if (r.source === 'EATCLUB') eatclubRevenue += Number(r.amount);
+        if (eDate === dateStr) {
+          if (e.source === 'POS') posRevenue += Number(e.amount);
+          if (e.source === 'EATCLUB') eatclubRevenue += Number(e.amount);
         }
       }
 
@@ -113,19 +112,17 @@ export class AnalyticsService {
       });
     }
 
-    const revenues = await this.analyticsRepo.findRevenueBetween(startDate, endDate);
+    const events = await this.analyticsRepo.findEventsBetween(startDate, endDate);
 
     let totalRevenue = 0;
-    let totalCovers = 0;
     const datesWithData = new Set<string>();
 
-    for (const r of revenues) {
-      totalRevenue += Number(r.amount);
-      totalCovers += r.covers;
-      const rDate = r.entryDate instanceof Date
-        ? r.entryDate.toISOString().split('T')[0]
-        : String(r.entryDate).split('T')[0];
-      datesWithData.add(rDate);
+    for (const e of events) {
+      totalRevenue += Number(e.amount);
+      const eDate = e.eventDate instanceof Date
+        ? e.eventDate.toISOString().split('T')[0]
+        : String(e.eventDate).split('T')[0];
+      datesWithData.add(eDate);
     }
 
     const msPerDay = 1000 * 60 * 60 * 24;
@@ -138,7 +135,7 @@ export class AnalyticsService {
     return {
       totalRevenue,
       averagePerDay,
-      totalCovers,
+      totalCovers: events.length,
       daysWithData: datesWithData.size,
     };
   }

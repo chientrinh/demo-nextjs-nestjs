@@ -5,19 +5,17 @@
 | Bảng | Index | Phục vụ truy vấn |
 | --- | --- | --- |
 | `users` | `@unique(email)` | Tra cứu khi đăng nhập |
-| `revenue_entries` | `@@unique([entryDate, source])` | Đảm bảo duy nhất + tra theo ngày |
-| `revenue_entries` | `@@index([entryDate])` | Dải ngày cho biểu đồ/KPI |
-| `labour_costs` | `@@index([expenseDate])` | Dải ngày, tổng hợp theo ngày |
+| `labour_costs` | `@@index([expenseDate])` | Dải ngày, tổng hợp chi phí theo ngày |
 | `labour_costs` | `@@index([department])` | Lọc theo bộ phận trên sổ nhật ký |
-| `event_annotations` | `@@index([eventDate])` | Ghim sự kiện theo tuần |
+| `event_annotations` | `@@index([eventDate])` | Dải ngày doanh thu, tổng hợp bán hàng, ghim sự kiện |
 
-Index `entryDate` và `expenseDate` là quan trọng nhất vì **mọi truy vấn analytics đều lọc theo khoảng ngày** (xem [`../api/endpoints/revenue.md`](../api/endpoints/revenue.md)).
+Index `eventDate` và `expenseDate` là quan trọng nhất vì **mọi truy vấn analytics đều lọc theo khoảng ngày** (xem [`../api/endpoints/analytics.md`](../api/endpoints/analytics.md)).
 
 ## Truy vấn trọng tâm và chi phí
 
 | Truy vấn | Tần suất | Đường index |
 | --- | --- | --- |
-| Xu hướng tuần (7 ngày × 2 bảng) | mỗi lần mở Home | Range scan trên `entryDate`, `expenseDate` |
+| Xu hướng tuần (7 ngày × 2 bảng) | mỗi lần mở Home | Range scan trên `eventDate`, `expenseDate` |
 | KPI tổng hợp theo khoảng | mỗi lần mở Home / đổi khoảng | Range scan, `SUM`/`COUNT` gộp ở DB |
 | Sổ nhật ký labour theo bộ phận + ngày | khi xem ledger | `expenseDate` + `department` |
 
@@ -33,13 +31,13 @@ Index `entryDate` và `expenseDate` là quan trọng nhất vì **mọi truy v�
 Để dựng 7 điểm dữ liệu cho biểu đồ, dùng một truy vấn gộp cho mỗi bảng thay vì 7 truy vấn:
 
 ```sql
-SELECT entryDate, source, SUM(amount) AS total
-FROM revenue_entries
-WHERE entryDate BETWEEN $1 AND $2
-GROUP BY entryDate, source;
+SELECT event_date, source, SUM(amount) AS total
+FROM event_annotations
+WHERE event_date BETWEEN $1 AND $2
+GROUP BY event_date, source;
 ```
 
-Backend gộp kết quả thành mảng 7 ngày, chèn `0` cho ngày thiếu (điền đầy ở tầng service, xem [`../api/endpoints/revenue.md`](../api/endpoints/revenue.md)).
+Backend gộp kết quả thành mảng 7 ngày, chèn `0` cho ngày thiếu (điền đầy ở tầng service, xem [`../api/endpoints/analytics.md`](../api/endpoints/analytics.md)).
 
 ## Khi nào thêm index
 

@@ -2,7 +2,7 @@
 
 Database: **PostgreSQL 16**. ORM: **Prisma**. File schema nằm ở `backend/prisma/schema.prisma`.
 
-Bốn bảng nghiệp vụ: `users`, `revenue_entries`, `labour_costs`, `event_annotations`.
+Ba bảng nghiệp vụ: `users`, `labour_costs`, `event_annotations`.
 
 ## Quy ước chung cho mọi bảng
 
@@ -27,7 +27,6 @@ model User {
   createdAt    DateTime @default(now()) @map("created_at")
   updatedAt    DateTime @updatedAt @map("updated_at")
 
-  revenueEntries   RevenueEntry[]
   labourCosts      LabourCost[]
   eventAnnotations EventAnnotation[]
 
@@ -86,24 +85,27 @@ Tài khoản đăng nhập và gán chủ sở hữu cho dữ liệu tạo ra. C
 | `created_at` | `createdAt` | DateTime | | |
 | `updated_at` | `updatedAt` | DateTime | | |
 
-Quan hệ: một user có nhiều `revenueEntries`, `labourCosts`, `eventAnnotations`.
+Quan hệ: một user có nhiều `labourCosts`, `eventAnnotations`.
 
-## `RevenueEntry`
+## `EventAnnotation`
 
-Doanh thu theo **ngày + nguồn**. Mỗi cặp `(entryDate, source)` là duy nhất.
+Bản ghi bán hàng / doanh thu chi tiết (bán được gì mỗi ngày, trong ngày có thể bán nhiều lần) theo nguồn và ca làm việc, đồng thời dùng ghim sự kiện lên biểu đồ tuần.
 
 | Cột DB | Field Prisma | Kiểu | Ràng buộc | Ghi chú |
 | --- | --- | --- | --- | --- |
 | `id` | `id` | String (UUID) | PK | |
-| `entry_date` | `entryDate` | Date | not null | Ngày phát sinh doanh thu |
-| `source` | `source` | RevenueSource | not null | `POS` hoặc `EATCLUB` |
-| `amount` | `amount` | Decimal(15,0) | not null, ≥ 0 | Doanh thu VND |
-| `covers` | `covers` | Int | not null, default `0` | Số lượt khách |
-| `note` | `note` | String? | nullable, ≤ 500 | |
+| `title` | `title` | String | not null, **≤ 80 ký tự** | Tiêu đề món/sự kiện/lần bán hàng |
+| `source` | `source` | RevenueSource | not null | Nguồn doanh thu: `POS` hoặc `EATCLUB` |
+| `amount` | `amount` | Decimal(15,0) | not null, **≥ 0** | Giá trị doanh thu bán được (VND, không âm) |
+| `event_date` | `eventDate` | Date | not null | Ngày phát sinh bán hàng |
+| `shift` | `shift` | WorkShift | not null | Ca làm việc (`CA_NGAY`, `CA_TRUA`, `CA_TOI`, `CA_DEM`) |
+| `note` | `note` | String? | nullable, ≤ 500 | Ghi chú thêm |
 | `created_by_id` | `createdById` | String | FK → `users.id`, not null | |
 | `created_at` / `updated_at` | `createdAt` / `updatedAt` | DateTime | | |
 
-**Unique:** `@@unique([entryDate, source])` — một nguồn, một ngày, một bản ghi.
+**Index:** `@@index([eventDate])`.
+
+> Giới hạn 80 ký tự của `title` được thực thi ở cả ba lớp: Zod (frontend), class-validator (DTO), và độ dài cột (DB). Xem [`features/events/create-event.md`](../../features/events/create-event.md).
 
 ## `LabourCost`
 
@@ -122,30 +124,9 @@ Một khoản chi phí nhân công theo ngày và bộ phận.
 
 **Index:** `@@index([expenseDate])`, `@@index([department])` — phục vụ lọc theo ngày/bộ phận (xem [`indexing.md`](./indexing.md)).
 
-## `EventAnnotation`
-
-Sự kiện/ghi chú có ảnh hưởng doanh thu, ghim lên biểu đồ tuần.
-
-| Cột DB | Field Prisma | Kiểu | Ràng buộc | Ghi chú |
-| --- | --- | --- | --- | --- |
-| `id` | `id` | String (UUID) | PK | |
-| `title` | `title` | String | not null, **≤ 80 ký tự** | Tiêu đề sự kiện |
-| `source` | `source` | RevenueSource | not null | Nguồn bị ảnh hưởng |
-| `amount` | `amount` | Decimal(15,0) | not null, **≥ 0** | Giá trị tác động doanh thu (không âm) |
-| `event_date` | `eventDate` | Date | not null | Ngày sự kiện |
-| `shift` | `shift` | WorkShift | not null | Ca làm việc |
-| `note` | `note` | String? | nullable, ≤ 500 | |
-| `created_by_id` | `createdById` | String | FK → `users.id`, not null | |
-| `created_at` / `updated_at` | `createdAt` / `updatedAt` | DateTime | | |
-
-**Index:** `@@index([eventDate])`.
-
-> Giới hạn 80 ký tự của `title` được thực thi ở cả ba lớp: Zod (frontend), class-validator (DTO), và độ dài cột (DB). Xem [`features/events/create-event.md`](../../features/events/create-event.md).
-
 ## Quan hệ (ERD rút gọn)
 
 ```
-users 1 ──< revenue_entries
 users 1 ──< labour_costs
 users 1 ──< event_annotations
 ```

@@ -33,13 +33,12 @@ Dùng đúng các thuật ngữ sau trong code, commit, và tài liệu. Chúng 
 
 | Thuật ngữ | Nghĩa | Tránh dùng |
 | --- | --- | --- |
-| **Revenue Entry** | Một bản ghi doanh thu theo ngày + nguồn (POS hoặc Eatclub) | sale, transaction |
+| **Event Annotation** | Bản ghi bán hàng / sự kiện phát sinh doanh thu theo ca và nguồn (`POS`/`EATCLUB`), ghim lên biểu đồ | marker, note (dùng riêng) |
 | **Revenue Source** | Kênh phát sinh doanh thu: `POS` (tại quầy) hoặc `EATCLUB` (app đối tác) | channel, provider |
 | **Labour Cost** | Một khoản chi phí nhân công theo ngày | payroll, salary |
 | **Department** | Bộ phận nhận chi: `FOH`, `BOH`, `MANAGEMENT`, `STEWARD` | team, group |
-| **Event Annotation** | Sự kiện/ghi chú có ảnh hưởng doanh thu, ghim lên biểu đồ | marker, note (dùng riêng) |
 | **Work Shift** | Ca làm việc: `CA_TOI`, `CA_TRUA`, `CA_DEM`, `CA_NGAY` | time slot |
-| **Covers** | Số lượt khách (số suất ăn) trong ngày | guests, pax (chỉ dùng trong UI copy) |
+| **Covers** | Số lượt bán / giao dịch phát sinh trong kỳ | guests, pax (chỉ dùng trong UI copy) |
 | **Trend** | Chuỗi doanh thu/chi phí theo ngày trong một tuần | series (chỉ là chi tiết ApexCharts) |
 
 Định nghĩa đầy đủ hơn nằm ở [`features/README.md`](./features/README.md#từ-vựng-nghiệp-vụ).

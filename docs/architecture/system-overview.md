@@ -24,14 +24,14 @@ Hệ thống gồm ba tầng chạy độc lập, giao tiếp qua HTTP:
 ┌───────────────────────────▼─────────────────────────────────┐
 │  TẦNG BACKEND — NestJS                         cổng 3001     │
 │  · AuthModule (JWT + passport)                                │
-│  · RevenueModule · LabourModule · EventsModule                │
-│  · AnalyticsModule (tổng hợp tuần, KPI)                       │
+│  · LabourModule · EventsModule                                │
+│  · AnalyticsModule (tổng hợp tuần, KPI từ events & labour)    │
 │  · Prisma Client (data access)                                │
 └───────────────────────────┬─────────────────────────────────┘
                             │ TCP 5432 (Prisma)
 ┌───────────────────────────▼─────────────────────────────────┐
 │  TẦNG DATABASE — PostgreSQL 16                 cổng 5432     │
-│  · users · revenue_entries · labour_costs · event_annotations │
+│  · users · labour_costs · event_annotations                   │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -54,8 +54,8 @@ Backend chia theo module nghiệp vụ (NestJS module), frontend chia theo route
 | Miền nghiệp vụ | Backend module | Frontend route | Đặc tả |
 | --- | --- | --- | --- |
 | Xác thực | `AuthModule`, `UsersModule` | `/login` | [`features/authentication/login.md`](../features/authentication/login.md) |
-| Doanh thu & xu hướng tuần | `RevenueModule`, `AnalyticsModule` | `/` | [`features/revenue-analytics/home.md`](../features/revenue-analytics/home.md) |
-| Sự kiện/ghi chú doanh thu | `EventsModule` | `/forms/event-note` | [`features/events/create-event.md`](../features/events/create-event.md) |
+| Doanh thu & xu hướng tuần | `AnalyticsModule` | `/` | [`features/revenue-analytics/home.md`](../features/revenue-analytics/home.md) |
+| Sự kiện & Bán hàng (Doanh thu) | `EventsModule` | `/forms/event-note` | [`features/events/create-event.md`](../features/events/create-event.md) |
 | Chi phí nhân công | `LabourModule` | `/forms/labour-cost` | [`features/labour-cost/create-labour-cost.md`](../features/labour-cost/create-labour-cost.md) |
 
 ## Phạm vi (scope)

@@ -49,28 +49,10 @@ model User {
   createdAt    DateTime @default(now()) @map("created_at")
   updatedAt    DateTime @updatedAt @map("updated_at")
 
-  revenueEntries   RevenueEntry[]
   labourCosts      LabourCost[]
   eventAnnotations EventAnnotation[]
 
   @@map("users")
-}
-
-model RevenueEntry {
-  id          String        @id @default(uuid()) @db.Uuid
-  entryDate   DateTime      @map("entry_date") @db.Date
-  source      RevenueSource
-  amount      Decimal       @db.Decimal(15, 0)
-  covers      Int           @default(0)
-  note        String?
-  createdById String        @map("created_by_id") @db.Uuid
-  createdAt   DateTime      @default(now()) @map("created_at")
-  updatedAt   DateTime      @updatedAt @map("updated_at")
-
-  createdBy   User          @relation(fields: [createdById], references: [id])
-
-  @@unique([entryDate, source])
-  @@map("revenue_entries")
 }
 
 model LabourCost {

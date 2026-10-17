@@ -1,22 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service.js';
-import { RevenueEntry, LabourCost, EventAnnotation } from '@prisma/client';
+import { LabourCost, EventAnnotation } from '@prisma/client';
 
 @Injectable()
 export class AnalyticsRepository {
-  constructor(private readonly prisma: PrismaService) {}
-
-  async findRevenueBetween(startDate: Date, endDate: Date): Promise<RevenueEntry[]> {
-    return this.prisma.revenueEntry.findMany({
-      where: {
-        entryDate: {
-          gte: startDate,
-          lte: endDate,
-        },
-      },
-      orderBy: { entryDate: 'asc' },
-    });
-  }
+  constructor(private readonly prisma: PrismaService) { }
 
   async findLabourBetween(startDate: Date, endDate: Date): Promise<LabourCost[]> {
     return this.prisma.labourCost.findMany({

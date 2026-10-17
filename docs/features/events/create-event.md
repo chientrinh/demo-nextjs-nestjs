@@ -1,8 +1,8 @@
-# Tính năng — Ghi sự kiện (create-event)
+# Tính năng — Bán hàng & Ghi sự kiện (create-event)
 
 ## Mục tiêu
 
-Ghi lại một sự kiện/ghi chú có ảnh hưởng doanh thu và **ghim nó lên biểu đồ tuần** để giải thích biến động (live nhạc, khuyến mãi, mất điện, hủy show…).
+Ghi lại các giao dịch bán hàng / sự kiện phát sinh doanh thu chi tiết (bán được món gì, dịch vụ gì, bao nhiêu tiền theo nguồn POS/Eatclub và ca làm việc; trong ngày có thể bán và ghi nhiều lần). Dữ liệu này trực tiếp cấu thành cột doanh thu tuần trên biểu đồ và giải thích biến động.
 
 ## Vai trò
 

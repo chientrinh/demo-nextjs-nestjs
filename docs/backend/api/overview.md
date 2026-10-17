@@ -69,10 +69,9 @@ Endpoint `analytics` dùng `weekStart` (thứ Hai của tuần cần xem) thay c
 | Nhóm | Tiền tố | Đặc tả |
 | --- | --- | --- |
 | Xác thực | `/api/auth` | [`endpoints/auth.md`](./endpoints/auth.md) |
-| Doanh thu | `/api/revenue` | [`endpoints/revenue.md`](./endpoints/revenue.md) |
-| Sự kiện | `/api/events` | [`endpoints/events.md`](./endpoints/events.md) |
-| Nhân công | `/api/labour` | [`endpoints/labour.md`](./endpoints/labour.md) |
-| Analytics | `/api/analytics` | [`endpoints/revenue.md`](./endpoints/revenue.md#analytics) |
+| Sự kiện & Bán hàng (Doanh thu) | `/api/events` | [`endpoints/events.md`](./endpoints/events.md) |
+| Nhân công (Chi phí) | `/api/labour` | [`endpoints/labour.md`](./endpoints/labour.md) |
+| Analytics | `/api/analytics` | [`endpoints/analytics.md`](./endpoints/analytics.md) |
 | Người dùng | `/api/users` | [`endpoints/auth.md`](./endpoints/auth.md#users) |
 
 ## Swagger
