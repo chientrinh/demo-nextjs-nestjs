@@ -13,7 +13,7 @@
 
 ## 📹 DEMO VIDEO
 
-https://www.youtube.com/watch?v=LsNcbQzMs8s
+[https://www.youtube.com/watch?v=LsNcbQzMs8s](https://www.youtube.com/watch?v=LsNcbQzMs8s)
 
 ---
 
@@ -174,13 +174,6 @@ docker compose -f docker/database/docker-compose.yml down -v
 | Build lần đầu lâu | Bình thường — image đang cài dependencies; lần sau dùng cache |
 | Frontend báo lỗi CORS | Đảm bảo `CORS_ORIGIN` chứa origin `http://localhost:3000` |
 
----
-
-## 📹 DEMO VIDEO
-
-https://www.youtube.com/watch?v=LsNcbQzMs8s
-
----
 
 # Phần 2 — Giới thiệu dự án
 
