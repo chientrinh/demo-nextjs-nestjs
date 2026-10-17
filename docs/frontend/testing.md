@@ -1,13 +1,14 @@
 # Kiểm thử Frontend
 
-> ⚠️ **Chưa cài đặt:** frontend hiện chưa có test runner (không có script `test`, chưa có Jest/Vitest/RTL). Nội dung dưới đây mô tả chiến lược dự kiến.
+> **Trạng thái:** đã cài **Vitest** (script `test`) và có unit test cho hàm thuần + schema Zod. Component test (React Testing Library) và e2e (Playwright) **chưa cài đặt** — các mục đó dưới đây là chiến lược dự kiến.
 
 ## Công cụ
 
 | Loại | Công cụ | Vị trí |
 | --- | --- | --- |
-| Unit / component | Jest + React Testing Library | cạnh mã nguồn (`*.test.tsx`) **trong module** (`modules/<x>/ui/...`, `modules/shared/lib/...`) hoặc app-shared (`shared/utils/...`) |
-| e2e (tùy chọn) | Playwright | `e2e/` |
+| Unit (đã cài) | Vitest | cạnh mã nguồn (`*.test.ts`) — hàm thuần & schema Zod (`modules/<x>/domain/`, `modules/shared/lib/`, `modules/shared/domain/`) |
+| Component (chưa cài) | Vitest + React Testing Library | cạnh mã nguồn (`*.test.tsx`) trong `modules/<x>/ui/...` |
+| e2e (chưa cài) | Playwright | `e2e/` |
 
 Test đặt cạnh thứ nó kiểm, bên trong module (hoặc app-shared `shared/`) sở hữu — không gom vào một thư mục `__tests__` chung toàn cục.
 
@@ -15,14 +16,12 @@ Test đặt cạnh thứ nó kiểm, bên trong module (hoặc app-shared `share
 
 ```bash
 cd frontend
-npm run test            # unit/component
-npm run test -- --coverage
-npm run test:e2e        # nếu đã cấu hình Playwright
+pnpm test               # unit (Vitest)
 ```
 
 ## Ưu tiên kiểm thử
 
-Kiểm thử **hành vi người dùng**, không phải chi tiết cài đặt:
+Kiểm thử **hành vi người dùng**, không phải chi tiết cài đặt. Đã có unit test cho `formatUsd`/`readEnglishAmount`/`canWrite` và schema Zod (`event`, `labour`, `login`); các mục form/KPI/chart bên dưới cần React Testing Library (chưa cài):
 
 1. **Form** — nhập sai (title > 80, amount âm ở labour) hiển thị lỗi đúng field; submit hợp lệ gọi đúng API.
 2. **Định dạng** — `formatUsd(16110)` → `"$16,110"` (`modules/shared/lib/format.ts`).
@@ -51,7 +50,7 @@ it('formatUsd dùng định dạng en-US', () => {
 
 ## Mock API
 
-Không gọi mạng thật. Mock **tầng `data/` của module** (`modules/<x>/data/api.ts`) hoặc mock **service** (`modules/<x>/application/services/`) bằng MSW hoặc `jest.mock` để trả dữ liệu cố định; bọc test trong `QueryClientProvider` mới cho mỗi test. Vì `domain/` không chạm mạng, có thể test schema/logic thuần mà không cần mock.
+Không gọi mạng thật. Mock **tầng `data/` của module** (`modules/<x>/data/api.ts`) hoặc mock **service** (`modules/<x>/application/services/`) bằng MSW hoặc `vi.mock` (Vitest) để trả dữ liệu cố định; bọc test trong `QueryClientProvider` mới cho mỗi test. Vì `domain/` không chạm mạng, có thể test schema/logic thuần mà không cần mock.
 
 ```tsx
 import { EventNoteForm } from '@/modules/events';   // import qua barrel, không vào sâu ui/
