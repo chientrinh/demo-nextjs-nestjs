@@ -4,7 +4,7 @@ import type React from "react";
 import { useEffect } from "react";
 import { create } from "zustand";
 
-import { storage } from "@/adapters/infrastructures/storage";
+import { accessToken, setAccessToken, clearAccessToken } from "@/shared/token";
 import type { AuthSession, AuthUser } from "../../domain/auth";
 import { authService } from "../services/auth.service";
 
@@ -20,16 +20,11 @@ export interface AuthState {
   setUser: (user: AuthUser | null) => void;
 }
 
-export const SESSION_STORAGE_KEY = "bistro_auth_session";
-
 function readSession(): { user: AuthUser | null; token: string | null } {
   try {
-    const raw = storage.get(SESSION_STORAGE_KEY);
-    if (!raw) return { user: null, token: null };
-    const parsed = JSON.parse(raw) as AuthSession;
     return {
-      user: parsed?.user ?? null,
-      token: parsed?.accessToken ?? null,
+      user: null,
+      token: accessToken ?? null,
     };
   } catch {
     return { user: null, token: null };
@@ -37,7 +32,7 @@ function readSession(): { user: AuthUser | null; token: string | null } {
 }
 
 export const useAuthStore = create<AuthState>()((set) => ({
-  // Trạng thái khởi tạo cố định (null/"loading") để HTML server và client khớp
+  // Trạng thái khởi tạo cố định (null/"loading") để HTML server và client khớp nhau
   // nhau; phiên đã lưu chỉ được nạp sau khi mount qua `hydrate`.
   user: null,
   status: "loading",
@@ -51,7 +46,7 @@ export const useAuthStore = create<AuthState>()((set) => ({
     });
   },
   login: (s: AuthSession) => {
-    storage.set(SESSION_STORAGE_KEY, JSON.stringify(s));
+    setAccessToken(s.accessToken);
     set({
       user: s.user,
       status: "authenticated",
@@ -62,7 +57,7 @@ export const useAuthStore = create<AuthState>()((set) => ({
     try {
       await authService.logout();
     } finally {
-      storage.remove(SESSION_STORAGE_KEY);
+      clearAccessToken();
       set({
         user: null,
         status: "unauthenticated",
@@ -72,17 +67,6 @@ export const useAuthStore = create<AuthState>()((set) => ({
   },
   setUser: (user) => {
     set({ user });
-    if (user) {
-      try {
-        const raw = storage.get(SESSION_STORAGE_KEY);
-        if (raw) {
-          const parsed = JSON.parse(raw);
-          storage.set(SESSION_STORAGE_KEY, JSON.stringify({ ...parsed, user }));
-        }
-      } catch {
-        /* ignore parsing error */
-      }
-    }
   },
 }));
 

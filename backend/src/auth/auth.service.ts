@@ -1,4 +1,5 @@
-import { Injectable, UnauthorizedException, OnModuleInit } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from '../users/users.service.js';
 import { LoginDto } from './dto/login.dto.js';
@@ -6,25 +7,17 @@ import { ERROR_CODES } from '../common/constants/error-codes.js';
 import bcrypt from 'bcryptjs';
 
 @Injectable()
-export class AuthService implements OnModuleInit {
+export class AuthService {
   private readonly jwtSecret: string;
   private readonly jwtRefreshSecret: string;
 
   constructor(
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
+    private readonly configService: ConfigService,
   ) {
-    this.jwtSecret = process.env.JWT_SECRET || '';
-    this.jwtRefreshSecret = process.env.JWT_REFRESH_SECRET || '';
-  }
-
-  onModuleInit() {
-    if (!this.jwtSecret || !this.jwtRefreshSecret) {
-      throw new Error('FATAL: JWT_SECRET and JWT_REFRESH_SECRET must be defined in environment.');
-    }
-    if (this.jwtSecret === this.jwtRefreshSecret) {
-      throw new Error('FATAL: JWT_SECRET and JWT_REFRESH_SECRET must be different.');
-    }
+    this.jwtSecret = this.configService.getOrThrow<string>('JWT_SECRET');
+    this.jwtRefreshSecret = this.configService.getOrThrow<string>('JWT_REFRESH_SECRET');
   }
 
   async login(loginDto: LoginDto) {
@@ -38,8 +31,8 @@ export class AuthService implements OnModuleInit {
 
     if (!user.isActive) {
       throw new UnauthorizedException({
-        code: ERROR_CODES.accountInactive,
-        message: 'Tài khoản của bạn đã bị vô hiệu hóa',
+        code: ERROR_CODES.invalidCredentials,
+        message: 'Email hoặc mật khẩu không chính xác',
       });
     }
 
@@ -87,7 +80,13 @@ export class AuthService implements OnModuleInit {
         });
       }
 
-      const tokens = await this.generateTokens(user);
+      // Xoay vòng refresh token: tăng tokenVersion xuống DB để token cũ không còn khả dụng
+      const rotatedUser = await this.usersService.incrementTokenVersion(user.id);
+
+      const tokens = await this.generateTokens({
+        ...user,
+        tokenVersion: rotatedUser.tokenVersion,
+      });
       return {
         accessToken: tokens.accessToken,
         refreshToken: tokens.refreshToken,

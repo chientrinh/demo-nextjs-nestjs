@@ -3,6 +3,14 @@ import bcrypt from 'bcryptjs';
 
 const prisma = new PrismaClient();
 
+function requiredSeedPassword(name: string): string {
+  const password = process.env[name];
+  if (!password) {
+    throw new Error(`${name} là bắt buộc khi chạy seed`);
+  }
+  return password;
+}
+
 // ── Phạm vi dữ liệu demo: Thứ Hai 2026-10-05 → Thứ Bảy 2026-10-24 ───────────
 const RANGE_START = '2026-10-05';
 const RANGE_END = '2026-10-24';
@@ -50,10 +58,14 @@ const seedDays: SeedDay[] = [
 ].filter((d) => d.date >= RANGE_START && d.date <= RANGE_END);
 
 async function main() {
+  if (process.env.NODE_ENV === 'production') {
+    throw new Error('Không được chạy seed dữ liệu demo trong môi trường production');
+  }
+
   console.log('🌱 Bắt đầu khởi tạo dữ liệu mẫu (Seeding)...');
 
-  // 1. Tạo tài khoản Admin mặc định
-  const adminPassword = await bcrypt.hash('Admin@123456', 10);
+  // 1. Tạo tài khoản demo từ mật khẩu do môi trường cung cấp.
+  const adminPassword = await bcrypt.hash(requiredSeedPassword('SEED_ADMIN_PASSWORD'), 10);
   const admin = await prisma.user.upsert({
     where: { email: 'admin@bistro.local' },
     update: {},
@@ -67,7 +79,7 @@ async function main() {
   });
 
   // 2. Tạo tài khoản Quản lý mẫu
-  const managerPassword = await bcrypt.hash('Manager@123456', 10);
+  const managerPassword = await bcrypt.hash(requiredSeedPassword('SEED_MANAGER_PASSWORD'), 10);
   await prisma.user.upsert({
     where: { email: 'manager@bistro.local' },
     update: {},
@@ -81,7 +93,7 @@ async function main() {
   });
 
   // 3. Tạo tài khoản Phân tích mẫu
-  const analystPassword = await bcrypt.hash('Analyst@123456', 10);
+  const analystPassword = await bcrypt.hash(requiredSeedPassword('SEED_ANALYST_PASSWORD'), 10);
   await prisma.user.upsert({
     where: { email: 'analyst@bistro.local' },
     update: {},

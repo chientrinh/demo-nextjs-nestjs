@@ -7,7 +7,7 @@ export class LoginDto {
   @IsNotEmpty({ message: 'Email không được để trống' })
   email!: string;
 
-  @ApiProperty({ example: 'Admin@123456' })
+  @ApiProperty({ example: 'MatKhauManh@2026' })
   @IsString({ message: 'Mật khẩu phải là chuỗi' })
   @IsNotEmpty({ message: 'Mật khẩu không được để trống' })
   password!: string;

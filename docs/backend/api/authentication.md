@@ -11,7 +11,7 @@
 | Token | Thời hạn | Payload | Nơi client giữ |
 | --- | --- | --- | --- |
 | Access | 15 phút | `{ sub: userId, email, role }` | Bộ nhớ (biến JS), gắn `Authorization: Bearer` |
-| Refresh | 7 ngày | `{ sub: userId, tokenVersion }` | Cookie `refresh_token` (httpOnly, Secure, SameSite=Strict) |
+| Refresh | 7 ngày | `{ sub: userId, tokenVersion }` | Cookie `refresh_token` (httpOnly, Secure ở production, SameSite=Lax) |
 
 Refresh token không được trả trong body JSON. Nó đến qua `Set-Cookie`.
 
@@ -39,7 +39,7 @@ POST /api/auth/refresh   (cookie refresh_token tự gửi kèm)
    ▼
 Đọc + verify refresh token từ cookie
    · thiếu/hỏng → 401 { code: "INVALID_REFRESH_TOKEN" }
-   · kiểm tra tokenVersion khớp user (đã thu hồi thì chặn)
+   · kiểm tra tokenVersion khớp user (đã thu hồi thì chặn), sau đó tăng tokenVersion để refresh token cũ không còn hợp lệ
    ▼
 200 { accessToken } + xoay vòng refresh token mới
 ```

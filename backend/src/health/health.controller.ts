@@ -34,11 +34,10 @@ export class HealthController {
         database: 'connected',
         timestamp: new Date().toISOString(),
       });
-    } catch (error: any) {
+    } catch {
       return res.status(HttpStatus.SERVICE_UNAVAILABLE).json({
         status: 'error',
         database: 'disconnected',
-        error: error.message,
         timestamp: new Date().toISOString(),
       });
     }

@@ -79,7 +79,7 @@ export class UsersService {
     return this.sanitize(updated);
   }
 
-  async incrementTokenVersion(id: string): Promise<void> {
-    await this.usersRepo.incrementTokenVersion(id);
+  async incrementTokenVersion(id: string): Promise<User> {
+    return this.usersRepo.incrementTokenVersion(id);
   }
 }

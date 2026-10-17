@@ -18,7 +18,6 @@ export type AuthUser = {
   fullName: string;
   role: Role;
   isActive: boolean;
-  tokenVersion: number;
   createdAt: string;
   updatedAt: string;
 };

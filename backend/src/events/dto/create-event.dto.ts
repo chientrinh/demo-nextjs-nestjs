@@ -6,6 +6,7 @@ import {
   IsOptional,
   IsString,
   MaxLength,
+  Min,
 } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { RevenueSource, WorkShift } from '@prisma/client';
@@ -25,9 +26,10 @@ export class CreateEventDto {
 
   @ApiProperty({
     example: 2500000,
-    description: 'Ảnh hưởng doanh thu USD (số nguyên, có thể âm)',
+    description: 'Ảnh hưởng doanh thu USD (số nguyên không âm)',
   })
   @IsInt({ message: 'amount phải là số nguyên' })
+  @Min(0, { message: 'amount phải lớn hơn hoặc bằng 0' })
   amount!: number;
 
   @ApiProperty({ example: '2026-10-17', description: 'Ngày sự kiện YYYY-MM-DD' })

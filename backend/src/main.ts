@@ -1,25 +1,17 @@
-import 'dotenv/config';
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import cookieParser from 'cookie-parser';
+import helmet from 'helmet';
 import { AppModule } from './app.module.js';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter.js';
 
 async function bootstrap() {
-  // Fail-fast validate JWT secrets
-  const jwtSecret = process.env.JWT_SECRET;
-  const jwtRefreshSecret = process.env.JWT_REFRESH_SECRET;
-
-  if (!jwtSecret || !jwtRefreshSecret) {
-    throw new Error('JWT_SECRET và JWT_REFRESH_SECRET là bắt buộc trong biến môi trường');
-  }
-
-  if (jwtSecret === jwtRefreshSecret) {
-    throw new Error('JWT_SECRET và JWT_REFRESH_SECRET phải khác nhau để đảm bảo an toàn');
-  }
-
   const app = await NestFactory.create(AppModule);
+  const configService = app.get(ConfigService);
+  app.use(helmet());
+  app.getHttpAdapter().getInstance().disable('x-powered-by');
 
   // Global prefix: /api
   app.setGlobalPrefix('api');
@@ -28,9 +20,10 @@ async function bootstrap() {
   app.use(cookieParser());
 
   // CORS configuration
-  const allowedOrigins = process.env.CORS_ORIGIN
-    ? process.env.CORS_ORIGIN.split(',').map((o) => o.trim())
-    : ['http://localhost:3000', 'http://127.0.0.1:3000'];
+  const allowedOrigins = configService
+    .getOrThrow<string>('CORS_ORIGIN')
+    .split(',')
+    .map((origin) => origin.trim());
 
   app.enableCors({
     origin: allowedOrigins,
@@ -51,21 +44,25 @@ async function bootstrap() {
   // Global ExceptionFilter
   app.useGlobalFilters(new HttpExceptionFilter());
 
-  // Swagger Documentation: /api/docs
-  const config = new DocumentBuilder()
-    .setTitle('Bistro Revenue & Labour API')
-    .setDescription('Hệ thống quản lý doanh thu và chi phí nhân công nhà hàng Bistro')
-    .setVersion('1.0')
-    .addBearerAuth()
-    .build();
+  // Swagger Documentation: /api/docs (chỉ bật ở development)
+  if (configService.getOrThrow<string>('NODE_ENV') !== 'production') {
+    const config = new DocumentBuilder()
+      .setTitle('Bistro Revenue & Labour API')
+      .setDescription('Hệ thống quản lý doanh thu và chi phí nhân công nhà hàng Bistro')
+      .setVersion('1.0')
+      .addBearerAuth()
+      .build();
 
-  const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api/docs', app, document);
+    const document = SwaggerModule.createDocument(app, config);
+    SwaggerModule.setup('api/docs', app, document);
+  }
 
-  const port = process.env.PORT ? parseInt(process.env.PORT, 10) : 3001;
+  const port = configService.getOrThrow<number>('PORT');
   await app.listen(port);
   console.log(`Backend server is running on port ${port}`);
-  console.log(`Swagger documentation available at http://localhost:${port}/api/docs`);
+  if (configService.getOrThrow<string>('NODE_ENV') !== 'production') {
+    console.log(`Swagger documentation available at http://localhost:${port}/api/docs`);
+  }
 }
 
 await bootstrap();

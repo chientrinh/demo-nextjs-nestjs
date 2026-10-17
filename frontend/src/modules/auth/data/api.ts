@@ -1,9 +1,8 @@
 import { httpClient } from "@/adapters/infrastructures/clients/HttpClient";
-import { storage } from "@/adapters/infrastructures/storage";
 
 import type { AuthSession, AuthUser, LoginInput } from "../domain/auth";
 
-const SESSION_STORAGE_KEY = "bistro_auth_session";
+import { setAccessToken, clearAccessToken } from "@/shared/token";
 
 type AuthResponseDto = {
   accessToken: string;
@@ -13,7 +12,6 @@ type AuthResponseDto = {
     fullName: string;
     role: string;
     isActive: boolean;
-    tokenVersion: number;
     createdAt: string;
     updatedAt: string;
   };
@@ -35,7 +33,7 @@ export async function login(input: LoginInput): Promise<AuthSession> {
     accessToken: data.accessToken,
     user: mapUser(data.user),
   };
-  storage.set(SESSION_STORAGE_KEY, JSON.stringify(session));
+  setAccessToken(data.accessToken);
   return session;
 }
 
@@ -45,10 +43,11 @@ export async function refresh(): Promise<AuthSession> {
     accessToken: data.accessToken,
     user: mapUser(data.user),
   };
-  storage.set(SESSION_STORAGE_KEY, JSON.stringify(session));
+  setAccessToken(data.accessToken);
   return session;
 }
 
 export async function logout(): Promise<void> {
   await httpClient.post("/auth/logout");
+  clearAccessToken();
 }

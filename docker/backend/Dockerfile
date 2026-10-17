@@ -3,7 +3,7 @@ FROM node:22-alpine AS deps
 WORKDIR /app
 COPY backend/package*.json ./
 COPY backend/prisma ./prisma/
-RUN npm install
+RUN npm ci
 
 # ---- dev (watch mode) ----
 FROM node:22-alpine AS dev
@@ -32,5 +32,6 @@ COPY backend/package*.json ./
 COPY --from=build /app/node_modules ./node_modules
 COPY --from=build /app/dist ./dist
 COPY --from=build /app/prisma ./prisma
+USER node
 EXPOSE 3001
 CMD ["sh", "-c", "npx prisma migrate deploy && node dist/main.js"]

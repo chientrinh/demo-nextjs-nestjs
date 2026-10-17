@@ -14,7 +14,7 @@ Danh sách sự kiện trong khoảng ngày.
 | `to` | date | bắt buộc, ≥ `from` |
 | `source` | enum | tùy chọn: `POS` \| `EATCLUB` |
 | `shift` | enum | tùy chọn: `CA_NGAY` \| `CA_TRUA` \| `CA_TOI` \| `CA_DEM` |
-| `page` / `pageSize` | int | mặc định 1 / 20 |
+| `page` / `pageSize` | int | mặc định 1 / 20, `pageSize` tối đa 100 |
 
 **Response `200`**
 
@@ -52,7 +52,7 @@ Tạo sự kiện để ghim lên biểu đồ.
 | --- | --- | --- | --- |
 | `title` | string | **bắt buộc, 1–80 ký tự** | Cắt khoảng trắng đầu/cuối |
 | `source` | enum | `POS` \| `EATCLUB` | Nguồn bị ảnh hưởng |
-| `amount` | number | số nguyên, **có thể âm** | Ảnh hưởng USD; âm = giảm |
+| `amount` | number | số nguyên, **≥ 0** | Ảnh hưởng doanh thu USD |
 | `eventDate` | date | `YYYY-MM-DD` | |
 | `shift` | enum | `CA_NGAY` \| `CA_TRUA` \| `CA_TOI` \| `CA_DEM` | |
 | `note` | string? | ≤ 500 | |
@@ -60,7 +60,7 @@ Tạo sự kiện để ghim lên biểu đồ.
 **Response `201`:** sự kiện vừa tạo.
 **Lỗi:** `400 VALIDATION_ERROR` (bao gồm `title` > 80 ký tự), `403 FORBIDDEN`.
 
-> `amount` **được phép âm** — khác với `revenue`/`labour`. Dùng để biểu diễn sự kiện làm giảm doanh thu (ví dụ mất điện, hủy show).
+> `amount` không được âm, nhất quán với quy tắc tiền tệ của hệ thống.
 
 ## `PATCH /api/events/:id` — ADMIN, MANAGER
 

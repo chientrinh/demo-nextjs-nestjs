@@ -66,7 +66,7 @@ Hình dạng response đầy đủ: [`../backend/api/endpoints/revenue.md`](../.
 | --- | --- |
 | Tuần không có dữ liệu | 7 cột `0`; KPI là `0`; danh sách sự kiện rỗng |
 | Ngày chỉ có Eatclub | Cột POS = `0`, cột Eatclub có giá trị |
-| Sự kiện `amount` âm | Annotation màu giảm; tooltip hiển thị dấu âm |
+| Sự kiện `amount` âm | Bị validation từ chối; event chỉ nhận giá trị ≥ 0 |
 | Nhiều sự kiện cùng ngày | Nhiều annotation; nhãn không chồng che khuất hoàn toàn |
 | `weekStart` không phải thứ Hai | Backend từ chối `400`; UI luôn gửi thứ Hai |
 

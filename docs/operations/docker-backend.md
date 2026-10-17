@@ -41,6 +41,7 @@ COPY backend/package*.json ./
 COPY --from=build /app/node_modules ./node_modules
 COPY --from=build /app/dist ./dist
 COPY --from=build /app/prisma ./prisma
+USER node
 EXPOSE 3001
 CMD ["sh", "-c", "npx prisma migrate deploy && node dist/main.js"]
 ```
@@ -77,8 +78,8 @@ services:
       NODE_ENV: development
       PORT: 3001
       DATABASE_URL: ${DATABASE_URL:-postgresql://bistro:bistro@database:5432/bistro?schema=public}
-      JWT_SECRET: ${JWT_SECRET:-super-secret-jwt-access-key-bistro-2026}
-      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET:-different-super-secret-jwt-refresh-key-bistro-2026}
+      JWT_SECRET: ${JWT_SECRET:?JWT_SECRET is required}
+      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET:?JWT_REFRESH_SECRET is required}
       CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost:3000,http://frontend:3000}
     networks:
       - bistro
@@ -101,7 +102,7 @@ services:
       target: runtime
     container_name: bistro-backend-prod
     ports:
-      - "3001:3001"
+      - "127.0.0.1:3001:3001"
     environment:
       NODE_ENV: production
       PORT: 3001

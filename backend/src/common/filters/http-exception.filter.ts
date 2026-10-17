@@ -55,7 +55,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
         code = ERROR_CODES.duplicateRevenueEntry;
         message = 'Dữ liệu đã tồn tại hoặc vi phạm ràng buộc duy nhất';
       } else {
-        message = exception.message || message;
+        // Generic error — dùng message mặc định, không lộ exception.message
       }
     }
 

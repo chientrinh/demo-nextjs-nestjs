@@ -4,46 +4,20 @@ import { env } from "@/shared/constants/env";
 import { ApiError, ERROR_CODES } from "@/shared/utils/errors";
 import { logger } from "@/shared/utils/logger";
 
-import { storage } from "../storage";
 import type { IHttpClient } from "../interfaces/IHttpClient";
 
-const SESSION_STORAGE_KEY = "bistro_auth_session";
+import { accessToken, setAccessToken, clearAccessToken } from "@/shared/token";
 
 function getStoredAccessToken(): string | null {
-  try {
-    const raw = storage.get(SESSION_STORAGE_KEY);
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      if (parsed?.accessToken) return parsed.accessToken;
-    }
-    const directToken = storage.get("token");
-    if (directToken) return directToken;
-    return null;
-  } catch {
-    return null;
-  }
+  return accessToken && accessToken.length > 0 ? accessToken : null;
 }
 
-function updateStoredSession(data: { accessToken: string; user?: unknown }): void {
-  try {
-    const raw = storage.get(SESSION_STORAGE_KEY);
-    const prev = raw ? JSON.parse(raw) : {};
-    storage.set(
-      SESSION_STORAGE_KEY,
-      JSON.stringify({
-        ...prev,
-        accessToken: data.accessToken,
-        ...(data.user ? { user: data.user } : {}),
-      }),
-    );
-  } catch {
-    /* ignore */
-  }
+function updateStoredSession(data: { accessToken: string }): void {
+  setAccessToken(data.accessToken);
 }
 
 function clearStoredSession(): void {
-  storage.remove(SESSION_STORAGE_KEY);
-  storage.remove("token");
+  clearAccessToken();
 }
 
 type ErrorEnvelope = {
@@ -139,7 +113,7 @@ async function requestNewAccessToken(): Promise<string> {
   }
 }
 
-// ── Request interceptor: tự làm mới nếu biết token hết hạn, gắn header ────
+// ── Request interceptor: luôn có access token trước khi gọi API bảo vệ ───────
 axiosInstance.interceptors.request.use(async (config) => {
   if (
     config.url?.includes("/auth/login") ||
@@ -150,8 +124,10 @@ axiosInstance.interceptors.request.use(async (config) => {
 
   let token = getStoredAccessToken();
 
-  // Nếu biết chắc chắn token đã hết hạn, gọi refresh trước khi gửi
-  if (token && isTokenExpired(token)) {
+  // Access token chỉ nằm trong bộ nhớ nên sẽ mất sau khi tải lại trang.
+  // Khi đó (hoặc khi token sắp hết hạn), dùng refresh cookie để lấy token mới
+  // trước khi gửi request API bảo vệ.
+  if (!token || isTokenExpired(token)) {
     try {
       token = await requestNewAccessToken();
     } catch (err) {

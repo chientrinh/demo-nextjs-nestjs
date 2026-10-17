@@ -4,6 +4,8 @@ coverage
 .next
 .env
 *.local
+*.pem
+*.key
 .DS_Store
 *:Zone.Identifier
 .agents
